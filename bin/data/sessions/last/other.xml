@@ -1,0 +1,15 @@
+<settings>
+    <audio active="1">
+        <amp-reg>8.585858345</amp-reg>
+        <amp-reg>8.585858345</amp-reg>
+        <damp-dt>0.078787878</damp-dt>
+    </audio>
+    <gui>
+        <korg active="1"></korg>
+    </gui>
+    <blending-layer-paths>
+        <mode>14</mode>
+        <mix>0.543307066</mix>
+        <order>1</order>
+    </blending-layer-paths>
+</settings>
