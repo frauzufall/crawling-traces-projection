@@ -63,38 +63,38 @@ void ControlWindow::update() {
     paths.update();
     server.update();
 
-    float current_time = ofGetElapsedTimeMillis();
-    if(current_time - last_temp_update >= system_temp_freq) {
+//    float current_time = ofGetElapsedTimeMillis();
+//    if(current_time - last_temp_update >= system_temp_freq) {
 
-        last_temp_update = current_time;
+//        last_temp_update = current_time;
 
-        // get NVIDIA GPU and CPU temperature
+//        // get NVIDIA GPU and CPU temperature
 
-        stringstream temp_str, tmp_rm;
+//        stringstream temp_str, tmp_rm;
 
-        string status_gpu = Stuff::exec("sensors | grep temp7");
+//        string status_gpu = Stuff::exec("sensors | grep temp7");
 
-        tmp_rm << "temp 7:";
-        status_gpu.erase(status_gpu.begin(), status_gpu.begin()+tmp_rm.str().size());
-        Stuff::trim(status_gpu);
+//        tmp_rm << "temp 7:";
+//        status_gpu.erase(status_gpu.begin(), status_gpu.begin()+tmp_rm.str().size());
+//        Stuff::trim(status_gpu);
 
-        temp_str << "\nGPU: " << status_gpu << "\n";
+//        temp_str << "\nGPU: " << status_gpu << "\n";
 
-        int cpu_count = atoi(Stuff::exec("sensors | grep Core | wc -l").c_str());
+//        int cpu_count = atoi(Stuff::exec("sensors | grep Core | wc -l").c_str());
 
-        for(int i = 0; i < cpu_count; i++) {
+//        for(int i = 0; i < cpu_count; i++) {
 
-            stringstream command;
-            command << "sensors | grep Core | sed -n " << i+1 << "p";
-            string status_cpu = Stuff::exec(command.str().c_str());
-            Stuff::trim(status_cpu);
+//            stringstream command;
+//            command << "sensors | grep Core | sed -n " << i+1 << "p";
+//            string status_cpu = Stuff::exec(command.str().c_str());
+//            Stuff::trim(status_cpu);
 
-            temp_str << status_cpu << "\n";
+//            temp_str << status_cpu << "\n";
 
-        }
+//        }
 
-        status_temp = temp_str.str();
-    }
+//        status_temp = temp_str.str();
+//    }
 
 }
 
