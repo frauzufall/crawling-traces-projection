@@ -1,7 +1,7 @@
 #include "app.h"
 #include "ofAppGLFWWindow.h"
 
-typedef tr1::shared_ptr<AppStart> AppStart_ptr;
+typedef std::shared_ptr<AppStart> AppStart_ptr;
 
 //========================================================================
 int main(){

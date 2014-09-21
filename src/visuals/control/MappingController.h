@@ -3,7 +3,7 @@
 #include "ofMain.h"
 #include "Projector.h"
 
-typedef tr1::shared_ptr<ofFbo> ofFbo_ptr;
+typedef std::shared_ptr<ofFbo> ofFbo_ptr;
 
 namespace guardacaso {
 	

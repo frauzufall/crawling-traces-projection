@@ -24,7 +24,7 @@ PathsTab::PathsTab():CustomTab()
     paths_options.setHeaderBackgroundColor(ofColor(159,0,38));
 
     paths_names = PathsController::getInstance().getPathsNames();
-    for(int i = 0; i < paths_names.size(); i++) {
+    for(uint i = 0; i < paths_names.size(); i++) {
         paths_list.add(PathsController::getInstance().getPath(i)->isActive().set(
                 PathsController::getInstance().getPath(i)->getName(),
                 PathsController::getInstance().getPath(i)->isActive()));

@@ -1,12 +1,12 @@
 <traces>
     <server active="1">
-        <ip>141.76.66.20</ip>
+        <ip>0.0.0.0</ip>
         <port>1234</port>
     </server>
     <speed>0.094999999</speed>
     <range>0.150000006</range>
     <pulsetime>0.200000003</pulsetime>
     <maxlines>0.500000000</maxlines>
-	<fadeout-idle>0.005</fadeout-idle>
-	<fadeout-gone>0.005</fadeout-gone>
+    <fadeout-idle>0.354999989</fadeout-idle>
+    <fadeout-gone>0.335000008</fadeout-gone>
 </traces>

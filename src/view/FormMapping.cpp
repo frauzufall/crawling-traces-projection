@@ -43,13 +43,13 @@ void FormMapping::updateForms(int projector_id) {
     int existing_quads = 0;
     Projector* p = MappingController::getInstance().getProjector(projector_id);
 
-    for (int i = 0; i < p->quadCount(); i++){
+    for (uint i = 0; i < p->quadCount(); i++){
 
         ofPolyline line = p->getQuad(i)->polyline;
 
         quads_dst.push_back(vector<draggableVertex>());
 
-        for(int j = 0; j < line.size(); j++) {
+        for(uint j = 0; j < line.size(); j++) {
             quads_dst[existing_quads].push_back(draggableVertex());
             quads_dst[existing_quads][j].quadIndex = i;
             quads_dst[existing_quads][j].x = line[j].x*mapping_rect_dst.width+mapping_rect_dst.x;
@@ -152,8 +152,8 @@ void FormMapping::draw(ofPoint pos, int projector_id) {
                 ofSetColor(quad_col,255);
             }
             ofBeginShape();
-            for(uint j = 0; j < quads_dst[i].size(); j++) {
-                ofVertex(quads_dst[i][j].x, quads_dst[i][j].y);
+            for(uint k = 0; k < quads_dst[i].size(); k++) {
+                ofVertex(quads_dst[i][k].x, quads_dst[i][k].y);
             }
             ofEndShape(true);
         }
@@ -210,6 +210,8 @@ bool FormMapping::mouseMoved(ofMouseEventArgs& args) {
         start_point.bOver = true;
     else
         start_point.bOver = false;
+
+    return true;
 }
 
 
@@ -303,6 +305,8 @@ bool FormMapping::mouseDragged(ofMouseEventArgs &args) {
         MappingController::getInstance().getProjector(0)->setStartPoint(newstart);
 
     }
+
+    return true;
 }
 
 bool FormMapping::mousePressed(ofMouseEventArgs& args) {
@@ -330,6 +334,8 @@ bool FormMapping::mousePressed(ofMouseEventArgs& args) {
         start_point.bBeingDragged = true;
     else
         start_point.bBeingDragged = false;
+
+    return true;
 }
 
 bool FormMapping::mouseReleased(ofMouseEventArgs &args) {
@@ -344,4 +350,6 @@ bool FormMapping::mouseReleased(ofMouseEventArgs &args) {
         }
     }
     start_point.bBeingDragged = false;
+
+    return true;
 }

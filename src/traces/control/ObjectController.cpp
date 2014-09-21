@@ -58,38 +58,44 @@ void ObjectController::update() {
         if(obj) {
 
             if(!obj->getFadingOut()) {
-                //obj has connection
-                obj->update();
-                if(obj->getColor() == ofColor(255)) {
-                    ServerController::getInstance().askForColor(obj->getId());
-                }
-                float pulsetime = obj->getPulseStart()-obj->getPulseVal();
-                if(pulsetime < min_pulse_time) {
-                    pulsing_obj = obj;
-                    min_pulse_time = pulsetime;
-                }
-                ofColor col = obj->getColor();
-                float limit = fadeout_time_idle*max_fadeout_time;
-                float fadeout = min(limit,obj->getTimeIdle())/limit;
-                if(fadeout < 1) {
-                    col.set(col.r,col.g,col.b, 255-255.0*fadeout);
-                    obj->setColor(col);
-                }
-                else {
-                    removeClient(obj->getId());
+                if(!obj->isGone()) {
+                    //obj has connection
+                    obj->update();
+                    if(obj->getColor() == ofColor(255)) {
+                        ServerController::getInstance().askForColor(obj->getId());
+                    }
+                    float pulsetime = obj->getPulseStart()-obj->getPulseVal();
+                    if(pulsetime < min_pulse_time) {
+                        pulsing_obj = obj;
+                        min_pulse_time = pulsetime;
+                    }
+                    //check if client is not doing anything and, if so, blend out
+                    ofColor col = obj->getColor();
+                    float limit = fadeout_time_idle*max_fadeout_time;
+                    float fadeout = min(limit,obj->getTimeIdle())/limit;
+                    if(fadeout < 1) {
+                        col.set(col.r,col.g,col.b, 255-255.0*fadeout);
+                        obj->setColor(col);
+                    }
+                    else {
+                        obj->closeAndSave();
+                        obj->setGone(true);
+                    }
                 }
             }
             else {
-                //obj is gone, fade out
-                ofColor col = obj->getColor();
+                //obj is gone
                 float limit = fadeout_time_gone*max_fadeout_time;
                 float fadeout = min(limit,obj->getTimeGone())/limit;
                 if(fadeout < 1) {
+                    //fade out
+                    ofColor col = obj->getColor();
                     col.set(col.r,col.g,col.b, 255-255.0*fadeout);
                     obj->setColor(col);
                 }
                 else {
-                    removeClient(obj->getId());
+                    obj->closeAndSave();
+                    obj->setGone(true);
                 }
             }
         }
@@ -168,6 +174,14 @@ void ObjectController::fadeoutClient(string id) {
         obj->setFadingOut(true);
         obj->setFadingOutStart(ofGetElapsedTimef());
     }
+}
+
+void ObjectController::deactivateClient(string id) {
+    getClient(id)->setGone(true);
+}
+
+void ObjectController::activateClient(string id) {
+    getClient(id)->setGone(false);
 }
 
 void ObjectController::removeClient(string id) {

@@ -2,11 +2,11 @@
     <usecomplexquads>1</usecomplexquads>
     <content>
         <width>1280</width>
-        <height>960</height>
+		<height>800</height>
     </content>
     <output>
         <width>1280</width>
-        <height>960</height>
+		<height>800</height>
     </output>
     <control>
         <width>1600</width>

@@ -4,8 +4,8 @@
 #include "DrawingObject.h"
 #include "FakeObject.h"
 
-typedef tr1::shared_ptr<DrawingObject> DrawingObject_ptr;
-typedef tr1::shared_ptr<FakeObject> FakeObject_ptr;
+typedef std::shared_ptr<DrawingObject> DrawingObject_ptr;
+typedef std::shared_ptr<FakeObject> FakeObject_ptr;
 
 class ObjectController {
 
@@ -45,6 +45,8 @@ class ObjectController {
         DrawingObject_ptr getMostInactiveClient();
         DrawingObject_ptr getClient(string id);
         void fadeoutClient(string id);
+        void deactivateClient(string id);
+        void activateClient(string id);
         void removeClient(string id);
         void removeClient(map<string,DrawingObject_ptr>::iterator it);
         void removeAllClients();

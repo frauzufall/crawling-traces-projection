@@ -3,7 +3,7 @@
 #include "ofMain.h"
 #include "ofxXmlSettings.h"
 
-typedef tr1::shared_ptr<ofxXmlSettings> ofxXmlSettings_ptr;
+typedef std::shared_ptr<ofxXmlSettings> ofxXmlSettings_ptr;
 
 namespace guardacaso {
 

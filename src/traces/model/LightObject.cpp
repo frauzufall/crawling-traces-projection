@@ -11,6 +11,11 @@ LightObject::LightObject() {
     _id = "";
     fading_out = false;
     fading_out_start = 0;
+    gone = false;
+}
+
+void LightObject::setId(string id) {
+    _id = id;
 }
 
 void LightObject::setName(string n) {
@@ -143,4 +148,12 @@ void LightObject::setFadingOutStart(float status) {
 
 float LightObject::getFadingOutStart() {
     return fading_out_start;
+}
+
+void LightObject::setGone(bool is_gone) {
+    gone = is_gone;
+}
+
+bool LightObject::isGone() {
+    return gone;
 }

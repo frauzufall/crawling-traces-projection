@@ -6,7 +6,7 @@
 
 namespace guardacaso {
 
-    typedef tr1::shared_ptr<MappingQuad> MappingQuad_ptr;
+    typedef std::shared_ptr<MappingQuad> MappingQuad_ptr;
 
 	class Projector {
 	

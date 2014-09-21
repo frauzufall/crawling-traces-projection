@@ -48,7 +48,7 @@ void SortableList::add(string title, ofParameter<bool> &parameter, bool at_end =
     btn->setPosition(pos);
 
     //move existing elements below new element
-    if(index != list.size()-1) {
+    if(index != (int)list.size()-1) {
         shift(index+1, btn->getHeight());
     }
 
@@ -60,7 +60,7 @@ void SortableList::add(ofxToggle_ptr btn) {
 }
 
 void SortableList::shift(int start_index, int amount) {
-    for(int i = start_index; i < list.size(); i++) {
+    for(int i = start_index; i < (int)list.size(); i++) {
         ofxToggle_ptr btn = list.at(i);
         btn->setPosition(btn->getPosition().x, btn->getPosition().y+amount+margin);
     }
@@ -68,7 +68,7 @@ void SortableList::shift(int start_index, int amount) {
 
 void SortableList::mousePressed(int x, int y) {
 
-    for(int i = 0; i < list.size(); i++) {
+    for(uint i = 0; i < list.size(); i++) {
         if(list.at(i)->getShape().inside(x,y)) {
             // mouse pressed on element
             moving_el = i;

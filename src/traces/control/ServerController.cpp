@@ -84,11 +84,17 @@ void ServerController::processMsg(string client_id, string action, string value)
         if(client_id != "all") {
 
             if(action == "gone") {
+                ObjectController::getInstance().deactivateClient(client_id);
                 ObjectController::getInstance().fadeoutClient(client_id);
             }
             else {
                 DrawingObject_ptr c = ObjectController::getInstance().getClient(client_id);
 
+                c->setGone(false);
+
+                if(action == "id") {
+                    c->setId(value);
+                }
                 if(action == "type") {
                     c->setType(value);
                 }

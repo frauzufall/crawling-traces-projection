@@ -1,6 +1,4 @@
 #include "CtControlLayer.h"
-#include "ServerController.h"
-#include "ObjectController.h"
 
 CtControlLayer::CtControlLayer(string name):CustomPaths(name) {
 	

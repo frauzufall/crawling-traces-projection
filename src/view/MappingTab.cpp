@@ -127,6 +127,7 @@ void MappingTab::updateQuadList() {
 
 bool MappingTab::mouseMoved(ofMouseEventArgs &args) {
     CustomTab::mouseMoved(args);
+    return true;
 }
 
 bool MappingTab::mouseDragged(ofMouseEventArgs &args) {
@@ -136,6 +137,8 @@ bool MappingTab::mouseDragged(ofMouseEventArgs &args) {
     mapping_list.mouseDragged(mouse.x,mouse.y,this,&MappingTab::reorderForm);
 
     CustomTab::mouseDragged(args);
+
+    return true;
 
 }
 
@@ -147,6 +150,8 @@ bool MappingTab::mousePressed(ofMouseEventArgs& args) {
 
     CustomTab::mousePressed(args);
 
+    return true;
+
 }
 
 bool MappingTab::mouseReleased(ofMouseEventArgs &args) {
@@ -156,6 +161,8 @@ bool MappingTab::mouseReleased(ofMouseEventArgs &args) {
     mapping_list.mouseReleased(mouse.x,mouse.y,this,&MappingTab::removeForm);
 
     CustomTab::mouseReleased(args);
+
+    return true;
 
 }
 

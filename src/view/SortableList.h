@@ -2,7 +2,7 @@
 #include "ofMain.h"
 #include "ofxGui.h"
 
-typedef tr1::shared_ptr<ofxToggle> ofxToggle_ptr;
+typedef std::shared_ptr<ofxToggle> ofxToggle_ptr;
 
 namespace guardacaso {
 
@@ -18,14 +18,14 @@ namespace guardacaso {
 
         template<class ListenerClass>
         void mouseDragged(int x, int y, ListenerClass * listener, void (ListenerClass::*draggedInside)(int, int)) {
-            if(catched_el && moving_el >= 0 && moving_el < list.size()) {
+            if(catched_el && moving_el >= 0 && moving_el < (int)list.size()) {
 
                 //move el with drag
                 list.at(moving_el)->setPosition(x, y);
 
                 if(this->getShape().inside(x,y)) {
                     int new_pos = 0;
-                    for(int i = 0; i < list.size(); i++) {
+                    for(int i = 0; i < (int)list.size(); i++) {
                         if(list.at(i)->getPosition().y < y) {
                             if(moving_el<i) {
                                 new_pos = i;

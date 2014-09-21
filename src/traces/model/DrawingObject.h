@@ -31,6 +31,8 @@ class DrawingObject : public LightObject {
         float getPulseVal();
         void setPulseVal(float val);
 
+        void closeAndSave();
+
         ~DrawingObject();
 
     protected:

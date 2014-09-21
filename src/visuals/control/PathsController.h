@@ -4,7 +4,7 @@
 
 using namespace guardacaso;
 
-typedef tr1::shared_ptr<CustomPaths> CustomPaths_ptr;
+typedef std::shared_ptr<CustomPaths> CustomPaths_ptr;
 
 namespace guardacaso {
 

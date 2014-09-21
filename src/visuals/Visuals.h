@@ -5,14 +5,14 @@
 #include "ofxXmlSettings.h"
 #include "ofxSvg.h"
 
-typedef tr1::shared_ptr<ofxXmlSettings> ofxXmlSettings_ptr;
-typedef tr1::shared_ptr<ofxSVG> ofxSVG_ptr;
-typedef tr1::shared_ptr< vector<ofPolyline> > ofPolylines_ptr;
-typedef tr1::shared_ptr< vector<ofPath> > ofPaths_ptr;
+typedef std::shared_ptr<ofxXmlSettings> ofxXmlSettings_ptr;
+typedef std::shared_ptr<ofxSVG> ofxSVG_ptr;
+typedef std::shared_ptr< vector<ofPolyline> > ofPolylines_ptr;
+typedef std::shared_ptr< vector<ofPath> > ofPaths_ptr;
 
 namespace guardacaso {
 
-    typedef tr1::shared_ptr<CustomPaths> CustomPaths_ptr;
+    typedef std::shared_ptr<CustomPaths> CustomPaths_ptr;
 
     class Visuals {
 		

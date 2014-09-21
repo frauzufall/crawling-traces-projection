@@ -6,8 +6,8 @@
 
 using namespace guardacaso;
 
-typedef tr1::shared_ptr<MappingQuad> MappingQuad_ptr;
-typedef tr1::shared_ptr<ofPolyline> ofPolyline_ptr;
+typedef std::shared_ptr<MappingQuad> MappingQuad_ptr;
+typedef std::shared_ptr<ofPolyline> ofPolyline_ptr;
 
 Visuals& Visuals::get() {
     static Visuals instance;
@@ -296,7 +296,7 @@ void Visuals::importSvg(string svg) {
 
         mq->polyline.clear();
 
-        for(int k = 0; k < l.size(); k++) {
+        for(uint k = 0; k < l.size(); k++) {
             mq->polyline.addVertex(l[k].x/outputWidth(), l[k].y/outputHeight());
         }
 
@@ -504,7 +504,7 @@ void Visuals::saveMapping(string path, string path_svg, string path_png) {
                         xml.addTag("polyline");
                         xml.pushTag("polyline",0);
 
-                            for(int k = 0; k < mq->polyline.size(); k++) {
+                            for(uint k = 0; k < mq->polyline.size(); k++) {
                                 xml.addTag("point");
                                 xml.pushTag("point",k);
                                     xml.addValue("x", mq->polyline[k].x);
@@ -585,7 +585,7 @@ void Visuals::saveMappingAsSvg(string path) {
                     stringstream path_sstr;
                     path_sstr << "m";
                     ofPoint last_p;
-                    for(int k = 0; k < mq->polyline.size(); k++) {
+                    for(uint k = 0; k < mq->polyline.size(); k++) {
                         ofPoint cur_p = ofPoint(mq->polyline[k].x*outputWidth(), mq->polyline[k].y*outputHeight());
                         if(k == 0)
                             path_sstr << cur_p.x << "," << cur_p.y;
@@ -753,7 +753,7 @@ void Visuals::updateOutlines() {
     _outlines_raw->clear();
     _paths->clear();
 
-    for(int i = 0; i < MappingController::getInstance().getProjector(0)->quadCount(); i++) {
+    for(int i = 0; i < (int)MappingController::getInstance().getProjector(0)->quadCount(); i++) {
 
         MappingQuad_ptr mq = MappingController::getInstance().getProjector(0)->getQuad(i);
 
@@ -761,7 +761,7 @@ void Visuals::updateOutlines() {
 
         _outlines_raw->push_back(mq->polyline);
 
-        for(int j = 0; j < _outlines_raw->at(i).size(); j++) {
+        for(uint j = 0; j < _outlines_raw->at(i).size(); j++) {
             _outlines_raw->at(i)[j].x *= outputWidth();
             _outlines_raw->at(i)[j].y *= outputHeight();
 
