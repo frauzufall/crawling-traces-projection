@@ -201,7 +201,7 @@ void DrawingObject::saveTimestamps(string path) {
     xml.addTag("timestamps");
     xml.pushTag("timestamps", 0);
 
-    for(int i = 0; i < history_timestamp.size(); i++) {
+    for(uint i = 0; i < history_timestamp.size(); i++) {
         xml.addValue("p",history_timestamp.at(i));
     }
 
@@ -218,7 +218,7 @@ void DrawingObject::saveNetTimestamps(string path) {
     xml.addTag("timestamps");
     xml.pushTag("timestamps", 0);
 
-    for(int i = 0; i < history_net_timestamp.size(); i++) {
+    for(uint i = 0; i < history_net_timestamp.size(); i++) {
         xml.addValue("p",history_net_timestamp.at(i));
     }
 
@@ -228,30 +228,34 @@ void DrawingObject::saveNetTimestamps(string path) {
 }
 
 void DrawingObject::closeAndSave() {
-    this->setFinishingPos();
 
-    stringstream unique_id, test_path, svg_path, timestamp_path, svg_net_path, timestamp_net_path;
+    if(getLine().size() > 0) {
+        this->setFinishingPos();
 
-    int file_count = 1;
-    unique_id << getId();
-    test_path << Traces::get().historyDir() << "/" << unique_id.str() << ".svg";
-    while(ofFile::doesFileExist(test_path.str())) {
-        unique_id.str("");
-        test_path.str("");
-        unique_id << getId() << "_" << file_count;
+        stringstream unique_id, test_path, svg_path, timestamp_path, svg_net_path, timestamp_net_path;
+
+        int file_count = 1;
+        unique_id << getId();
         test_path << Traces::get().historyDir() << "/" << unique_id.str() << ".svg";
-        ++file_count;
+        while(ofFile::doesFileExist(test_path.str())) {
+            unique_id.str("");
+            test_path.str("");
+            unique_id << getId() << "_" << file_count;
+            test_path << Traces::get().historyDir() << "/" << unique_id.str() << ".svg";
+            ++file_count;
+        }
+
+        svg_path << Traces::get().historyDir() << "/" << unique_id.str() << ".svg";
+        svg_net_path << Traces::get().historyDir() << "/net_" << unique_id.str() << ".svg";
+        timestamp_path << Traces::get().historyDir() << "/" << unique_id.str() << ".xml";
+        timestamp_net_path << Traces::get().historyDir() << "/net_" << unique_id.str() << ".xml";
+
+        cout << "DRAWINGOBJECT::saving object " << unique_id.str() << "..." << endl;
+
+        Stuff::saveLineAsSvg(svg_path.str(),history_line,Visuals::get().outputWidth(), Visuals::get().outputHeight(),getColor());
+        Stuff::saveLineAsSvg(svg_net_path.str(),history_net_line,Visuals::get().outputWidth(), Visuals::get().outputHeight(),getColor());
+        saveTimestamps(timestamp_path.str());
+        saveNetTimestamps(timestamp_net_path.str());
     }
 
-    svg_path << Traces::get().historyDir() << "/" << unique_id.str() << ".svg";
-    svg_net_path << Traces::get().historyDir() << "/net_" << unique_id.str() << ".svg";
-    timestamp_path << Traces::get().historyDir() << "/" << unique_id.str() << ".xml";
-    timestamp_net_path << Traces::get().historyDir() << "/net_" << unique_id.str() << ".xml";
-
-    cout << "DRAWINGOBJECT::saving object " << unique_id.str() << "..." << endl;
-
-    Stuff::saveLineAsSvg(svg_path.str(),history_line,Visuals::get().outputWidth(), Visuals::get().outputHeight(),getColor());
-    Stuff::saveLineAsSvg(svg_net_path.str(),history_net_line,Visuals::get().outputWidth(), Visuals::get().outputHeight(),getColor());
-    saveTimestamps(timestamp_path.str());
-    saveNetTimestamps(timestamp_net_path.str());
 }
