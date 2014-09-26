@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ofMain.h"
+#include "IDGenerator.h"
 
 namespace guardacaso {
 
@@ -11,6 +12,9 @@ namespace guardacaso {
         }
 
         MappingQuad(string nature) {
+            stringstream id_str;
+            id_str << IDGenerator::getInstance().next();
+            id = id_str.str();
             setup(nature);
         }
 
@@ -60,6 +64,7 @@ namespace guardacaso {
 			
         }
 		
+        string              id;
         ofPoint             src[4];
         ofPoint             dst[4];
         string              nature;
