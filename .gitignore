@@ -22,3 +22,6 @@ crawling-traces.config
 
 # Crawling Traces history directory
 bin/data/history/*
+
+#Crawling Traces binary, server and gui settings
+
