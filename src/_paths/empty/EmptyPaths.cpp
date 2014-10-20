@@ -38,7 +38,7 @@ void EmptyPaths::draw(int path) {
     ofPolyline & line = data.outlines->at(path);
 
     ofBeginShape();
-    for (int j = 0; j < line.size(); j++){
+    for (uint j = 0; j < line.size(); j++){
         ofVertex(line[j]);
     }
     ofEndShape(true);

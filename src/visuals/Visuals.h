@@ -88,8 +88,6 @@ namespace guardacaso {
             ofParameter<bool>           use_complex_quads;
             ofParameter<bool>           control_left;
 
-            ofPoint                     control_point;
-
             /****** MAPPING             *****/
             ofxSVG_ptr                  _svg;
             ofPolylines_ptr             _outlines;

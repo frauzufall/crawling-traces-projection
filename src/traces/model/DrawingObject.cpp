@@ -1,6 +1,7 @@
 #include "DrawingObject.h"
 #include "ObjectController.h"
 #include "MappingController.h"
+#include "ServerController.h"
 #include "Traces.h"
 #include "Stuff.h"
 
@@ -18,6 +19,12 @@ void DrawingObject::setup(string id) {
     }
     pos.x = MappingController::getInstance().getProjector(0)->getStartPoint().x* Visuals::get().outputWidth();
     pos.y = MappingController::getInstance().getProjector(0)->getStartPoint().y* Visuals::get().outputHeight();
+
+    //send starting position to server
+    stringstream possent;
+    possent << _id << ";" << pos.x << "|" << pos.y;
+    ServerController::getInstance().send(ServerController::getInstance().getClientName(), "moveto", possent.str());
+
     setPulsing();
     please_redraw = false;
     pulseval = 0;
@@ -78,6 +85,13 @@ void DrawingObject::setPos(ofPoint p) {
     history_net_line.addVertex(pos);
     history_net_timestamp.push_back(timestamp);
     line.addVertex(pos);
+
+    //send new position to server
+    stringstream possent;
+    possent << _id << ";" << pos.x << "|" << pos.y;
+    ServerController::getInstance().send(ServerController::getInstance().getClientName(), "lineto", possent.str());
+
+    //create connection lines to existing drawing points
     for(uint i = 0; i < backup_line.getVertices().size(); i++) {
         ofPoint p_tmp = backup_line.getVertices().at(i);
         if(p_tmp.distance(pos) < max_distance) {
@@ -95,6 +109,7 @@ void DrawingObject::setPos(ofPoint p) {
     Projector* pj = MappingController::getInstance().getProjector(0);
     MappingQuad_ptr q;
 
+    //add lines to borders of obstacles if they are nearby
     for(uint i = 0; i < pj->quadCount(); i++) {
         q = pj->getQuad(i);
         if(q) {
@@ -161,6 +176,8 @@ void DrawingObject::gotRedrawn() {
 void DrawingObject::setPulsing() {
     pulsestart = ofGetElapsedTimef();
     pulseval = 1;
+    //send to server that client is pulsing
+    ServerController::getInstance().send(ServerController::getInstance().getClientName(), "pulsing", _id);
 }
 
 float DrawingObject::getPulseStart() {

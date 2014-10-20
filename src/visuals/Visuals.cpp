@@ -136,7 +136,7 @@ void Visuals::reloadMapping(ofxXmlSettings_ptr xml) {
                 if(type == "picture") {
                     string url = xml->getValue("url", "images/notfound.png");
                     mq->image.clear();
-                    mq->image.loadImage(url);
+                    mq->image.load(url);
                     mq->img_src = url;
                 }
 
@@ -263,7 +263,7 @@ void Visuals::importSvg(string svg) {
             mq->showframe = false;
             if(mq->nature == "picture") {
                 string url = "images/notfound.png";
-                mq->image.loadImage(url);
+                mq->image.load(url);
                 mq->img_src = url;
             }
         }

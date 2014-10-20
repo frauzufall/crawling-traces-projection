@@ -1,10 +1,6 @@
 #pragma once
 
 #include "ofMain.h"
-//#include "ControlWindow.h"
-//#include "MappingController.h"
-
-//using namespace guardacaso;
 
 class AppStart : public ofBaseApp {
 
@@ -23,7 +19,6 @@ public:
     void mousePressed(int x, int y, int button);
     void mouseReleased(int x, int y, int button);
     void windowResized(int w, int h);
-    void scrolled(float deltaX, float deltaY);
 
 private:
 

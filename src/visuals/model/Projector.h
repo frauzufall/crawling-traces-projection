@@ -20,6 +20,11 @@ namespace guardacaso {
             plane[1] = ofPoint(1, 0, 0);
             plane[2] = ofPoint(1, 1, 0);
             plane[3] = ofPoint(0, 1, 0);
+            camera.addVertex(ofPoint(0, 0, 0));
+            camera.addVertex(ofPoint(1, 0, 0));
+            camera.addVertex(ofPoint(1, 1, 0));
+            camera.addVertex(ofPoint(0, 1, 0));
+            camera.close();
 		}
 
         ~Projector() {
@@ -85,7 +90,7 @@ namespace guardacaso {
         void addImage(string url) {
             MappingQuad_ptr mq = addQuad("picture");
             mq->img_src.set(url);
-            mq->image.loadImage(url);
+            mq->image.load(url);
 
         }
 		
@@ -340,12 +345,16 @@ namespace guardacaso {
         void setStartPoint(ofPoint p) {
             start_point = p;
         }
-		
+
+        ofPolyline& getCamera() {
+            return camera;
+        }
 		
 	private:
         vector<MappingQuad_ptr> quads;
         ofPoint                 start_point;
         ofPoint                 plane[4];
+        ofPolyline              camera;
 		
 	};
 

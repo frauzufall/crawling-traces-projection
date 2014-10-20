@@ -25,6 +25,7 @@ namespace guardacaso {
             void setActive(bool _active);
             ofParameter<int> getPort();
             ofParameter<string> getIp();
+            string getClientName();
 
         protected:
             ServerController();

@@ -118,7 +118,7 @@ CustomPaths_ptr PathsController::getActivePath() {
 
 CustomPaths_ptr PathsController::getPath(int index) {
 
-    if(index < paths.size())
+    if(index < (int)paths.size())
         return paths.at(index);
     else
         return CustomPaths_ptr();
@@ -126,7 +126,7 @@ CustomPaths_ptr PathsController::getPath(int index) {
 }
 
 bool PathsController::activePathChanged() {
-    for(int i = 0; i < paths.size(); i++) {
+    for(int i = 0; i < (int)paths.size(); i++) {
         if( (paths.at(i)->isActive()) ) {
             if(active_path.get() != i){
                 setActivePath(i,true);

@@ -9,7 +9,7 @@ OF_ROOT = ../../../of/git
 # for example search paths like:
 # USER_CFLAGS = -I src/objects
 
-USER_CFLAGS = -std=c++11
+#USER_CFLAGS = -std=c++11
 
 USER_CFLAGS += -I src/visuals -I src/visuals/model -I src/visuals/control
 USER_CFLAGS += -I src/traces -I src/traces/model -I src/traces/control

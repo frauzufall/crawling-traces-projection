@@ -31,8 +31,6 @@ MappingController::MappingController() {
     cal_border = 0.05;
     cal_grey = 100;
 
-    controlpoint = ofPoint(20,20);
-
 }
 
 void MappingController::update() {
@@ -299,7 +297,7 @@ ofPoint MappingController::getPointInMappedArea(ofPoint last_p, ofPoint next_p) 
             res = getProjector(0)->getStartPoint();
         }
 
-        for(int i = 0; i < paintings_last_inside.size(); i++) {
+        for(uint i = 0; i < paintings_last_inside.size(); i++) {
 
             MappingQuad_ptr mq = paintings_last_inside.at(i);
 
@@ -327,7 +325,7 @@ ofPoint MappingController::getPointInMappedArea(ofPoint last_p, ofPoint next_p) 
 
         float dist_res_nextp = 1000000;
 
-        for(int i = 0; i < windows_next_inside.size(); i++) {
+        for(uint i = 0; i < windows_next_inside.size(); i++) {
 
             MappingQuad_ptr mq = windows_next_inside.at(i);
 

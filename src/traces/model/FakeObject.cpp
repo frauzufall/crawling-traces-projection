@@ -171,7 +171,7 @@ void FakeObject::saveTimestamps(string path) {
     xml.addTag("timestamps");
     xml.pushTag("timestamps", 0);
 
-    for(int i = 0; i < history_timestamp.size(); i++) {
+    for(uint i = 0; i < history_timestamp.size(); i++) {
         xml.addValue("p",history_timestamp.at(i));
     }
 
@@ -188,7 +188,7 @@ void FakeObject::saveNetTimestamps(string path) {
     xml.addTag("timestamps");
     xml.pushTag("timestamps", 0);
 
-    for(int i = 0; i < history_net_timestamp.size(); i++) {
+    for(uint i = 0; i < history_net_timestamp.size(); i++) {
         xml.addValue("p",history_net_timestamp.at(i));
     }
 
@@ -211,7 +211,7 @@ void FakeObject::addHistoryNetLine(ofPoint p1, ofPoint p2, string timestamp) {
 
     bool double_line = false;
 
-    for(int i = 1; i < history_net_line.size()-1; i++) {
+    for(uint i = 1; i < history_net_line.size()-1; i++) {
 
         ofPoint p = history_net_line[i];
         ofPoint p_prev = history_net_line[i-1];

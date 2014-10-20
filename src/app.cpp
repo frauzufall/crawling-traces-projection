@@ -127,20 +127,19 @@ void AppStart::keyReleased(int key){
 }
 
 //--------------------------------------------------------------
-void AppStart::scrolled(float deltaX, float deltaY){
-    cout << "scolling" << endl;
-}
-
-//--------------------------------------------------------------
 void AppStart::mouseMoved(int x, int y ){
+//    cout << "mousemoved" << endl;
 }
 
 //--------------------------------------------------------------
 void AppStart::mouseDragged(int x, int y, int button){
+//    cout << "mousedragged" << endl;
 }
 
 //--------------------------------------------------------------
 void AppStart::mousePressed(int x, int y, int button){
+//    cout << "mousepressed" << endl;
+    //ControlWindow::getInstance().mousePressed(x);
 }
 
 //--------------------------------------------------------------

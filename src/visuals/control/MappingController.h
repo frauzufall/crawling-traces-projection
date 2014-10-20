@@ -37,8 +37,6 @@ namespace guardacaso {
 
             void                        clear();
 
-            ofPoint                     controlpoint;
-
             ofParameter<bool>           is_cal;
             ofParameter<float>          cal_border;
             ofParameter<int>            cal_grey;
