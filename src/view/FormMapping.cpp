@@ -10,6 +10,7 @@ FormMapping::FormMapping(): CustomTab() {
     img_col = ofColor::fromHex(0x2da1e3);
     pic_col = ofColor(200,0,200);
     win_col = ofColor(150,150,150);
+    cam_col = ofColor(255,100,100);
 
     quads_dst.clear();
 
@@ -60,11 +61,23 @@ void FormMapping::updateForms(int projector_id) {
         }
         existing_quads++;
     }
+
     start_point.x = p->getStartPoint().x*mapping_rect_dst.width+mapping_rect_dst.x;
     start_point.y = p->getStartPoint().y*mapping_rect_dst.height+mapping_rect_dst.y;
     start_point.bOver = false;
     start_point.bBeingDragged = false;
     start_point.radius = 13;
+
+    camera.clear();
+    for(uint i = 0; i < p->getCamera().getVertices().size(); i++) {
+        draggableVertex v;
+        v.x = p->getCamera().getVertices().at(i).x*mapping_rect_dst.width+mapping_rect_dst.x;
+        v.y = p->getCamera().getVertices().at(i).y*mapping_rect_dst.height+mapping_rect_dst.y;
+        v.bOver = false;
+        v.bBeingDragged = false;
+        v.radius = 8;
+        camera.push_back(v);
+    }
 
 }
 
@@ -96,7 +109,7 @@ void FormMapping::draw(ofPoint pos, int projector_id) {
 
     ofFill();
     ofSetColor(33);
-    ofRect(0,0,Visuals::get().outputWidth(),Visuals::get().outputHeight());
+    ofDrawRectangle(0,0,Visuals::get().outputWidth(),Visuals::get().outputHeight());
 
     ofNoFill();
     ofSetColor(80,130,150);
@@ -159,6 +172,15 @@ void FormMapping::draw(ofPoint pos, int projector_id) {
         }
     }
 
+    //draw camera field
+    ofNoFill();
+    ofSetColor(cam_col,255);
+    ofBeginShape();
+    for(uint i = 0; i < camera.size(); i++) {
+        ofVertex(camera[i].x, camera[i].y);
+    }
+    ofEndShape(true);
+
     //DRAW CIRCLES
 
     ofSetColor(255,255,255,200);
@@ -169,7 +191,7 @@ void FormMapping::draw(ofPoint pos, int projector_id) {
             if(editable) {
                 if (quads_dst[i][j].bOver) ofFill();
                 else ofNoFill();
-                ofCircle(quads_dst[i][j].x, quads_dst[i][j].y,6);
+                ofDrawCircle(quads_dst[i][j].x, quads_dst[i][j].y,6);
             }
 
         }
@@ -178,7 +200,16 @@ void FormMapping::draw(ofPoint pos, int projector_id) {
     if(start_point.bOver)
         ofFill();
     else ofNoFill();
-    ofCircle(start_point.x, start_point.y,13);
+    ofDrawCircle(start_point.x, start_point.y,13);
+
+    ofSetColor(cam_col,200);
+    for(uint i = 0; i < camera.size(); i++) {
+        draggableVertex v = camera.at(i);
+        if(v.bOver)
+            ofFill();
+        else ofNoFill();
+        ofDrawCircle(v.x, v.y,8);
+    }
 
 }
 
@@ -191,15 +222,10 @@ ofColor FormMapping::getColorOf(string name) {
 
 bool FormMapping::mouseMoved(ofMouseEventArgs& args) {
 
-    CustomTab::mouseMoved(args);
-
     ofPoint mouse(args.x,args.y);
     for (uint i = 0; i < quads_dst.size(); i++){
         for (uint j = 0; j < quads_dst[i].size(); j++){
-            float diffx = mouse.x - quads_dst[i][j].x;
-            float diffy = mouse.y - quads_dst[i][j].y;
-            float dist = sqrt(diffx*diffx + diffy*diffy);
-            if (dist < quads_dst[i][j].radius){
+            if (mouse.distance(quads_dst[i][j].asPoint()) < quads_dst[i][j].radius){
                 quads_dst[i][j].bOver = true;
             } else {
                 quads_dst[i][j].bOver = false;
@@ -211,13 +237,19 @@ bool FormMapping::mouseMoved(ofMouseEventArgs& args) {
     else
         start_point.bOver = false;
 
-    return true;
+    for (uint i = 0; i < camera.size(); i++){
+        if (mouse.distance(camera[i].asPoint()) < camera[i].radius){
+            camera[i].bOver = true;
+        } else {
+            camera[i].bOver = false;
+        }
+    }
+
+    return CustomTab::mouseMoved(args);
 }
 
 
 bool FormMapping::mouseDragged(ofMouseEventArgs &args) {
-
-    CustomTab::mouseDragged(args);
 
     ofPoint mouse(args.x,args.y);
 
@@ -306,12 +338,39 @@ bool FormMapping::mouseDragged(ofMouseEventArgs &args) {
 
     }
 
-    return true;
+    ofPolyline &camera_save = MappingController::getInstance().getProjector(0)->getCamera();
+    for (uint i = 0; i < camera.size(); i++) {
+
+        if (camera[i].bBeingDragged == true){
+            if(mouse.x < mapping_rect_dst.x+mapping_rect_dst.width) {
+                if(mouse.x > mapping_rect_dst.x)
+                    camera[i].x = mouse.x;
+                else
+                    camera[i].x = mapping_rect_dst.x;
+            }
+            else {
+                camera[i].x = mapping_rect_dst.x+mapping_rect_dst.width;
+            }
+            if(mouse.y < mapping_rect_dst.y+mapping_rect_dst.height) {
+                if(mouse.y > mapping_rect_dst.y)
+                    camera[i].y = mouse.y;
+                else
+                    camera[i].y = mapping_rect_dst.y;
+            }
+            else {
+                camera[i].y = mapping_rect_dst.y+mapping_rect_dst.height;
+            }
+
+            camera_save.getVertices().at(i).x = (camera[i].x-mapping_rect_dst.x)/mapping_rect_dst.width;
+            camera_save.getVertices().at(i).y = (camera[i].y-mapping_rect_dst.y)/mapping_rect_dst.height;
+
+        }
+    }
+
+    return CustomTab::mouseDragged(args);
 }
 
 bool FormMapping::mousePressed(ofMouseEventArgs& args) {
-
-    CustomTab::mousePressed(args);
 
     ofPoint mouse(args.x,args.y);
 
@@ -319,10 +378,7 @@ bool FormMapping::mousePressed(ofMouseEventArgs& args) {
         for (uint j = 0; j < quads_dst[i].size(); j++){
             bool editable = MappingController::getInstance().getProjector(0)->getQuad(quads_dst[i][0].quadIndex)->editable;
             if(editable) {
-                float diffx = mouse.x - quads_dst[i][j].x;
-                float diffy = mouse.y - quads_dst[i][j].y;
-                float dist = sqrt(diffx*diffx + diffy*diffy);
-                if (dist < quads_dst[i][j].radius){
+                if (mouse.distance(quads_dst[i][j].asPoint()) < quads_dst[i][j].radius){
                     quads_dst[i][j].bBeingDragged = true;
                 } else {
                     quads_dst[i][j].bBeingDragged = false;
@@ -335,14 +391,18 @@ bool FormMapping::mousePressed(ofMouseEventArgs& args) {
     else
         start_point.bBeingDragged = false;
 
-    return true;
+    for (uint i = 0; i < camera.size(); i++) {
+        if (mouse.distance(camera[i].asPoint()) < camera[i].radius){
+            camera[i].bBeingDragged = true;
+        } else {
+            camera[i].bBeingDragged = false;
+        }
+    }
+
+    return CustomTab::mousePressed(args);
 }
 
 bool FormMapping::mouseReleased(ofMouseEventArgs &args) {
-
-    CustomTab::mouseReleased(args);
-
-    ofPoint mouse(args.x,args.y);
 
     for (uint i = 0; i < quads_dst.size(); i++){
         for (uint j = 0; j < quads_dst[i].size(); j++){
@@ -350,6 +410,9 @@ bool FormMapping::mouseReleased(ofMouseEventArgs &args) {
         }
     }
     start_point.bBeingDragged = false;
+    for (uint i = 0; i < camera.size(); i++){
+        camera[i].bBeingDragged = false;
+    }
 
-    return true;
+    return CustomTab::mouseReleased(args);
 }

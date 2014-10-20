@@ -11,7 +11,6 @@ SortableList::SortableList():ofxPanel() {
     margin = 1;
 
     clear();
-    dead.clear();
 
 }
 

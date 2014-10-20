@@ -8,9 +8,6 @@ using namespace guardacaso;
 
 PathsTab::PathsTab():CustomTab()
 {
-
-    is_setup = false;
-
     setup("PATHS");
 
     setBorderColor(ofColor::black);
@@ -36,6 +33,8 @@ PathsTab::PathsTab():CustomTab()
     add(&save_btn);
 
     active_path = -1;
+
+    ofxPanel::registerMouseEvents();
 
 }
 

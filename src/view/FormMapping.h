@@ -43,11 +43,13 @@ private:
 
     vector< vector < draggableVertex > >  quads_dst;
     draggableVertex start_point;
+    vector <draggableVertex> camera;
     ofRectangle mapping_rect_dst, control_rect;
 
     ofColor img_col;
     ofColor pic_col;
     ofColor win_col;
+    ofColor cam_col;
 
     ofColor getColorOf(string name);
 

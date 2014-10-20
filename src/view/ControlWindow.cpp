@@ -48,8 +48,6 @@ void ControlWindow::setup() {
 
     setGui();
 
-    ofRegisterMouseEvents(this);
-
     is_setup = true;
 
 }
@@ -106,7 +104,7 @@ void ControlWindow::reloadGui() {
     ofPoint mapping_pos(gui.getPosition().x, gui.getPosition().y+gui.getHeight()+10);
     ofPoint server_pos(gui.getPosition().x, gui.getPosition().y+gui.getHeight()+10);
     ofPoint paths_pos(gui.getPosition().x, gui.getPosition().y+gui.getHeight()+10);
-    ofPoint status_pos(gui.getPosition().x+gui.getWidth()+10, gui.getPosition().y);
+//    ofPoint status_pos(gui.getPosition().x+gui.getWidth()+10, gui.getPosition().y);
 
     if( xml->loadFile(xml_gui) ){
 
@@ -124,9 +122,9 @@ void ControlWindow::reloadGui() {
             paths_pos.y = xml->getAttribute("paths", "y", paths_pos.y);
             paths.setVisible(xml->getAttribute("paths", "visible", 1));
 
-            status_pos.x = xml->getAttribute("status", "x", status_pos.x);
-            status_pos.y = xml->getAttribute("status", "y", status_pos.y);
-            status.setVisible(xml->getAttribute("status", "visible", 1));
+//            status_pos.x = xml->getAttribute("status", "x", status_pos.x);
+//            status_pos.y = xml->getAttribute("status", "y", status_pos.y);
+//            status.setVisible(xml->getAttribute("status", "visible", 1));
 
         xml->popTag();
 
@@ -134,7 +132,7 @@ void ControlWindow::reloadGui() {
         cout << "unable to load xml file " << xml_gui << endl;
     }
 
-    status.setPlacing(ofRectangle(status_pos,0,0));
+//    status.setPlacing(ofRectangle(status_pos,0,0));
     server.setPlacing(ofRectangle(server_pos,0,0));
     paths.setPlacing(ofRectangle(paths_pos,0,0));
     mapping.setPlacing(ofRectangle(mapping_pos,0,0));
@@ -165,10 +163,10 @@ void ControlWindow::saveGui() {
     xml.addAttribute("paths", "y", paths.getPlacing().y,0);
     xml.addAttribute("paths", "visible", paths.isVisible(),0);
 
-    xml.addTag("status");
-    xml.addAttribute("status", "x", status.getPlacing().x,0);
-    xml.addAttribute("status", "y", status.getPlacing().y,0);
-    xml.addAttribute("status", "visible", status.isVisible(),0);
+//    xml.addTag("status");
+//    xml.addAttribute("status", "x", status.getPlacing().x,0);
+//    xml.addAttribute("status", "y", status.getPlacing().y,0);
+//    xml.addAttribute("status", "visible", status.isVisible(),0);
 
     xml.popTag();
 
@@ -179,7 +177,7 @@ void ControlWindow::saveGui() {
 void ControlWindow::draw(ofPoint p) {
     
     gui.draw(p);
-    status.draw(p);
+//    status.draw(p);
     server.draw(p);
     paths.draw(p);
     mapping.draw(p);
@@ -189,18 +187,16 @@ void ControlWindow::draw(ofPoint p) {
 void ControlWindow::setGui() {
 
     gui.setup("crawling traces");
-    status.setup("STATUS");
+//    status.setup("STATUS");
 
     gui.setBorderColor(ofColor::black);
-    status.setBorderColor(ofColor::black);
+//    status.setBorderColor(ofColor::black);
 
     save_gui_btn.addListener(this, &ControlWindow::saveGui);
-    save_gui_btn.setup("Save GUI");
-    gui.add(&save_gui_btn);
+    gui.add(save_gui_btn.setup("Save GUI"));
 
     save_settings_btn.addListener(this, &ControlWindow::saveAllSettings);
-    save_settings_btn.setup("Save all settings");
-    gui.add(&save_settings_btn);
+    gui.add(save_settings_btn.setup("Save all settings"));
 
 //    import_events_btn.addListener(this, &ControlWindow::importGroup);
 //    import_events_btn.setup("Import events");
@@ -210,7 +206,7 @@ void ControlWindow::setGui() {
     gui.add(paths.visible.set("show paths", true));
     gui.add(mapping.visible.set("show mapping", false));
 
-    status.add(status_temp.set("Hardware temperatures", ".. showing status .."));
+//    status.add(status_temp.set("Hardware temperatures", ".. showing status .."));
 
     reloadGui();
 
@@ -224,19 +220,6 @@ void ControlWindow::saveAllSettings() {
     Visuals::get().saveMappingDefault();
     Traces::get().saveServer();
     Visuals::get().savePaths();
-}
-
-
-void ControlWindow::mouseMoved(ofMouseEventArgs &args) {
-}
-
-void ControlWindow::mouseDragged(ofMouseEventArgs &args) {
-}
-
-void ControlWindow::mousePressed(ofMouseEventArgs &args) {
-}
-
-void ControlWindow::mouseReleased(ofMouseEventArgs &args) {
 }
 
 void ControlWindow::keyPressed(int key) {

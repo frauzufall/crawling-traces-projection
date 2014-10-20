@@ -20,6 +20,7 @@ class MappingTab : public CustomTab {
         bool mouseDragged(ofMouseEventArgs &args);
         bool mousePressed(ofMouseEventArgs &args);
         bool mouseReleased(ofMouseEventArgs &args);
+        bool mouseScrolled(ofMouseEventArgs &args);
 
         void addCanvas();
         void addObstacle();

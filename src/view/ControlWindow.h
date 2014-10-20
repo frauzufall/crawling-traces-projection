@@ -23,10 +23,6 @@ namespace guardacaso {
 
             bool isSetup();
 
-            void mouseMoved(ofMouseEventArgs& args);
-            void mouseDragged(ofMouseEventArgs &args);
-            void mousePressed(ofMouseEventArgs &args);
-            void mouseReleased(ofMouseEventArgs &args);
             void keyPressed(int key);
 
             MappingTab& getMapping();

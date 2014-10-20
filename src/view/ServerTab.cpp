@@ -108,7 +108,7 @@ void ServerTab::drawServerStatus(ofRectangle shape) {
             ofSetColor(255,0,0);
             con_msg << "DISCONNECTED. ";
         }
-        ofRect(margin,margin-status_quad/2,status_quad, status_quad);
+        ofDrawRectangle(margin,margin-status_quad/2,status_quad, status_quad);
         stringstream obj_msg;
         obj_msg << con_msg.str();
         obj_msg << "Drawing Objects: ";
@@ -139,11 +139,11 @@ void ServerTab::drawServerStatus(ofRectangle shape) {
 
                     client_names.push_back(c->getId());
                     ofSetColor(c->getColor());
-                    ofRect(margin,i*r_client.height-status_quad/2,status_quad, status_quad);
+                    ofDrawRectangle(margin,i*r_client.height-status_quad/2,status_quad, status_quad);
                     ofSetLineWidth(5);
                     ofSetColor(255,100,100,(1-c->getPulseVal())*255);
                     ofNoFill();
-                    ofRect(margin,i*r_client.height-status_quad/2,status_quad, status_quad);
+                    ofDrawRectangle(margin,i*r_client.height-status_quad/2,status_quad, status_quad);
                     ofFill();
                     ofSetLineWidth(1);
                     if(c->getConnections().size()>0)

@@ -74,7 +74,6 @@ namespace guardacaso {
 
     private:
         vector<ofxToggle_ptr> list;
-        vector<ofxToggle_ptr> dead;
         int padding;
         int margin;
         bool catched_el;

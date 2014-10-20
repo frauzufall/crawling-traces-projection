@@ -17,8 +17,6 @@ class PathsTab : public CustomTab {
 
         vector<string> paths_names;
 
-        bool is_setup;
-
         ofRectangle control_rect;
 
         float preview_h, preview_w;

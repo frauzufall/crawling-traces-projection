@@ -59,7 +59,7 @@ MappingTab::MappingTab():CustomTab() {
 
     form_mapping.setSize(500, 300);
 
-//    ofRegisterMouseEvents(this);
+    ofRegisterMouseEvents(this, -1);
 
 }
 
@@ -126,8 +126,7 @@ void MappingTab::updateQuadList() {
 }
 
 bool MappingTab::mouseMoved(ofMouseEventArgs &args) {
-    CustomTab::mouseMoved(args);
-    return true;
+    return CustomTab::mouseMoved(args);
 }
 
 bool MappingTab::mouseDragged(ofMouseEventArgs &args) {
@@ -136,9 +135,7 @@ bool MappingTab::mouseDragged(ofMouseEventArgs &args) {
 
     mapping_list.mouseDragged(mouse.x,mouse.y,this,&MappingTab::reorderForm);
 
-    CustomTab::mouseDragged(args);
-
-    return true;
+    return CustomTab::mouseDragged(args);
 
 }
 
@@ -148,9 +145,7 @@ bool MappingTab::mousePressed(ofMouseEventArgs& args) {
 
     mapping_list.mousePressed(mouse.x,mouse.y);
 
-    CustomTab::mousePressed(args);
-
-    return true;
+    return CustomTab::mousePressed(args);
 
 }
 
@@ -160,9 +155,13 @@ bool MappingTab::mouseReleased(ofMouseEventArgs &args) {
 
     mapping_list.mouseReleased(mouse.x,mouse.y,this,&MappingTab::removeForm);
 
-    CustomTab::mouseReleased(args);
+    return CustomTab::mouseReleased(args);
 
-    return true;
+}
+
+bool MappingTab::mouseScrolled(ofMouseEventArgs &args) {
+
+    return CustomTab::mouseScrolled(args);
 
 }
 

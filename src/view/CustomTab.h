@@ -9,7 +9,9 @@ namespace guardacaso {
         CustomTab():ofxPanel() {
 
             visible = true;
-            TTF.loadFont("fonts/Ubuntu-L.ttf", 10);
+            TTF.load("fonts/Ubuntu-L.ttf", 10);
+
+//            ofxPanel::registerMouseEvents();
 
         }
 
