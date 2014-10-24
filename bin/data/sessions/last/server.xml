@@ -1,7 +1,7 @@
 <traces>
     <server active="1">
-		<ip>0.0.0.0</ip>
-		<!--<ip>178.62.212.160</ip>-->
+		<!--<ip>0.0.0.0</ip>-->
+		<ip>178.62.212.160</ip>
 		<port>1234</port>
     </server>
     <speed>0.094999999</speed>

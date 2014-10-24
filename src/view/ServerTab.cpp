@@ -26,6 +26,8 @@ ServerTab::ServerTab():CustomTab() {
     add(ObjectController::getInstance().getDrawingRange().set("Range", ObjectController::getInstance().getDrawingRange(), 0, 1));
     add(ObjectController::getInstance().getFadeoutTimeIdle().set("Fadeout idle", ObjectController::getInstance().getFadeoutTimeIdle(), 0, 1));
     add(ObjectController::getInstance().getFadeoutTimeGone().set("Fadeout gone", ObjectController::getInstance().getFadeoutTimeGone(), 0, 1));
+    add(timeout_gone.set("gone timeout: ", timeout_gone));
+    add(timeout_idle.set("idle timeout: ", timeout_idle));
 
     participants.setup("Connected drawers");
     participants.setBorderColor(ofColor::black);
@@ -48,6 +50,31 @@ void ServerTab::update() {
 
         participants.setShape(r_widget);
     }
+
+    //updating idle and gone timeout strings
+    int sec = ObjectController::getInstance().getFadeoutTimeGone()*ObjectController::getInstance().getMaxFadeoutTime();
+    int seconds=sec%60;
+    int minutes=(sec/(60))%60;
+    int hours=(sec/(60*60))%24;
+    stringstream timestr1;
+    timestr1 << setfill('0') << setw(2) << hours;
+    timestr1 << ":";
+    timestr1 << setfill('0') << setw(2) << minutes;
+    timestr1 << ":";
+    timestr1 << setfill('0') << setw(2) << seconds;
+    timeout_gone = timestr1.str();
+    sec = ObjectController::getInstance().getFadeoutTimeIdle()*ObjectController::getInstance().getMaxFadeoutTime();
+    seconds=sec%60;
+    minutes=(sec/(60))%60;
+    hours=(sec/(60*60))%24;
+    stringstream timestr2;
+    timestr2 << setfill('0') << setw(2) << hours;
+    timestr2 << ":";
+    timestr2 << setfill('0') << setw(2) << minutes;
+    timestr2 << ":";
+    timestr2 << setfill('0') << setw(2) << seconds;
+    timeout_idle = timestr2.str();
+
 }
 
 void ServerTab::draw(ofPoint p) {
@@ -154,8 +181,15 @@ void ServerTab::drawServerStatus(ofRectangle shape) {
                     c_status << "ID: " << c->getId();
                     c_status << " lines: " << c->getConnections().size();
                     string resttime = c->getRestTimeAsString();
-                    if(resttime != "")
-                        c_status << " inactive: " << resttime;
+                    if(resttime != "") {
+                        if(c->isGone()) {
+                            c_status << " gone: ";
+                        }
+                        else {
+                            c_status << " inactive: ";
+                        }
+                        c_status << resttime;
+                    }
                     TTF.drawString(c_status.str(), status_quad+margin*2, i*r_client.height+margin/2);
                 }
             }

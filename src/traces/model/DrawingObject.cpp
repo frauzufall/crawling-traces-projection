@@ -206,6 +206,7 @@ ofPolyline DrawingObject::getConnections() {
 
 DrawingObject::~DrawingObject() {
 
+    cout << "DRAWINGOBJECT:: destroyed" << endl;
     closeAndSave();
 
 }

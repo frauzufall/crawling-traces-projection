@@ -58,7 +58,7 @@ void ObjectController::update() {
         if(obj) {
 
             if(!obj->getFadingOut()) {
-                if(!obj->isGone()) {
+//                if(!obj->isGone()) {
                     //obj has connection
                     obj->update();
                     if(obj->getColor() == ofColor(255)) {
@@ -78,10 +78,11 @@ void ObjectController::update() {
                         obj->setColor(col);
                     }
                     else {
-                        obj->closeAndSave();
-                        obj->setGone(true);
+                        //obj->closeAndSave();
+                        //obj->setGone(true);
+                        removeClient(obj->getId());
                     }
-                }
+//                }
             }
             else {
                 //obj is gone
@@ -94,8 +95,9 @@ void ObjectController::update() {
                     obj->setColor(col);
                 }
                 else {
-                    obj->closeAndSave();
-                    obj->setGone(true);
+                    //obj->closeAndSave();
+                    //obj->setGone(true);
+                    removeClient(obj->getId());
                 }
             }
         }
@@ -330,4 +332,8 @@ ofParameter<float> ObjectController::getFadeoutTimeGone() {
 
 void ObjectController::setFadeoutTimeGone(float time) {
     fadeout_time_gone = time;
+}
+
+ofParameter<float> ObjectController::getMaxFadeoutTime() {
+    return max_fadeout_time;
 }

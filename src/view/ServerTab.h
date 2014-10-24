@@ -20,6 +20,8 @@ class ServerTab : public CustomTab {
         CustomTab participants;
 
         ofRectangle control_rect;
+        ofParameter<string> timeout_idle;
+        ofParameter<string> timeout_gone;
 
 };
 

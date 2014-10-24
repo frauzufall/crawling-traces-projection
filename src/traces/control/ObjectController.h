@@ -38,6 +38,7 @@ class ObjectController {
         void setFadeoutTimeIdle(float time);
         ofParameter<float> getFadeoutTimeGone();
         void setFadeoutTimeGone(float time);
+        ofParameter<float> getMaxFadeoutTime();
 
         ofPoint getCurrentPulsingPoint();
 
