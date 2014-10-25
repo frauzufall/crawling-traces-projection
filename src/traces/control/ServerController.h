@@ -20,6 +20,7 @@ namespace guardacaso {
             void update();
             bool isConnected();
             bool send(string client_id, string action, string value);
+            void sendMappingQuads();
             void askForColor(string client_id);
             ofParameter<bool> getActive();
             void setActive(bool _active);

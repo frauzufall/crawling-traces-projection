@@ -212,6 +212,11 @@ void ControlWindow::setGui() {
 
 }
 
+ControlWindow::~ControlWindow() {
+    save_gui_btn.removeListener(this, &ControlWindow::saveGui);
+    save_settings_btn.removeListener(this, &ControlWindow::saveAllSettings);
+}
+
 bool ControlWindow::drawingMapping() {
     return mapping.isVisible();
 }

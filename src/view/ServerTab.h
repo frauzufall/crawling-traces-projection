@@ -8,6 +8,7 @@ class ServerTab : public CustomTab {
 
     public:
         ServerTab();
+        ~ServerTab();
 
         void update();
         void draw(ofPoint p);

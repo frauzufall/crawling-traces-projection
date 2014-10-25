@@ -8,6 +8,7 @@ class PathsTab : public CustomTab {
 
     public:
         PathsTab();
+        ~PathsTab();
 
         void update();
         void draw(ofPoint pos);

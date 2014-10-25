@@ -2,11 +2,11 @@
     <usecomplexquads>1</usecomplexquads>
     <content>
         <width>1280</width>
-		<height>800</height>
+        <height>800</height>
     </content>
     <output>
         <width>1280</width>
-		<height>800</height>
+        <height>800</height>
     </output>
     <control>
         <width>1600</width>
@@ -242,5 +242,23 @@
             <x>0.383333325</x>
             <y>0.618518531</y>
         </point>
+        <camera>
+            <lefttop>
+                <x>-0.085648149</x>
+                <y>-0.118518516</y>
+            </lefttop>
+            <righttop>
+                <x>1.060185194</x>
+                <y>-0.125925928</y>
+            </righttop>
+            <rightbottom>
+                <x>0.974537015</x>
+                <y>1.092592597</y>
+            </rightbottom>
+            <leftbottom>
+                <x>-0.164351851</x>
+                <y>1.077777743</y>
+            </leftbottom>
+        </camera>
     </projector>
 </mapping>

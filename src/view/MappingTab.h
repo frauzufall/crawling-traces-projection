@@ -10,6 +10,7 @@ class MappingTab : public CustomTab {
 
     public:
         MappingTab();
+        ~MappingTab();
 
         void update();
         void draw(ofPoint pos);

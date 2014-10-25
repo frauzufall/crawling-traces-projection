@@ -20,11 +20,11 @@ namespace guardacaso {
             plane[1] = ofPoint(1, 0, 0);
             plane[2] = ofPoint(1, 1, 0);
             plane[3] = ofPoint(0, 1, 0);
-            camera.addVertex(ofPoint(0, 0, 0));
-            camera.addVertex(ofPoint(1, 0, 0));
-            camera.addVertex(ofPoint(1, 1, 0));
-            camera.addVertex(ofPoint(0, 1, 0));
-            camera.close();
+            camera[0] = ofPoint(0, 0, 0);
+            camera[1] = ofPoint(1, 0, 0);
+            camera[2] = ofPoint(1, 1, 0);
+            camera[3] = ofPoint(0, 1, 0);
+            camera_homography.makeIdentityMatrix();
 		}
 
         ~Projector() {
@@ -63,6 +63,11 @@ namespace guardacaso {
             ofPoint res = orig;
             res.x*=Visuals::get().outputWidth();
             res.y*=Visuals::get().outputHeight();
+            return res;
+        }
+
+        ofPoint inCameraView(ofPoint orig) {
+            ofPoint res = orig*camera_homography;
             return res;
         }
 		
@@ -346,15 +351,25 @@ namespace guardacaso {
             start_point = p;
         }
 
-        ofPolyline& getCamera() {
-            return camera;
+        ofPoint (&getCamera())[4] {
+           return camera;
+        }
+
+        void setCamera(ofPoint (&arr)[4]){
+            camera[0] = arr[0];
+            camera[1] = arr[1];
+            camera[2] = arr[2];
+            camera[3] = arr[3];
+            findHomography(camera,plane, (GLfloat*)camera_homography.getPtr(),true);
         }
 		
 	private:
         vector<MappingQuad_ptr> quads;
         ofPoint                 start_point;
         ofPoint                 plane[4];
-        ofPolyline              camera;
+
+        ofPoint                 camera[4];
+        ofMatrix4x4             camera_homography;
 		
 	};
 

@@ -63,6 +63,10 @@ MappingTab::MappingTab():CustomTab() {
 
 }
 
+MappingTab::~MappingTab() {
+    ofUnregisterMouseEvents(this, -1);
+}
+
 void MappingTab::setGui() {
 
     mapping_list.clear();

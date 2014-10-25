@@ -22,7 +22,9 @@ void DrawingObject::setup(string id) {
 
     //send starting position to server
     stringstream possent;
-    possent << _id << ";" << pos.x << "|" << pos.y;
+    Projector *p = MappingController::getInstance().getProjector(0);
+    ofPoint pos_incam = p->inCameraView(pos);
+    possent << _id << ";" << pos_incam.x << "|" << pos_incam.y;
     ServerController::getInstance().send(ServerController::getInstance().getClientName(), "moveto", possent.str());
 
     setPulsing();
@@ -88,7 +90,11 @@ void DrawingObject::setPos(ofPoint p) {
 
     //send new position to server
     stringstream possent;
-    possent << _id << ";" << pos.x << "|" << pos.y;
+
+    Projector* pj = MappingController::getInstance().getProjector(0);
+
+    ofPoint pos_incam = pj->inCameraView(pos);
+    possent << _id << ";" << pos_incam.x << "|" << pos_incam.y;
     ServerController::getInstance().send(ServerController::getInstance().getClientName(), "lineto", possent.str());
 
     //create connection lines to existing drawing points
@@ -106,7 +112,6 @@ void DrawingObject::setPos(ofPoint p) {
 
     backup_line.simplify();
 
-    Projector* pj = MappingController::getInstance().getProjector(0);
     MappingQuad_ptr q;
 
     //add lines to borders of obstacles if they are nearby

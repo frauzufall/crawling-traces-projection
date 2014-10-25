@@ -2,6 +2,7 @@
 #include "MappingController.h"
 #include "ControlWindow.h"
 #include "PathsController.h"
+#include "ServerController.h"
 #include "Stuff.h"
 
 using namespace guardacaso;
@@ -217,11 +218,30 @@ void Visuals::reloadMapping(ofxXmlSettings_ptr xml) {
                 startpoint.x = xml->getValue("x",0.);
                 startpoint.y = xml->getValue("y",0.);
                 MappingController::getInstance().getProjector(i)->setStartPoint(startpoint);
+                xml->popTag();
             }
-
-            xml->popTag();
         }
 
+        ofPoint camera[4] = MappingController::getInstance().getProjector(i)->getCamera();
+        xml->pushTag("camera", 0);
+            xml->pushTag("lefttop", 0);
+                camera[0].x = xml->getValue("x", 0.);
+                camera[0].y = xml->getValue("y", 0.);
+            xml->popTag();
+            xml->pushTag("righttop", 0);
+                camera[1].x = xml->getValue("x", 1.);
+                camera[1].y = xml->getValue("y", 0.);
+            xml->popTag();
+            xml->pushTag("rightbottom", 0);
+                camera[2].x = xml->getValue("x", 1.);
+                camera[2].y = xml->getValue("y", 1.);
+            xml->popTag();
+            xml->pushTag("leftbottom", 0);
+                camera[3].x = xml->getValue("x", 0.);
+                camera[3].y = xml->getValue("y", 1.);
+            xml->popTag();
+        xml->popTag();
+        MappingController::getInstance().getProjector(i)->setCamera(camera);
 
         xml->popTag();
 
@@ -528,6 +548,31 @@ void Visuals::saveMapping(string path, string path_svg, string path_png) {
                 xml.addValue("y", MappingController::getInstance().getProjector(0)->getStartPoint().y);
             xml.popTag();
 
+            xml.addTag("camera");
+            xml.pushTag("camera", 0);
+            ofPoint camera[4] = MappingController::getInstance().getProjector(0)->getCamera();
+                xml.addTag("lefttop");
+                xml.pushTag("lefttop", 0);
+                    xml.addValue("x", camera[0].x);
+                    xml.addValue("y", camera[0].y);
+                xml.popTag();
+                xml.addTag("righttop");
+                xml.pushTag("righttop", 0);
+                    xml.addValue("x", camera[1].x);
+                    xml.addValue("y", camera[1].y);
+                xml.popTag();
+                xml.addTag("rightbottom");
+                xml.pushTag("rightbottom", 0);
+                    xml.addValue("x", camera[2].x);
+                    xml.addValue("y", camera[2].y);
+                xml.popTag();
+                xml.addTag("leftbottom");
+                xml.pushTag("leftbottom", 0);
+                    xml.addValue("x", camera[3].x);
+                    xml.addValue("y", camera[3].y);
+                xml.popTag();
+            xml.popTag();
+
         xml.popTag();
 
     xml.popTag();
@@ -783,6 +828,8 @@ void Visuals::updateOutlines() {
         _outlines->push_back(_outlines_raw->at(i).getResampledBySpacing(1));
 
     }
+
+    ServerController::getInstance().sendMappingQuads();
 
 }
 

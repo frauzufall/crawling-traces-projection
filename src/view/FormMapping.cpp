@@ -1,5 +1,6 @@
 #include "FormMapping.h"
 #include "MappingController.h"
+#include "ServerController.h"
 
 using namespace guardacaso;
 
@@ -69,10 +70,10 @@ void FormMapping::updateForms(int projector_id) {
     start_point.radius = 13;
 
     camera.clear();
-    for(uint i = 0; i < p->getCamera().getVertices().size(); i++) {
+    for(uint i = 0; i < 4; i++) {
         draggableVertex v;
-        v.x = p->getCamera().getVertices().at(i).x*mapping_rect_dst.width+mapping_rect_dst.x;
-        v.y = p->getCamera().getVertices().at(i).y*mapping_rect_dst.height+mapping_rect_dst.y;
+        v.x = p->getCamera()[i].x*mapping_rect_dst.width+mapping_rect_dst.x;
+        v.y = p->getCamera()[i].y*mapping_rect_dst.height+mapping_rect_dst.y;
         v.bOver = false;
         v.bBeingDragged = false;
         v.radius = 8;
@@ -338,33 +339,25 @@ bool FormMapping::mouseDragged(ofMouseEventArgs &args) {
 
     }
 
-    ofPolyline &camera_save = MappingController::getInstance().getProjector(0)->getCamera();
-    for (uint i = 0; i < camera.size(); i++) {
+    ofPoint camera_save[4] = MappingController::getInstance().getProjector(0)->getCamera();
+    bool cam_changed = false;
+    for (uint i = 0; i < 4; i++) {
 
         if (camera[i].bBeingDragged == true){
-            if(mouse.x < mapping_rect_dst.x+mapping_rect_dst.width) {
-                if(mouse.x > mapping_rect_dst.x)
-                    camera[i].x = mouse.x;
-                else
-                    camera[i].x = mapping_rect_dst.x;
-            }
-            else {
-                camera[i].x = mapping_rect_dst.x+mapping_rect_dst.width;
-            }
-            if(mouse.y < mapping_rect_dst.y+mapping_rect_dst.height) {
-                if(mouse.y > mapping_rect_dst.y)
-                    camera[i].y = mouse.y;
-                else
-                    camera[i].y = mapping_rect_dst.y;
-            }
-            else {
-                camera[i].y = mapping_rect_dst.y+mapping_rect_dst.height;
-            }
 
-            camera_save.getVertices().at(i).x = (camera[i].x-mapping_rect_dst.x)/mapping_rect_dst.width;
-            camera_save.getVertices().at(i).y = (camera[i].y-mapping_rect_dst.y)/mapping_rect_dst.height;
+            cam_changed = true;
+
+            camera[i].x = mouse.x;
+            camera[i].y = mouse.y;
+
+            camera_save[i].x = (camera[i].x-mapping_rect_dst.x)/mapping_rect_dst.width;
+            camera_save[i].y = (camera[i].y-mapping_rect_dst.y)/mapping_rect_dst.height;
 
         }
+    }
+    if(cam_changed) {
+        MappingController::getInstance().getProjector(0)->setCamera(camera_save);
+        ServerController::getInstance().sendMappingQuads();
     }
 
     return CustomTab::mouseDragged(args);

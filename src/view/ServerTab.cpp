@@ -35,6 +35,10 @@ ServerTab::ServerTab():CustomTab() {
 
 }
 
+ServerTab::~ServerTab() {
+    save_btn.removeListener(&Traces::get(), &Traces::saveServer);
+}
+
 void ServerTab::update() {
     if(control_rect.position != this->getPosition()) {
         control_rect.position = this->getPosition();

@@ -29,8 +29,7 @@ namespace guardacaso {
 
     protected:
         ControlWindow();
-        ~ControlWindow() {
-        }
+        ~ControlWindow();
 
     private:
 

@@ -34,8 +34,10 @@ PathsTab::PathsTab():CustomTab()
 
     active_path = -1;
 
-    ofxPanel::registerMouseEvents();
+}
 
+PathsTab::~PathsTab() {
+    save_btn.removeListener(&Visuals::get(), &Visuals::savePaths);
 }
 
 void PathsTab::setGui() {

@@ -115,22 +115,7 @@ void ServerController::processMsg(string client_id, string action, string value)
                     c->setColor(ofColor(atoi(col[0].c_str()),atoi(col[1].c_str()), atoi(col[2].c_str())));
                 }
                 if(action == "getmapping") {
-                    stringstream msg0;
-                    msg0 << Visuals::get().contentWidth() << "|" << Visuals::get().contentHeight();
-                    send(client_name, "mappingsize", msg0.str());
-                    for(int i = MappingController::getInstance().getProjector(0)->quadCount()-1; i >= 0; i--) {
-                        MappingQuad_ptr mq = MappingController::getInstance().getProjector(0)->getQuad(i);
-                        ofPolyline line = Visuals::get().outlinesRaw()->at(i);
-                        stringstream msg;
-                        msg << mq->id << ";" << mq->nature << ";";
-                        for(uint j = 0; j < line.getVertices().size(); j++) {
-                            if(j > 0) {
-                                msg << ",";
-                            }
-                            msg << line.getVertices().at(j).x << "|" << line.getVertices().at(j).y;
-                        }
-                        send(client_name, "newmappingform", msg.str());
-                    }
+                    sendMappingQuads();
                 }
             }
 
@@ -142,6 +127,27 @@ void ServerController::processMsg(string client_id, string action, string value)
         }
     }
 
+}
+
+void ServerController::sendMappingQuads() {
+    send(client_name, "clearmappingforms", "");
+    stringstream msg0;
+    msg0 << Visuals::get().contentWidth() << "|" << Visuals::get().contentHeight();
+    send(client_name, "mappingsize", msg0.str());
+    for(int i = MappingController::getInstance().getProjector(0)->quadCount()-1; i >= 0; i--) {
+        MappingQuad_ptr mq = MappingController::getInstance().getProjector(0)->getQuad(i);
+        ofPolyline line = Visuals::get().outlinesRaw()->at(i);
+        stringstream msg;
+        msg << mq->id << ";" << mq->nature << ";";
+        for(uint j = 0; j < line.getVertices().size(); j++) {
+            if(j > 0) {
+                msg << ",";
+            }
+            ofPoint p = MappingController::getInstance().getProjector(0)->inCameraView(line.getVertices().at(j));
+            msg << p.x << "|" << p.y;
+        }
+        send(client_name, "newmappingform", msg.str());
+    }
 }
 
 string ServerController::read() {
