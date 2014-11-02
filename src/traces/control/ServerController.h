@@ -55,6 +55,9 @@ namespace guardacaso {
             float reconnect_time;
             float last_reconnect;
 
+            int mapping_sent;
+            int mapping_time;
+
             ofParameter<int> port;
             ofParameter<string> ip;
             string client_name;

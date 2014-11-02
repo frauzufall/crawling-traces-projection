@@ -50,11 +50,16 @@ class DrawingObject : public LightObject {
         ofPolyline future_line;
         vector<uint> future_timestamp;
 
-        float range;
+        float range_max;
+        float range_min;
         float speed;
 
         float pulsestart;
         float pulseval;
+
+        bool connect_to_itself;
+        bool connect_to_others;
+        int max_connections;
 
         void saveTimestamps(string path);
         void saveNetTimestamps(string path);

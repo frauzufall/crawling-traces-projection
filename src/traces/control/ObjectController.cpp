@@ -19,9 +19,9 @@ ObjectController::ObjectController() {
 void ObjectController::setup() {
     client_speed = 0.3;
     wheel_speed = 0.7;
-    client_range = 0.6;
+    client_range_max = 0.6;
     wheel_range = 0.1;
-    wheel_range = client_range;
+    wheel_range = client_range_max;
     max_lines = 100000;
     max_lines_percent = 0.5;
     pulse_time_percent = 0.2;
@@ -29,6 +29,8 @@ void ObjectController::setup() {
     fadeout_time_idle = 0.005;
     fadeout_time_gone = 0.005;
     max_fadeout_time = 3600;
+    connect_to_itself = false;
+    connect_to_others = true;
 }
 
 void ObjectController::update() {
@@ -39,6 +41,7 @@ void ObjectController::update() {
     if(lc > getMaxLinecount()) {
         DrawingObject_ptr inactive = getMostInactiveClient();
         if(inactive) {
+            inactive->closeAndSave();
             inactive->clearLines();
             if(inactive->getId()=="wheels") {
                 inactive->setNewRandomColor();
@@ -250,12 +253,20 @@ DrawingObject_ptr ObjectController::getMostInactiveClient() {
     return c_last;
 }
 
-ofParameter<float> ObjectController::getDrawingRange() {
-    return client_range;
+ofParameter<float> ObjectController::getDrawingRangeMax() {
+    return client_range_max;
 }
 
-void ObjectController::setDrawingRange(float range) {
-    client_range = range;
+void ObjectController::setDrawingRangeMax(float range) {
+    client_range_max = range;
+}
+
+ofParameter<float> ObjectController::getDrawingRangeMin() {
+    return client_range_min;
+}
+
+void ObjectController::setDrawingRangeMin(float range) {
+    client_range_min = range;
 }
 
 ofParameter<float> ObjectController::getDrawingRangeWheels() {
@@ -336,4 +347,32 @@ void ObjectController::setFadeoutTimeGone(float time) {
 
 ofParameter<float> ObjectController::getMaxFadeoutTime() {
     return max_fadeout_time;
+}
+
+vector<DrawingObject_ptr> ObjectController::getDrawingObjects() {
+    return draw_obj;
+}
+
+void ObjectController::setConnectToItself(bool connect) {
+    connect_to_itself = connect;
+}
+
+ofParameter<bool> ObjectController::getConnectToItself() {
+    return connect_to_itself;
+}
+
+void ObjectController::setConnectToOthers(bool connect) {
+    connect_to_others = connect;
+}
+
+ofParameter<bool> ObjectController::getConnectToOthers() {
+    return connect_to_others;
+}
+
+void ObjectController::setMaxConnections(int num) {
+    max_connections = num;
+}
+
+ofParameter<int> ObjectController::getMaxConnections() {
+    return max_connections;
 }

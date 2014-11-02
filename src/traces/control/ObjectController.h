@@ -24,8 +24,10 @@ class ObjectController {
         ofParameter<float> getDrawingSpeed();
         void setDrawingSpeedWheels(float speed);
         ofParameter<float> getDrawingSpeedWheels();
-        void setDrawingRange(float range);
-        ofParameter<float> getDrawingRange();
+        void setDrawingRangeMax(float range);
+        ofParameter<float> getDrawingRangeMax();
+        void setDrawingRangeMin(float range);
+        ofParameter<float> getDrawingRangeMin();
         void setDrawingRangeWheels(float range);
         ofParameter<float> getDrawingRangeWheels();
         int getMaxLinecount();
@@ -39,6 +41,12 @@ class ObjectController {
         ofParameter<float> getFadeoutTimeGone();
         void setFadeoutTimeGone(float time);
         ofParameter<float> getMaxFadeoutTime();
+        void setConnectToItself(bool connect);
+        ofParameter<bool> getConnectToItself();
+        void setConnectToOthers(bool connect);
+        ofParameter<bool> getConnectToOthers();
+        void setMaxConnections(int num);
+        ofParameter<int> getMaxConnections();
 
         ofPoint getCurrentPulsingPoint();
 
@@ -68,7 +76,8 @@ class ObjectController {
 
         ofParameter<float> client_speed;
         ofParameter<float> wheel_speed;
-        ofParameter<float> client_range;
+        ofParameter<float> client_range_max;
+        ofParameter<float> client_range_min;
         ofParameter<float> wheel_range;
         ofParameter<float> max_lines_percent;
         int max_lines;
@@ -77,6 +86,9 @@ class ObjectController {
         ofParameter<float> fadeout_time_idle;
         ofParameter<float> fadeout_time_gone;
         float max_fadeout_time;
+        ofParameter<bool> connect_to_itself;
+        ofParameter<bool> connect_to_others;
+        ofParameter<int> max_connections;
         DrawingObject_ptr pulsing_obj;
 
         vector<FakeObject_ptr> fake_objs;

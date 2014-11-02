@@ -32,9 +32,25 @@ void Traces::setup() {
     setupServer();
 }
 
+void Traces::setup(string ip, int port) {
+    ObjectController::getInstance().setup();
+    setupServer(ip, port);
+}
+
 void Traces::update() {
     ServerController::getInstance().update();
     ObjectController::getInstance().update();
+}
+
+void Traces::setupServer(string ip, int port){
+    ofxXmlSettings_ptr xml = ofxXmlSettings_ptr(new ofxXmlSettings());
+    xml->clear();
+    if( xml->loadFile(xml_server) ){
+        reloadServer(xml, ip, port);
+    } else{
+        cout << "unable to load xml file " << xml_server << endl;
+    }
+	
 }
 
 void Traces::setupServer(){
@@ -45,27 +61,23 @@ void Traces::setupServer(){
     } else{
         cout << "unable to load xml file " << xml_server << endl;
     }
-	
+
 }
 
-void Traces::reloadServer(ofxXmlSettings_ptr xml) {
+void Traces::reloadServer(ofxXmlSettings_ptr xml, string ip, int port) {
 
     xml->pushTag("traces", 0);
 
         bool active = xml->getAttribute("server", "active", (int)false);
         ServerController::getInstance().setActive(active);
 
-        xml->pushTag("server", 0);
+        ServerController::getInstance().setup(ip,port,client_id);
 
-            string ip = xml->getValue("ip", "0.0.0.0");
-
-            int port = xml->getValue("port", 41234);
-
-            ServerController::getInstance().setup(ip,port,client_id);
-
-        xml->popTag();
-
-        ObjectController::getInstance().setDrawingRange(xml->getValue("range",0.3));
+        ObjectController::getInstance().setDrawingRangeMax(xml->getValue("range_max",0.3));
+        ObjectController::getInstance().setDrawingRangeMin(xml->getValue("range_min",0.3));
+        ObjectController::getInstance().setConnectToItself(xml->getValue("connect_itself",0));
+        ObjectController::getInstance().setConnectToOthers(xml->getValue("connect_others",1));
+        ObjectController::getInstance().setMaxConnections(xml->getValue("max_connect",10));
         ObjectController::getInstance().setDrawingSpeed(xml->getValue("speed",0.3));
         ObjectController::getInstance().setPulseTime(xml->getValue("pulsetime",0.2));
         ObjectController::getInstance().setMaxLines(xml->getValue("maxlines",0.5));
@@ -73,6 +85,21 @@ void Traces::reloadServer(ofxXmlSettings_ptr xml) {
         ObjectController::getInstance().setFadeoutTimeGone(xml->getValue("fadeout-gone",0.5));
 
     xml->popTag();
+
+}
+
+void Traces::reloadServer(ofxXmlSettings_ptr xml) {
+
+    xml->pushTag("traces", 0);
+    xml->pushTag("server", 0);
+
+        string ip = xml->getValue("ip", "0.0.0.0");
+        int port = xml->getValue("port", 41234);
+
+    xml->popTag();
+    xml->popTag();
+
+    reloadServer(xml, ip, port);
 
 }
 
@@ -98,7 +125,11 @@ void Traces::saveServer() {
         xml.popTag();
 
         xml.addValue("speed", ObjectController::getInstance().getDrawingSpeed());
-        xml.addValue("range", ObjectController::getInstance().getDrawingRange());
+        xml.addValue("range_max", ObjectController::getInstance().getDrawingRangeMax());
+        xml.addValue("range_min", ObjectController::getInstance().getDrawingRangeMin());
+        xml.addValue("connect_itself", ObjectController::getInstance().getConnectToItself());
+        xml.addValue("connect_others", ObjectController::getInstance().getConnectToOthers());
+        xml.addValue("max_connect", ObjectController::getInstance().getMaxConnections());
         xml.addValue("pulsetime", ObjectController::getInstance().getPulseTime());
         xml.addValue("maxlines", ObjectController::getInstance().getMaxLines());
         xml.addValue("fadeout-idle", ObjectController::getInstance().getFadeoutTimeIdle());

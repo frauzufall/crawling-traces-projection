@@ -31,7 +31,8 @@ void DrawingObject::setup(string id) {
     please_redraw = false;
     pulseval = 0;
     pulsestart = 0;
-    range = 0;
+    range_max = 0;
+    range_min = 0;
     backup_line.clear();
     line.clear();
     history_line.clear();
@@ -42,9 +43,14 @@ void DrawingObject::setup(string id) {
 
 void DrawingObject::update() {
 
-    range = 100*ObjectController::getInstance().getDrawingRange();
+    range_max = 100*ObjectController::getInstance().getDrawingRangeMax();
+    range_min = 100*ObjectController::getInstance().getDrawingRangeMin();
     if(getId() == "wheels")
-        range = 100*ObjectController::getInstance().getDrawingRangeWheels();
+        range_max = 100*ObjectController::getInstance().getDrawingRangeWheels();
+
+    connect_to_itself = ObjectController::getInstance().getConnectToItself();
+    connect_to_others = ObjectController::getInstance().getConnectToOthers();
+    max_connections = ObjectController::getInstance().getMaxConnections();
 
     speed = ObjectController::getInstance().getDrawingSpeed();
     if(getId() == "wheels")
@@ -57,7 +63,8 @@ void DrawingObject::setPos(ofPoint p) {
 
     ofPoint p_d = p;
 
-    int max_distance = range;
+    int max_distance = range_max;
+    int min_distance = range_min;
 
     last_pos = pos;
     speed = speed<0.01?0.01:speed;
@@ -97,16 +104,60 @@ void DrawingObject::setPos(ofPoint p) {
     possent << _id << ";" << pos_incam.x << "|" << pos_incam.y;
     ServerController::getInstance().send(ServerController::getInstance().getClientName(), "lineto", possent.str());
 
-    //create connection lines to existing drawing points
-    for(uint i = 0; i < backup_line.getVertices().size(); i++) {
-        ofPoint p_tmp = backup_line.getVertices().at(i);
-        if(p_tmp.distance(pos) < max_distance) {
-            line.addVertex(p_tmp);
-            line.addVertex(pos);
-            history_net_line.addVertex(p_tmp);
-            history_net_timestamp.push_back(timestamp);
-            history_net_line.addVertex(pos);
-            history_net_timestamp.push_back(timestamp);
+    //check if point matches one of the line points other than the last one
+    //if this is the case, the point was already added and no connection lines need to be drawn (they are already present)
+    bool point_in_line = false;
+    for(uint i = 0; i < backup_line.getVertices().size()-1; i++) {
+       if(pos == backup_line.getVertices().at(i)) {
+           point_in_line = true;
+           cout << "point in line with id " << this->getId() << endl;
+           break;
+       }
+    }
+
+    if(!point_in_line) {
+        //create connection lines to existing drawing points
+        int con_num = 0;
+        if(connect_to_others) {
+            for(uint j = 0; j < ObjectController::getInstance().getDrawingObjects().size() && con_num < max_connections; j++) {
+                if(ObjectController::getInstance().getDrawingObjects().at(j)->getId() != this->getId()) {
+                    ofPolyline l = ObjectController::getInstance().getDrawingObjects().at(j)->getLine();
+                    for(uint i = 0; i < l.getVertices().size(); i++) {
+                        ofPoint p_tmp = l.getVertices().at(i);
+                        float distance = p_tmp.distance(pos);
+                        if(distance < min_distance) {
+                            continue;
+                        }
+                        if(distance < max_distance) {
+                            line.addVertex(p_tmp);
+                            line.addVertex(pos);
+                            history_net_line.addVertex(p_tmp);
+                            history_net_timestamp.push_back(timestamp);
+                            history_net_line.addVertex(pos);
+                            history_net_timestamp.push_back(timestamp);
+                            con_num++;
+                        }
+                    }
+                }
+            }
+        }
+        if(connect_to_itself) {
+            for(uint i = 0; i < backup_line.getVertices().size() && con_num < max_connections; i++) {
+                ofPoint p_tmp = backup_line.getVertices().at(i);
+                float distance = p_tmp.distance(pos);
+                if(distance < min_distance) {
+                    continue;
+                }
+                if(distance < max_distance) {
+                    line.addVertex(p_tmp);
+                    line.addVertex(pos);
+                    history_net_line.addVertex(p_tmp);
+                    history_net_timestamp.push_back(timestamp);
+                    history_net_line.addVertex(pos);
+                    history_net_timestamp.push_back(timestamp);
+                    con_num++;
+                }
+            }
         }
     }
 
@@ -276,9 +327,9 @@ void DrawingObject::closeAndSave() {
         cout << "DRAWINGOBJECT::saving object " << unique_id.str() << "..." << endl;
 
         Stuff::saveLineAsSvg(svg_path.str(),history_line,Visuals::get().outputWidth(), Visuals::get().outputHeight(),getColor());
-        Stuff::saveLineAsSvg(svg_net_path.str(),history_net_line,Visuals::get().outputWidth(), Visuals::get().outputHeight(),getColor());
+        //Stuff::saveLineAsSvg(svg_net_path.str(),history_net_line,Visuals::get().outputWidth(), Visuals::get().outputHeight(),getColor());
         saveTimestamps(timestamp_path.str());
-        saveNetTimestamps(timestamp_net_path.str());
+        //saveNetTimestamps(timestamp_net_path.str());
     }
 
 }

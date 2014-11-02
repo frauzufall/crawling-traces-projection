@@ -23,7 +23,11 @@ ServerTab::ServerTab():CustomTab() {
     add(ObjectController::getInstance().getMaxLines().set("Max. lines", ObjectController::getInstance().getMaxLines(), 0, 1));
     add(ObjectController::getInstance().getPulseTime().set("Pulse time", ObjectController::getInstance().getPulseTime(), 0, 1));
     add(ObjectController::getInstance().getDrawingSpeed().set("Speed", ObjectController::getInstance().getDrawingSpeed(), 0, 1));
-    add(ObjectController::getInstance().getDrawingRange().set("Range", ObjectController::getInstance().getDrawingRange(), 0, 1));
+    add(ObjectController::getInstance().getDrawingRangeMax().set("Range max", ObjectController::getInstance().getDrawingRangeMax(), 0, 1));
+    add(ObjectController::getInstance().getDrawingRangeMin().set("Range min", ObjectController::getInstance().getDrawingRangeMin(), 0, 1));
+    add(ObjectController::getInstance().getConnectToItself().set("connect to itself", ObjectController::getInstance().getConnectToItself(), 0, 1));
+    add(ObjectController::getInstance().getConnectToOthers().set("connect to others", ObjectController::getInstance().getConnectToOthers(), 0, 1));
+    add(ObjectController::getInstance().getMaxConnections().set("max connections", ObjectController::getInstance().getMaxConnections(),0,100));
     add(ObjectController::getInstance().getFadeoutTimeIdle().set("Fadeout idle", ObjectController::getInstance().getFadeoutTimeIdle(), 0, 1));
     add(ObjectController::getInstance().getFadeoutTimeGone().set("Fadeout gone", ObjectController::getInstance().getFadeoutTimeGone(), 0, 1));
     add(timeout_gone.set("gone timeout: ", timeout_gone));
@@ -142,9 +146,9 @@ void ServerTab::drawServerStatus(ofRectangle shape) {
         ofDrawRectangle(margin,margin-status_quad/2,status_quad, status_quad);
         stringstream obj_msg;
         obj_msg << con_msg.str();
-        obj_msg << "Drawing Objects: ";
-        obj_msg << ObjectController::getInstance().getClients().size() << ". ";
-        obj_msg << "Lines max.: " << ObjectController::getInstance().getMaxLinecount();
+        obj_msg << ObjectController::getInstance().getClients().size() << " drawing objects,";
+        obj_msg << ObjectController::getInstance().getTotalClientLineCount() << " lines ";
+        obj_msg << "(max. " << ObjectController::getInstance().getMaxLinecount() << ")";
         ofSetColor(255);
         TTF.drawString(obj_msg.str(),status_quad+margin*2,margin*3/2);
 

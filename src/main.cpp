@@ -4,7 +4,7 @@
 typedef std::shared_ptr<AppStart> AppStart_ptr;
 
 //========================================================================
-int main(){
+int main(int argc, char *argv[]){
 
     ofAppGLFWWindow window;
 
@@ -16,6 +16,9 @@ int main(){
     ofSetupOpenGL(&window, w,h, OF_WINDOW);
 
     AppStart_ptr app = AppStart_ptr(new AppStart());
+
+    app->arguments = vector<string>(argv, argv + argc);
+
     ofRunApp(app.get());
 
 }

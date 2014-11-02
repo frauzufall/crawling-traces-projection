@@ -5,7 +5,7 @@
 class AppStart : public ofBaseApp {
 
 public:
-    AppStart() {}
+    AppStart();
     ~AppStart() {
     }
     void setup();
@@ -19,6 +19,8 @@ public:
     void mousePressed(int x, int y, int button);
     void mouseReleased(int x, int y, int button);
     void windowResized(int w, int h);
+
+    vector<string> arguments;
 
 private:
 

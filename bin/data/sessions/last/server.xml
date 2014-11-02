@@ -1,13 +1,16 @@
 <traces>
     <server active="1">
-		<ip>0.0.0.0</ip>
-		<!--<ip>178.62.212.160</ip>-->
-		<port>1234</port>
+        <ip>178.62.212.160</ip>
+        <port>1234</port>
     </server>
     <speed>0.094999999</speed>
-    <range>0.150000006</range>
+    <range_max>0.194999993</range_max>
+    <range_min>0.140000001</range_min>
+    <connect_itself>1</connect_itself>
+    <connect_others>0</connect_others>
+    <max_connect>10</max_connect>
     <pulsetime>0.200000003</pulsetime>
-    <maxlines>0.500000000</maxlines>
+    <maxlines>0.769999981</maxlines>
     <fadeout-idle>0.354999989</fadeout-idle>
     <fadeout-gone>0.335000008</fadeout-gone>
 </traces>

@@ -22,6 +22,8 @@ ServerController::ServerController() {
     ip="";
     port = 8080;
     client_name="";
+    mapping_sent = 0;
+    mapping_time = 100;
 
 }
 
@@ -130,23 +132,30 @@ void ServerController::processMsg(string client_id, string action, string value)
 }
 
 void ServerController::sendMappingQuads() {
-    send(client_name, "clearmappingforms", "");
-    stringstream msg0;
-    msg0 << Visuals::get().contentWidth() << "|" << Visuals::get().contentHeight();
-    send(client_name, "mappingsize", msg0.str());
-    for(int i = MappingController::getInstance().getProjector(0)->quadCount()-1; i >= 0; i--) {
-        MappingQuad_ptr mq = MappingController::getInstance().getProjector(0)->getQuad(i);
-        ofPolyline line = Visuals::get().outlinesRaw()->at(i);
-        stringstream msg;
-        msg << mq->id << ";" << mq->nature << ";";
-        for(uint j = 0; j < line.getVertices().size(); j++) {
-            if(j > 0) {
-                msg << ",";
+
+    //ensure that mapping gets not sent too often (breaks connection of control webpage)
+    int currentTime = ofGetElapsedTimeMillis();
+    if(currentTime-mapping_sent > mapping_time) {
+        mapping_sent = currentTime;
+
+        send(client_name, "clearmappingforms", "");
+        stringstream msg0;
+        msg0 << Visuals::get().contentWidth() << "|" << Visuals::get().contentHeight();
+        send(client_name, "mappingsize", msg0.str());
+        for(int i = MappingController::getInstance().getProjector(0)->quadCount()-1; i >= 0; i--) {
+            MappingQuad_ptr mq = MappingController::getInstance().getProjector(0)->getQuad(i);
+            ofPolyline line = Visuals::get().outlinesRaw()->at(i);
+            stringstream msg;
+            msg << mq->id << ";" << mq->nature << ";";
+            for(uint j = 0; j < line.getVertices().size(); j++) {
+                if(j > 0) {
+                    msg << ",";
+                }
+                ofPoint p = MappingController::getInstance().getProjector(0)->inCameraView(line.getVertices().at(j));
+                msg << p.x << "|" << p.y;
             }
-            ofPoint p = MappingController::getInstance().getProjector(0)->inCameraView(line.getVertices().at(j));
-            msg << p.x << "|" << p.y;
+            send(client_name, "newmappingform", msg.str());
         }
-        send(client_name, "newmappingform", msg.str());
     }
 }
 

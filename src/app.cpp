@@ -12,12 +12,16 @@ using namespace guardacaso;
 
 #define USETRACES true
 
+AppStart::AppStart() {
+    arguments.resize(0);
+}
+
 //--------------------------------------------------------------
 void AppStart::setup(){
 
     ofSetLogLevel(OF_LOG_FATAL_ERROR);
 
-    ofSetFrameRate(60);
+    ofSetFrameRate(20);
 
     ofBackground(0);
 
@@ -25,7 +29,12 @@ void AppStart::setup(){
 
     ofPushMatrix();
     ofPushStyle();
-    Traces::get().setup();
+    if(arguments.size() == 3) {
+        Traces::get().setup(arguments.at(1), ofToInt(arguments.at(2)));
+    }
+    else {
+        Traces::get().setup();
+    }
     Visuals::get().setupMapping();
     Visuals::get().setupPaths();
     Visuals::get().setupOther();

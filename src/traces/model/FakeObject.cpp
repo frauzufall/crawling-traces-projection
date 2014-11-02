@@ -74,7 +74,7 @@ FakeObject::FakeObject(string future, string id) {
 
 void FakeObject::update() {
 
-    range = 100*ObjectController::getInstance().getDrawingRange();
+    range = 100*ObjectController::getInstance().getDrawingRangeMax();
 
     speed = ObjectController::getInstance().getDrawingSpeed();
 
