@@ -84,6 +84,8 @@ void FormMapping::updateForms(int projector_id) {
 
 void FormMapping::update() {
 
+    use_cam = MappingController::getInstance().getUsingCam();
+
     if(control_rect.position != this->getPosition()) {
         control_rect.position = this->getPosition();
         control_rect.setWidth(this->getWidth());
@@ -173,14 +175,16 @@ void FormMapping::draw(ofPoint pos, int projector_id) {
         }
     }
 
-    //draw camera field
-    ofNoFill();
-    ofSetColor(cam_col,255);
-    ofBeginShape();
-    for(uint i = 0; i < camera.size(); i++) {
-        ofVertex(camera[i].x, camera[i].y);
+    if(use_cam) {
+        //draw camera field
+        ofNoFill();
+        ofSetColor(cam_col,255);
+        ofBeginShape();
+        for(uint i = 0; i < camera.size(); i++) {
+            ofVertex(camera[i].x, camera[i].y);
+        }
+        ofEndShape(true);
     }
-    ofEndShape(true);
 
     //DRAW CIRCLES
 
@@ -203,13 +207,15 @@ void FormMapping::draw(ofPoint pos, int projector_id) {
     else ofNoFill();
     ofDrawCircle(start_point.x, start_point.y,13);
 
-    ofSetColor(cam_col,200);
-    for(uint i = 0; i < camera.size(); i++) {
-        draggableVertex v = camera.at(i);
-        if(v.bOver)
-            ofFill();
-        else ofNoFill();
-        ofDrawCircle(v.x, v.y,8);
+    if(use_cam) {
+        ofSetColor(cam_col,200);
+        for(uint i = 0; i < camera.size(); i++) {
+            draggableVertex v = camera.at(i);
+            if(v.bOver)
+                ofFill();
+            else ofNoFill();
+            ofDrawCircle(v.x, v.y,8);
+        }
     }
 
 }
@@ -238,11 +244,13 @@ bool FormMapping::mouseMoved(ofMouseEventArgs& args) {
     else
         start_point.bOver = false;
 
-    for (uint i = 0; i < camera.size(); i++){
-        if (mouse.distance(camera[i].asPoint()) < camera[i].radius){
-            camera[i].bOver = true;
-        } else {
-            camera[i].bOver = false;
+    if(use_cam) {
+        for (uint i = 0; i < camera.size(); i++){
+            if (mouse.distance(camera[i].asPoint()) < camera[i].radius){
+                camera[i].bOver = true;
+            } else {
+                camera[i].bOver = false;
+            }
         }
     }
 
@@ -339,25 +347,27 @@ bool FormMapping::mouseDragged(ofMouseEventArgs &args) {
 
     }
 
-    ofPoint camera_save[4] = MappingController::getInstance().getProjector(0)->getCamera();
-    bool cam_changed = false;
-    for (uint i = 0; i < 4; i++) {
+    if(use_cam) {
+        ofPoint camera_save[4] = MappingController::getInstance().getProjector(0)->getCamera();
+        bool cam_changed = false;
+        for (uint i = 0; i < 4; i++) {
 
-        if (camera[i].bBeingDragged == true){
+            if (camera[i].bBeingDragged == true){
 
-            cam_changed = true;
+                cam_changed = true;
 
-            camera[i].x = mouse.x;
-            camera[i].y = mouse.y;
+                camera[i].x = mouse.x;
+                camera[i].y = mouse.y;
 
-            camera_save[i].x = (camera[i].x-mapping_rect_dst.x)/mapping_rect_dst.width;
-            camera_save[i].y = (camera[i].y-mapping_rect_dst.y)/mapping_rect_dst.height;
+                camera_save[i].x = (camera[i].x-mapping_rect_dst.x)/mapping_rect_dst.width;
+                camera_save[i].y = (camera[i].y-mapping_rect_dst.y)/mapping_rect_dst.height;
 
+            }
         }
-    }
-    if(cam_changed) {
-        MappingController::getInstance().getProjector(0)->setCamera(camera_save);
-        ServerController::getInstance().sendMappingQuads();
+        if(cam_changed) {
+            MappingController::getInstance().getProjector(0)->setCamera(camera_save);
+            ServerController::getInstance().sendMappingQuads();
+        }
     }
 
     return CustomTab::mouseDragged(args);
@@ -384,11 +394,13 @@ bool FormMapping::mousePressed(ofMouseEventArgs& args) {
     else
         start_point.bBeingDragged = false;
 
-    for (uint i = 0; i < camera.size(); i++) {
-        if (mouse.distance(camera[i].asPoint()) < camera[i].radius){
-            camera[i].bBeingDragged = true;
-        } else {
-            camera[i].bBeingDragged = false;
+    if(use_cam) {
+        for (uint i = 0; i < camera.size(); i++) {
+            if (mouse.distance(camera[i].asPoint()) < camera[i].radius){
+                camera[i].bBeingDragged = true;
+            } else {
+                camera[i].bBeingDragged = false;
+            }
         }
     }
 
@@ -403,8 +415,10 @@ bool FormMapping::mouseReleased(ofMouseEventArgs &args) {
         }
     }
     start_point.bBeingDragged = false;
-    for (uint i = 0; i < camera.size(); i++){
-        camera[i].bBeingDragged = false;
+    if(use_cam) {
+        for (uint i = 0; i < camera.size(); i++){
+            camera[i].bBeingDragged = false;
+        }
     }
 
     return CustomTab::mouseReleased(args);

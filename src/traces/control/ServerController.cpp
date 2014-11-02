@@ -151,7 +151,10 @@ void ServerController::sendMappingQuads() {
                 if(j > 0) {
                     msg << ",";
                 }
-                ofPoint p = MappingController::getInstance().getProjector(0)->inCameraView(line.getVertices().at(j));
+                ofPoint p = line.getVertices().at(j);
+                if(MappingController::getInstance().getUsingCam()) {
+                    p = MappingController::getInstance().getProjector(0)->inCameraView(p);
+                }
                 msg << p.x << "|" << p.y;
             }
             send(client_name, "newmappingform", msg.str());

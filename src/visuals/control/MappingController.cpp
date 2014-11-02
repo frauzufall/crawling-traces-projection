@@ -409,3 +409,11 @@ ofPoint MappingController::intersectionPointPolyline(ofPoint last_p, ofPoint nex
 void MappingController::clear() {
     projectors.clear();
 }
+
+void MappingController::setUsingCam(bool in_use) {
+    use_cam = in_use;
+}
+
+ofParameter<bool> MappingController::getUsingCam() {
+    return use_cam;
+}

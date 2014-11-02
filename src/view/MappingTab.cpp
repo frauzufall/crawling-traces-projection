@@ -36,7 +36,10 @@ MappingTab::MappingTab():CustomTab() {
 
     add(&save_btn);
     add(&import_svg_btn);
-    add(MappingController::getInstance().is_cal.set(
+    add(MappingController::getInstance().getUsingCam().set(
+            "Webcam",
+            MappingController::getInstance().getUsingCam()));
+    add(MappingController::getInstance().getCalibrating().set(
             "Calibrate",
             MappingController::getInstance().getCalibrating()));
     add(MappingController::getInstance().getCalBorder().set(

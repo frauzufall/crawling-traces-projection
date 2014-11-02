@@ -23,8 +23,11 @@ void DrawingObject::setup(string id) {
     //send starting position to server
     stringstream possent;
     Projector *p = MappingController::getInstance().getProjector(0);
-    ofPoint pos_incam = p->inCameraView(pos);
-    possent << _id << ";" << pos_incam.x << "|" << pos_incam.y;
+    ofPoint posres = pos;
+    if(MappingController::getInstance().getUsingCam()) {
+        posres = p->inCameraView(pos);
+    }
+    possent << _id << ";" << posres.x << "|" << posres.y;
     ServerController::getInstance().send(ServerController::getInstance().getClientName(), "moveto", possent.str());
 
     setPulsing();
@@ -100,8 +103,11 @@ void DrawingObject::setPos(ofPoint p) {
 
     Projector* pj = MappingController::getInstance().getProjector(0);
 
-    ofPoint pos_incam = pj->inCameraView(pos);
-    possent << _id << ";" << pos_incam.x << "|" << pos_incam.y;
+    ofPoint posres = pos;
+    if(MappingController::getInstance().getUsingCam()) {
+        posres = pj->inCameraView(pos);
+    }
+    possent << _id << ";" << posres.x << "|" << posres.y;
     ServerController::getInstance().send(ServerController::getInstance().getClientName(), "lineto", possent.str());
 
     //check if point matches one of the line points other than the last one

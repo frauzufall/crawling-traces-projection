@@ -35,12 +35,15 @@ namespace guardacaso {
             void                        setCalBorder(float border);
             void                        setCalGrey(int grey);
 
+            ofParameter<bool>           getUsingCam();
+            void                        setUsingCam(bool in_use);
+
             void                        clear();
 
             ofParameter<bool>           is_cal;
             ofParameter<float>          cal_border;
             ofParameter<int>            cal_grey;
-
+            ofParameter<bool>           use_cam;
 				
 		protected:
             MappingController();

@@ -223,6 +223,7 @@ void Visuals::reloadMapping(ofxXmlSettings_ptr xml) {
         }
 
         ofPoint camera[4] = MappingController::getInstance().getProjector(i)->getCamera();
+        MappingController::getInstance().setUsingCam(xml->getAttribute("camera","in_use",false,0));
         xml->pushTag("camera", 0);
             xml->pushTag("lefttop", 0);
                 camera[0].x = xml->getValue("x", 0.);
@@ -549,6 +550,7 @@ void Visuals::saveMapping(string path, string path_svg, string path_png) {
             xml.popTag();
 
             xml.addTag("camera");
+            xml.addAttribute("camera","in_use",MappingController::getInstance().getUsingCam(), 0);
             xml.pushTag("camera", 0);
             ofPoint camera[4] = MappingController::getInstance().getProjector(0)->getCamera();
                 xml.addTag("lefttop");

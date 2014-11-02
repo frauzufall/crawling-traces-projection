@@ -55,6 +55,8 @@ private:
 
     ofParameter<string> explanation;
 
+    bool use_cam;
+
 };
 
 }
