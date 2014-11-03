@@ -62,12 +62,15 @@ void ServerController::update() {
         if (isConnected()) {
 
             string message = read();
-            if(message!=""){
-                vector<string> msg_parts = ofSplitString(message,":");
-                if(msg_parts.size()==3) {
-                    processMsg(msg_parts[0],msg_parts[1],msg_parts[2]);
+            while(message != "") {
+                if(message!=""){
+                    vector<string> msg_parts = ofSplitString(message,":");
+                    if(msg_parts.size()==3) {
+                        processMsg(msg_parts[0],msg_parts[1],msg_parts[2]);
+                    }
+                    //cout << "SERVERCONTROLLER LOG: msg: " << message << endl;
                 }
-                //cout << "SERVERCONTROLLER LOG: msg: " << message << endl;
+                message = read();
             }
         }
     }
