@@ -1,0 +1,16 @@
+SERVERCONTROLLER: name of this instance of WALLS: walls_2014-10-25-22-07-38-874
+SERVERCONTROLLER: established tcp connection and successfully sent message
+OBJECTCONTROLLER: new client MNc_87qiz998PDjnAAAC
+SERVERCONTROLLER: asking for color of client MNc_87qiz998PDjnAAAC.
+OBJECTCONTROLLER: new client bSrqERODVNEdZuo_AAAD
+SERVERCONTROLLER: asking for color of client bSrqERODVNEdZuo_AAAD.
+OBJECTCONTROLLER: new client fM_1iTUI7WAnPmIAAAAE
+SERVERCONTROLLER: asking for color of client fM_1iTUI7WAnPmIAAAAE.
+OBJECTCONTROLLER: new client vGkP-H7I76xi6hBPAAAF
+SERVERCONTROLLER: asking for color of client vGkP-H7I76xi6hBPAAAF.
+OBJECTCONTROLLER: new client JeISw-X0o26o0fvYAAAG
+SERVERCONTROLLER: asking for color of client JeISw-X0o26o0fvYAAAG.
+OBJECTCONTROLLER: new client dlepW3vgANXylEaHAAAH
+SERVERCONTROLLER: asking for color of client dlepW3vgANXylEaHAAAH.
+OBJECTCONTROLLER: new client NfMhCuHxRFjpXQfQAAAI
+SERVERCONTROLLER: asking for color of client NfMhCuHxRFjpXQfQAAAI.

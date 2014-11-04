@@ -28,6 +28,7 @@ void DrawingObject::setup(string id) {
         posres = p->inCameraView(pos);
     }
     possent << _id << ";" << posres.x << "|" << posres.y;
+    //cout << "possent: " << possent.str() << endl;
     ServerController::getInstance().send(ServerController::getInstance().getClientName(), "moveto", possent.str());
 
     setPulsing();
@@ -108,6 +109,7 @@ void DrawingObject::setPos(ofPoint p) {
         posres = pj->inCameraView(pos);
     }
     possent << _id << ";" << posres.x << "|" << posres.y;
+    //cout << "possent: " << possent.str() << endl;
     ServerController::getInstance().send(ServerController::getInstance().getClientName(), "lineto", possent.str());
 
     //check if point matches one of the line points other than the last one
@@ -116,7 +118,7 @@ void DrawingObject::setPos(ofPoint p) {
     for(uint i = 0; i < backup_line.getVertices().size()-1; i++) {
        if(pos == backup_line.getVertices().at(i)) {
            point_in_line = true;
-           cout << "point in line with id " << this->getId() << endl;
+           //cout << "point in line with id " << this->getId() << endl;
            break;
        }
     }

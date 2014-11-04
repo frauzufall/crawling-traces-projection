@@ -119,6 +119,11 @@ void ServerController::processMsg(string client_id, string action, string value)
                     vector<string> col = ofSplitString(value,"|");
                     c->setColor(ofColor(atoi(col[0].c_str()),atoi(col[1].c_str()), atoi(col[2].c_str())));
                 }
+                if(action == "clear") {
+                    cout << client_id << endl;
+                    c->closeAndSave();
+                    c->clearLines();
+                }
                 if(action == "getmapping") {
                     sendMappingQuads();
                 }
@@ -185,8 +190,9 @@ string ServerController::readUdp() {
 }
 
 string ServerController::readTcp() {
-    if(!tcpConnection.isConnected())
+    if(!tcpConnection.isConnected()) {
         reconnect();
+    }
     return tcpConnection.receive();
 }
 
