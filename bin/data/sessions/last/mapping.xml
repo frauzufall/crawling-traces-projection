@@ -13,62 +13,6 @@
         <height>900</height>
     </control>
     <projector>
-        <quad type="window" frame="1">
-            <src>
-                <lefttop>
-                    <x>0.000000000</x>
-                    <y>0.000000000</y>
-                </lefttop>
-                <righttop>
-                    <x>1.000000000</x>
-                    <y>0.000000000</y>
-                </righttop>
-                <rightbottom>
-                    <x>1.000000000</x>
-                    <y>1.000000000</y>
-                </rightbottom>
-                <leftbottom>
-                    <x>0.000000000</x>
-                    <y>1.000000000</y>
-                </leftbottom>
-            </src>
-            <dst>
-                <lefttop>
-                    <x>0.333333343</x>
-                    <y>0.851851881</y>
-                </lefttop>
-                <righttop>
-                    <x>0.363425940</x>
-                    <y>0.851851881</y>
-                </righttop>
-                <rightbottom>
-                    <x>0.402777791</x>
-                    <y>0.962962985</y>
-                </rightbottom>
-                <leftbottom>
-                    <x>0.280092597</x>
-                    <y>0.959259272</y>
-                </leftbottom>
-            </dst>
-            <polyline>
-                <point>
-                    <x>0.333333343</x>
-                    <y>0.851851881</y>
-                </point>
-                <point>
-                    <x>0.363425940</x>
-                    <y>0.851851881</y>
-                </point>
-                <point>
-                    <x>0.402777791</x>
-                    <y>0.962962985</y>
-                </point>
-                <point>
-                    <x>0.280092597</x>
-                    <y>0.959259272</y>
-                </point>
-            </polyline>
-        </quad>
         <quad type="painting" frame="1">
             <src>
                 <lefttop>
@@ -90,44 +34,6 @@
             </src>
             <dst>
                 <lefttop>
-                    <x>0.071759261</x>
-                    <y>0.177777782</y>
-                </lefttop>
-                <righttop>
-                    <x>0.837962985</x>
-                    <y>0.185185179</y>
-                </righttop>
-                <rightbottom>
-                    <x>0.812500000</x>
-                    <y>0.988888860</y>
-                </rightbottom>
-                <leftbottom>
-                    <x>0.097222224</x>
-                    <y>0.955555558</y>
-                </leftbottom>
-            </dst>
-            <polyline>
-                <point>
-                    <x>0.071759261</x>
-                    <y>0.177777782</y>
-                </point>
-                <point>
-                    <x>0.837962985</x>
-                    <y>0.185185179</y>
-                </point>
-                <point>
-                    <x>0.812500000</x>
-                    <y>0.988888860</y>
-                </point>
-                <point>
-                    <x>0.097222224</x>
-                    <y>0.955555558</y>
-                </point>
-            </polyline>
-        </quad>
-        <quad type="window" frame="1">
-            <src>
-                <lefttop>
                     <x>0.000000000</x>
                     <y>0.000000000</y>
                 </lefttop>
@@ -143,47 +49,29 @@
                     <x>0.000000000</x>
                     <y>1.000000000</y>
                 </leftbottom>
-            </src>
-            <dst>
-                <lefttop>
-                    <x>0.261574060</x>
-                    <y>0.433333337</y>
-                </lefttop>
-                <righttop>
-                    <x>0.418981493</x>
-                    <y>0.425925940</y>
-                </righttop>
-                <rightbottom>
-                    <x>0.414351851</x>
-                    <y>0.692592621</y>
-                </rightbottom>
-                <leftbottom>
-                    <x>0.261574060</x>
-                    <y>0.692592621</y>
-                </leftbottom>
             </dst>
             <polyline>
                 <point>
-                    <x>0.261574060</x>
-                    <y>0.433333337</y>
+                    <x>0.000000000</x>
+                    <y>0.000000000</y>
                 </point>
                 <point>
-                    <x>0.418981493</x>
-                    <y>0.425925940</y>
+                    <x>1.000000000</x>
+                    <y>0.000000000</y>
                 </point>
                 <point>
-                    <x>0.414351851</x>
-                    <y>0.692592621</y>
+                    <x>1.000000000</x>
+                    <y>1.000000000</y>
                 </point>
                 <point>
-                    <x>0.261574060</x>
-                    <y>0.692592621</y>
+                    <x>0.000000000</x>
+                    <y>1.000000000</y>
                 </point>
             </polyline>
         </quad>
         <point type="start">
-            <x>0.203703701</x>
-            <y>0.807407379</y>
+            <x>0.122685187</x>
+            <y>0.622222245</y>
         </point>
         <camera in_use="0">
             <lefttop>

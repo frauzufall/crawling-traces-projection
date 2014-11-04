@@ -1,7 +1,5 @@
 <svg id="svg2" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.w3.org/2000/svg" width="1280.000000000" height="800.000000000" version="1.1" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/">
     <g id="layer1">
-        <path id="path0" fill="#000000" d="m426.667,681.482,38.5185,0,50.3703,88.8889,-157.037,-2.96295z" stroke="#000000"></path>
-        <path id="path1" fill="#ffffff" d="m91.8519,142.222,980.741,5.92592,-32.5927,642.963,-915.556,-26.6666z" stroke="#000000"></path>
-        <path id="path2" fill="#000000" d="m334.815,346.667,201.482,-5.9259,-5.92596,213.333,-195.556,0z" stroke="#000000"></path>
+        <path id="path0" fill="#ffffff" d="m0,0,1280,0,0,800,-1280,0z" stroke="#000000"></path>
     </g>
 </svg>
