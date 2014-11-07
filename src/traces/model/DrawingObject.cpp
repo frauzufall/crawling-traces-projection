@@ -2,6 +2,7 @@
 #include "ObjectController.h"
 #include "MappingController.h"
 #include "ServerController.h"
+#include "SoundController.h"
 #include "Traces.h"
 #include "Stuff.h"
 
@@ -64,6 +65,8 @@ void DrawingObject::update() {
 
 
 void DrawingObject::setPos(ofPoint p) {
+
+    SoundController::getInstance().triggerActivity();
 
     ofPoint p_d = p;
 
@@ -137,6 +140,7 @@ void DrawingObject::setPos(ofPoint p) {
                             continue;
                         }
                         if(distance < max_distance) {
+                            SoundController::getInstance().triggerActivity();
                             line.addVertex(p_tmp);
                             line.addVertex(pos);
                             history_net_line.addVertex(p_tmp);
@@ -157,6 +161,7 @@ void DrawingObject::setPos(ofPoint p) {
                     continue;
                 }
                 if(distance < max_distance) {
+                    SoundController::getInstance().triggerActivity();
                     line.addVertex(p_tmp);
                     line.addVertex(pos);
                     history_net_line.addVertex(p_tmp);
@@ -185,6 +190,7 @@ void DrawingObject::setPos(ofPoint p) {
                                                                              10);
                     for(uint k = 0; k < points_between.size(); k++) {
                         if(pos.distance(points_between[k]) < max_distance) {
+                            SoundController::getInstance().triggerActivity();
                             line.addVertex(points_between[k]);
                             line.addVertex(pos);
                             history_net_line.addVertex(points_between[k]);

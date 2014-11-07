@@ -20,6 +20,8 @@ public:
     void mouseReleased(int x, int y, int button);
     void windowResized(int w, int h);
 
+    void audioOut(float * input, int bufferSize, int nChannels);
+
     vector<string> arguments;
 
 private:

@@ -7,6 +7,7 @@
 #include "ObjectController.h"
 #include "PathsController.h"
 #include "ControlWindow.h"
+#include "SoundController.h"
 
 using namespace guardacaso;
 
@@ -35,6 +36,7 @@ void AppStart::setup(){
     else {
         Traces::get().setup();
     }
+    SoundController::getInstance().setup();
     Visuals::get().setupMapping();
     Visuals::get().setupPaths();
     Visuals::get().setupOther();
@@ -66,6 +68,7 @@ void AppStart::update(){
 
         Traces::get().update();
         Visuals::get().update();
+        SoundController::getInstance().update();
 
         if(ControlWindow::getInstance().isSetup())
             ControlWindow::getInstance().update();
@@ -162,3 +165,6 @@ void AppStart::windowResized(int w, int h){
 
 }
 
+void AppStart::audioOut(float * input, int bufferSize, int nChannels) {
+    SoundController::getInstance().audioOut(input, bufferSize, nChannels);
+}
