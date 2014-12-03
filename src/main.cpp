@@ -15,10 +15,10 @@ int main(int argc, char *argv[]){
 
     ofSetupOpenGL(&window, w,h, OF_WINDOW);
 
-    AppStart_ptr app = AppStart_ptr(new AppStart());
+    AppStart* app = new AppStart();
 
     app->arguments = vector<string>(argv, argv + argc);
 
-    ofRunApp(app.get());
+    ofRunApp(app);
 
 }
