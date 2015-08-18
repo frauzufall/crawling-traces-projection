@@ -2,6 +2,9 @@
 
 #include "ofMain.h"
 #include "ofxXmlSettings.h"
+#include "ObjectController.h"
+#include "ServerController.h"
+#include "MappingController.h"
 
 typedef std::shared_ptr<ofxXmlSettings> ofxXmlSettings_ptr;
 
@@ -11,26 +14,30 @@ namespace guardacaso {
 		
 		public:
 		
-            static Traces&	get();
-            void			setup();
-            void			setup(string ip, int port);
+            Traces();
+            ~Traces();
 
+            void			setup(MappingController* mc);
+            void			setup(MappingController* mc, string ip, int port);
             void			update();
             void			reloadServer(ofxXmlSettings_ptr xml);
             void			reloadServer(ofxXmlSettings_ptr xml, string ip, int port);
             void            saveServer();
             string          clientId();
             string          historyDir();
+            ServerController* getServerController();
+            ObjectController* getObjectController();
 
-            void simulateGroup(string group_dir);
-            void simulateGroups();
-
-		protected:
-
-            Traces();
-            ~Traces();
+            void simulateGroup(MappingController* mc, string group_dir);
+            void simulateGroups(MappingController* mc);
 			
         private:
+
+            void sendMapping(bool&);
+
+            ObjectController object_controller;
+            ServerController server_controller;
+            MappingController* mapping_controller;
 
             void			setupServer(string ip, int port);
             void			setupServer();

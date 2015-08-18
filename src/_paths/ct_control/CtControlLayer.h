@@ -12,14 +12,12 @@ public:
     ~CtControlLayer(){}
 	
 	void setup();
-	void update();
-    void draw(int path);
+    void update(ofPolylines_ptr lines, map<string, DrawingObject_ptr> &clients);
+    void draw(ofPolylines_ptr lines, map<string, DrawingObject_ptr> &clients);
     void idle();
     void resume();
 
 private:
-    float max_size;
-    float max_pulse_size_factor;
 
 };
 

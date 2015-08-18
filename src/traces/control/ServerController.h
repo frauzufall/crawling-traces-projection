@@ -2,38 +2,45 @@
 #pragma once
 
 #include "ofMain.h"
+#include "ofx2DMappingProjector.h"
 #include "ofxNetwork.h"
 #include <memory>
 
-using namespace std;
-
 namespace guardacaso {
 
-#define PROTOCOL_TCP 0
-#define PROTOCOL_UDP 1
+    struct ctMessage{
+        string client_id;
+        string action;
+        string value;
+    };
+
+    #define PROTOCOL_TCP 0
+    #define PROTOCOL_UDP 1
 
     class ServerController {
 
         public:
-            static ServerController&     getInstance();
+            ServerController();
+            ~ServerController() {
+        //                udpConnection.Close();
+        //                tcpConnection.close();
+            }
+
             void setup(string ip, int port, string name);
             void update();
-            bool isConnected();
+            ofParameter<bool>& isConnected();
             bool send(string client_id, string action, string value);
-            void sendMappingQuads();
+            void sendMappingQuads(ofx2DMappingProjector *projector);
             void askForColor(string client_id);
             ofParameter<bool> getActive();
             void setActive(bool _active);
-            ofParameter<int> getPort();
-            ofParameter<string> getIp();
+            ofParameter<int> &getPort();
+            ofParameter<string> &getIp();
             string getClientName();
+            void sendPosition(ctMessage& msg);
 
-        protected:
-            ServerController();
-            ~ServerController() {
-//                udpConnection.Close();
-//                tcpConnection.close();
-            }
+            ofEvent<ctMessage> messageReceived;
+            ofEvent<bool> mappingRequested;
 
         private:
 
@@ -62,7 +69,7 @@ namespace guardacaso {
             ofParameter<string> ip;
             string client_name;
 
-            bool connected;
+            ofParameter<bool> connected;
             ofParameter<bool> active;
 
             int protocol;

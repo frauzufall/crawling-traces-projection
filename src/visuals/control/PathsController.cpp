@@ -1,5 +1,4 @@
 #include "PathsController.h"
-#include "MappingController.h"
 
 #include "EmptyPaths.h"
 #include "CtPaintingLayer.h"
@@ -7,15 +6,11 @@
 
 using namespace guardacaso;
 
-PathsController& PathsController::getInstance() {
-    static PathsController instance;
-    return instance;
-}
+PathsController::PathsController() {}
 
-PathsController::PathsController() {
+void PathsController::setup(){
 
-    w = Visuals::get().outputWidth();
-    h = Visuals::get().outputHeight();
+    xml_paths = "sessions/last/paths.xml";
 
     paths.clear();
     active_path = 0;
@@ -42,26 +37,98 @@ PathsController::PathsController() {
 
 }
 
-void PathsController::update() {
+void PathsController::setupPaths(){
+    ofxXmlSettings_ptr xml = ofxXmlSettings_ptr(new ofxXmlSettings());
+    xml->clear();
+    if( xml->loadFile(xml_paths) ){
+        reloadPaths(xml);
+    }else{
+        cout << "unable to load xml file " << xml_paths << endl;
+    }
 
-    activePathChanged();
+}
+
+void PathsController::reloadPaths(ofPtr<ofxXmlSettings> xml) {
+
+    xml->pushTag("pathsconfig", 0);
+
+        for(unsigned int i = 0; i < paths.size(); i++){
+
+            CustomPaths_ptr p = getPath(i);
+
+            if(xml->getAttribute(p->getName(), "active", 0, 0)){
+                setActivePath(i);
+            }
+
+            xml->pushTag(p->getName(), 0);
+
+                xml->deserialize(p->getSettings());
+
+            xml->popTag();
+        }
+
+    xml->popTag();
+
+}
+
+void PathsController::savePaths() {
+
+    ofxXmlSettings xml;
+
+    xml.clear();
+
+    xml.addTag("pathsconfig");
+    xml.pushTag("pathsconfig", 0);
+
+        int d_num = xml.getNumTags("deck");
+
+        xml.addTag("deck");
+
+        xml.addAttribute("deck", "visible", 1, d_num);
+
+        xml.pushTag("deck", d_num);
+
+            CustomPaths_ptr p = getActivePath();
+
+            if(p){
+                xml.addTag(p->getName());
+                xml.pushTag(p->getName(), 0);
+
+                xml.serialize(p->getSettings());
+
+                xml.popTag();
+
+            }
+
+        xml.popTag();
+
+    xml.popTag();
+
+    xml.saveFile(xml_paths);
+
+}
+
+void PathsController::update(ofPolylines_ptr lines, map<string, DrawingObject_ptr> &clients) {
 
     ofSetColor(255);
 
-    getActivePath()->updatePaths();
-    getActivePath()->update();
+    CustomPaths_ptr active = getActivePath();
+    if(active){
+        active->update(lines, clients);
+    }
 	
 }
 
-void PathsController::draw() {
-
-    Projector *p = MappingController::getInstance().getProjector(0);
+void PathsController::draw(ofPolylines_ptr lines, map<string, DrawingObject_ptr>& clients) {
 
     ofSetColor(255);
 
-    for(int i = p->quadCount()-1; i >= 0; i--) {
-
-        getActivePath()->draw(i);
+    if(getActivePath()){
+        //for(int i = p->shapeCount()-1; i >= 0; i--) {
+            getActivePath()->draw(lines, clients);
+        //}
+    }else{
+        ofLogWarning("PathsController: draw()", "no active path style, chose one from the paths tab");
     }
 }
 
@@ -75,30 +142,21 @@ void PathsController::setActivePath(string paths_name, bool loadDataFromLastPath
 
     for(uint i = 0; i < paths.size(); i++) {
         if(paths[i]->getName() == paths_name) {
-            setActivePath(i, loadDataFromLastPaths);
+            setActivePath(i);
             break;
         }
     }
 
 }
 
-void PathsController::setActivePath(int paths_id, bool loadDataFromLastPaths) {
-
-    PathsData *d;
-
-    if(loadDataFromLastPaths) {
-        d = getActivePath()->getData();
-    }
+void PathsController::setActivePath(int paths_id) {
 
     getActivePath()->idle();
-    getActivePath()->setActive(false);
+    getActivePath()->isActive().set(false);
 
     active_path = paths_id;
-    if(loadDataFromLastPaths) {
-        getActivePath()->setData(d);
-    }
 
-    getActivePath()->setActive(true);
+    getActivePath()->isActive().set(true);
     getActivePath()->resume();
 }
 
@@ -113,7 +171,13 @@ vector<string> PathsController::getPathsNames() {
 
 CustomPaths_ptr PathsController::getActivePath() {
 
-    return paths.at(active_path);
+    if(active_path >= 0 && active_path < (int)paths.size()){
+        return paths.at(active_path);
+    }else{
+        ofLogError("PathsController: getActivePath()", "could not get active path with index " + ofToString(active_path.get()) + ".");
+        return CustomPaths_ptr();
+    }
+
 }
 
 CustomPaths_ptr PathsController::getPath(int index) {
@@ -125,15 +189,15 @@ CustomPaths_ptr PathsController::getPath(int index) {
 
 }
 
-bool PathsController::activePathChanged() {
+void PathsController::activePathChanged(bool&) {
     for(int i = 0; i < (int)paths.size(); i++) {
         if( (paths.at(i)->isActive()) ) {
             if(active_path.get() != i){
-                setActivePath(i,true);
-                return true;
+                setActivePath(i);
             }
 
         }
     }
-    return false;
 }
+
+PathsController::~PathsController(){}

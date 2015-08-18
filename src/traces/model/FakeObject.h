@@ -2,23 +2,32 @@
 
 #include "LightObject.h"
 
+struct futureStepData{
+    string timestamp;
+    ofPoint pos;
+};
+
 class FakeObject : public LightObject {
 
     public:
 
         FakeObject(string future, string id);
 
-        void update();
+        void update(float range_max, float speed);
 
         ofPolyline getLine();
         ofPolyline getConnections();
         void clearLines();
-        void setPos(ofPoint p, string timestamp);
+        bool setPos(string timestamp, ofPoint p);
+        void addIntersection(string timestamp, ofPoint p);
 
         ofColor getModColor();
 
         bool hasFuture();
-        void futureStep();
+        futureStepData getFutureStep();
+        void removeFutureStep();
+
+        void closeAndSave(string history_dir, float output_w, float output_h);
 
         ~FakeObject();
 

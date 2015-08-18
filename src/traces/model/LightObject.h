@@ -8,44 +8,34 @@ class LightObject
 
         LightObject();
 
-        virtual void update() = 0;
-
-        string getId();
-        string getName();
-        string getType();
+        ofParameter<string> &getId();
+        ofParameter<string> &getName();
+        ofParameter<string> &getType();
         int getHue();
-        ofColor getColor();
-        ofPoint getLastPos();
-        ofPoint getPos();
+        ofParameter<ofColor> &getColor();
+        ofParameter<ofPoint> &getLastPos();
+        ofParameter<ofPoint> &getPos();
 
         float getLastActionTime();
         float getTimeIdle();
         float getTimeGone();
         string getRestTimeAsString();
-        void setFadingOut(bool fading);
-        bool getFadingOut();
-        void setFadingOutStart(float status);
-        float getFadingOutStart();
-        bool isGone();
-
-        void setName(string n);
-        void setType(string t);
-        void setColor(ofColor c);
-        void setId(string id);
-        void setGone(bool is_gone);
+        ofParameter<bool>& getFadingOut();
+        ofParameter<float>& getFadingOutStart();
+        ofParameter<bool>& getIsGone();
 
         ~LightObject(){}
 
     protected:
-        string _id;
-        string myname;
-        string mytype;
-        ofColor color;
-        ofPoint pos;
-        ofPoint last_pos;
-        float last_action;
-        bool fading_out;
-        float fading_out_start;
-        bool gone;
+        ofParameter<string> _id;
+        ofParameter<string> myname;
+        ofParameter<string> mytype;
+        ofParameter<ofColor> color;
+        ofParameter<ofPoint> pos;
+        ofParameter<ofPoint> last_pos;
+        ofParameter<float> last_action;
+        ofParameter<bool> fading_out;
+        ofParameter<float> fading_out_start;
+        ofParameter<bool> gone;
         ofColor hsvToRgb(float h, float s, float v);
 };

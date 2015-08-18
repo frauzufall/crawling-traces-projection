@@ -1,37 +1,15 @@
 <mapping>
-    <usecomplexquads>1</usecomplexquads>
-    <content>
-        <width>1280</width>
-        <height>800</height>
-    </content>
-    <output>
-        <width>1280</width>
-        <height>800</height>
-    </output>
     <control>
         <width>1600</width>
         <height>900</height>
     </control>
     <projector>
-        <quad type="painting" frame="1">
-            <src>
-                <lefttop>
-                    <x>0.000000000</x>
-                    <y>0.000000000</y>
-                </lefttop>
-                <righttop>
-                    <x>1.000000000</x>
-                    <y>0.000000000</y>
-                </righttop>
-                <rightbottom>
-                    <x>1.000000000</x>
-                    <y>1.000000000</y>
-                </rightbottom>
-                <leftbottom>
-                    <x>0.000000000</x>
-                    <y>1.000000000</y>
-                </leftbottom>
-            </src>
+        <output>
+            <width>1600</width>
+            <height>900</height>
+        </output>
+        <object type="SHAPE" name="drawing area">
+            <color r="255" g="255" b="255"></color>
             <dst>
                 <lefttop>
                     <x>0.000000000</x>
@@ -68,28 +46,11 @@
                     <y>1.000000000</y>
                 </point>
             </polyline>
-        </quad>
-        <point type="start">
-            <x>0.122685187</x>
-            <y>0.622222245</y>
-        </point>
-        <camera in_use="0">
-            <lefttop>
-                <x>0.046296295</x>
-                <y>0.159259260</y>
-            </lefttop>
-            <righttop>
-                <x>0.918981493</x>
-                <y>0.155555561</y>
-            </righttop>
-            <rightbottom>
-                <x>0.861111104</x>
-                <y>1.114814758</y>
-            </rightbottom>
-            <leftbottom>
-                <x>-0.034722224</x>
-                <y>1.074074030</y>
-            </leftbottom>
-        </camera>
+        </object>
+        <object type="POINT" name="start">
+            <color r="255" g="255" b="255"></color>
+            <x>0.415912092</x>
+            <y>0.384275615</y>
+        </object>
     </projector>
 </mapping>

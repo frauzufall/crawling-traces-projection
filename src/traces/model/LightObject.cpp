@@ -14,22 +14,6 @@ LightObject::LightObject() {
     gone = false;
 }
 
-void LightObject::setId(string id) {
-    _id = id;
-}
-
-void LightObject::setName(string n) {
-    myname = n;
-}
-
-void LightObject::setType(string t) {
-    mytype = t;
-}
-
-void LightObject::setColor(ofColor c) {
-    color = c;
-}
-
 float LightObject::getLastActionTime() {
     return last_action;
 }
@@ -46,27 +30,27 @@ float LightObject::getTimeGone() {
     return ofGetElapsedTimef()-getFadingOutStart();
 }
 
-string LightObject::getId() {
+ofParameter<string>& LightObject::getId() {
     return _id;
 }
 
-string LightObject::getName() {
+ofParameter<string>& LightObject::getName() {
     return myname;
 }
 
-string LightObject::getType() {
+ofParameter<string>& LightObject::getType() {
     return mytype;
 }
 
-ofColor LightObject::getColor() {
+ofParameter<ofColor>& LightObject::getColor() {
     return color;
 }
 
-ofPoint LightObject::getPos() {
+ofParameter<ofPoint>& LightObject::getPos() {
     return pos;
 }
 
-ofPoint LightObject::getLastPos() {
+ofParameter<ofPoint> &LightObject::getLastPos() {
     return last_pos;
 }
 
@@ -134,26 +118,14 @@ ofColor LightObject::hsvToRgb(float h, float s, float v) {
     return out;
 }
 
-void LightObject::setFadingOut(bool fading) {
-    fading_out = fading;
-}
-
-bool LightObject::getFadingOut() {
+ofParameter<bool> &LightObject::getFadingOut() {
     return fading_out;
 }
 
-void LightObject::setFadingOutStart(float status) {
-    fading_out_start = status;
-}
-
-float LightObject::getFadingOutStart() {
+ofParameter<float> &LightObject::getFadingOutStart() {
     return fading_out_start;
 }
 
-void LightObject::setGone(bool is_gone) {
-    gone = is_gone;
-}
-
-bool LightObject::isGone() {
+ofParameter<bool> &LightObject::getIsGone() {
     return gone;
 }

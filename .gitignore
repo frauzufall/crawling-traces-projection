@@ -19,6 +19,7 @@ crawling-traces.includes
 crawling-traces.config
 *.creator
 *.creator.user
+*.creator.user*
 
 # Crawling Traces history directory
 bin/data/history/*

@@ -1,59 +1,51 @@
 #include "ofMain.h"
 
-#include "Visuals.h"
-#include "CustomTab.h"
+#include "ofxGui.h"
+
 #include "ServerTab.h"
-#include "MappingTab.h"
 #include "PathsTab.h"
+
+#include "MappingController.h"
+#include "PathsController.h"
+#include "Traces.h"
 
 using namespace guardacaso;
 
 namespace guardacaso {
 
-    class ControlWindow {
+    class ControlWindow : public ofxPanel {
 
         public:
 
-            static ControlWindow&	getInstance();
-            void setup();
+            ControlWindow();
+            ~ControlWindow();
+            void setup(MappingController* mc, PathsController* pc, Traces* tc);
             void update();
-            void draw(ofPoint p);
-
-            bool drawingMapping();
+            void updatePosition(bool& left);
 
             bool isSetup();
 
             void keyPressed(int key);
 
-            MappingTab& getMapping();
-
-    protected:
-        ControlWindow();
-        ~ControlWindow();
-
     private:
 
             void saveAllSettings();
 
-            CustomTab gui;
-            CustomTab status;
+            MappingController* mapping_controller;
+            PathsController* paths_controller;
+            Traces* traces_controller;
+
+            ofxTabbedPages gui;
+            ofxGuiGroup header, status;
             ServerTab server;
-            MappingTab mapping;
             PathsTab paths;
 
-            float header_height;
-
-            int w,h,x,y;
-
-            void setGui();
+            int w,h;
 
             bool is_setup;
 
-            string font;
-
-            bool gui_invert;
-
-            ofxButton save_settings_btn, save_gui_btn, import_events_btn;
+            ofxButton save_settings_btn, import_events_btn;
+            ofxLabel title;
 
             ofParameter<string> status_temp;
 
@@ -61,8 +53,6 @@ namespace guardacaso {
             int last_temp_update;
 
             string xml_gui;
-            void reloadGui();
-            void saveGui();
             void importGroup();
 
     };

@@ -17,27 +17,27 @@ class DrawingObject : public LightObject {
         void gotRedrawn();
         bool needsRedraw();
         ofMesh getMesh();
-        ofPolyline getLine();
+        ofPolyline &getLine();
         ofPolyline getConnections();
         void setNewRandomColor();
         void clearLines();
-        void setPos(ofPoint p);
+        bool setPos(string timestamp, ofPoint p);
+        void addIntersection(string timestamp, ofPoint p);
 
-        ofColor getModColor();
-        float getPulseStart();
+        ofParameter<ofColor>& getModColor();
+        ofParameter<float>& getPulseStart();
+        ofParameter<float>& getPulseVal();
+        ofParameter<float>& getPulseDuration();
 
-        void setPulsing();
+        //void setPulsing();
 
-        float getPulseVal();
-        void setPulseVal(float val);
-
-        void closeAndSave();
+        void closeAndSave(string history_dir, float output_w, float output_h);
 
         ~DrawingObject();
 
     protected:
 
-        bool please_redraw;
+        ofParameter<bool> please_redraw;
         ofPolyline line;
         ofPolyline backup_line;
 
@@ -50,16 +50,9 @@ class DrawingObject : public LightObject {
         ofPolyline future_line;
         vector<uint> future_timestamp;
 
-        float range_max;
-        float range_min;
-        float speed;
-
-        float pulsestart;
-        float pulseval;
-
-        bool connect_to_itself;
-        bool connect_to_others;
-        int max_connections;
+        ofParameter<float> pulsestart;
+        ofParameter<float> pulseval;
+        ofParameter<float> pulseduration;
 
         void saveTimestamps(string path);
         void saveNetTimestamps(string path);

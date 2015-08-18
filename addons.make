@@ -2,3 +2,6 @@ ofxXmlSettings
 ofxGui
 ofxNetwork
 ofxSvg
+ofx2DMapping
+ofxTriangle
+ofxSortableList

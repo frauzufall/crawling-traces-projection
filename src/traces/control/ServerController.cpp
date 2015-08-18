@@ -1,15 +1,7 @@
 #include "ServerController.h"
-#include "ObjectController.h"
-#include "MappingController.h"
-#include "Visuals.h"
 #include <exception>
 
 using namespace guardacaso;
-
-ServerController& ServerController::getInstance() {
-    static ServerController instance;
-    return instance;
-}
 
 ServerController::ServerController() {
 
@@ -88,58 +80,22 @@ void ServerController::askForColor(string client_id) {
 void ServerController::processMsg(string client_id, string action, string value) {
 
     if(setup_done) {
-        if(client_id != "all") {
-
-            if(action == "gone") {
-                ObjectController::getInstance().deactivateClient(client_id);
-                ObjectController::getInstance().fadeoutClient(client_id);
-            }
-            else {
-                DrawingObject_ptr c = ObjectController::getInstance().getClient(client_id);
-
-                c->setGone(false);
-
-                if(action == "id") {
-                    c->setId(value);
-                }
-                if(action == "type") {
-                    c->setType(value);
-                }
-                if(action == "name") {
-                    c->setName(value);
-                }
-                if(action == "pos") {
-                    vector<string> pos = ofSplitString(value,"|");
-                    c->setPos(ofPoint(atof(pos[0].c_str()),atof(pos[1].c_str())));
-                }
-                if(action == "pulse") {
-                    c->setPulsing();
-                }
-                if(action == "color") {
-                    vector<string> col = ofSplitString(value,"|");
-                    c->setColor(ofColor(atoi(col[0].c_str()),atoi(col[1].c_str()), atoi(col[2].c_str())));
-                }
-                if(action == "clear") {
-                    cout << client_id << endl;
-                    c->closeAndSave();
-                    c->clearLines();
-                }
-                if(action == "getmapping") {
-                    sendMappingQuads();
-                }
-            }
-
+        if(action == "getmapping") {
+            bool b = true;
+            ofNotifyEvent(mappingRequested,b,this);
+        }else{
+            ctMessage msg;
+            msg.client_id = client_id;
+            msg.action = action;
+            msg.value = value;
+            ofNotifyEvent(messageReceived, msg, this);
         }
-        else {
-            if(action == "clear") {
-                ObjectController::getInstance().removeAllClients();
-            }
-        }
+
     }
 
 }
 
-void ServerController::sendMappingQuads() {
+void ServerController::sendMappingQuads(ofx2DMappingProjector* projector) {
 
     //ensure that mapping gets not sent too often (breaks connection of control webpage)
     int currentTime = ofGetElapsedTimeMillis();
@@ -148,11 +104,11 @@ void ServerController::sendMappingQuads() {
 
         send(client_name, "clearmappingforms", "");
         stringstream msg0;
-        msg0 << Visuals::get().contentWidth() << "|" << Visuals::get().contentHeight();
+        msg0 << projector->outputWidth() << "|" << projector->outputHeight();
         send(client_name, "mappingsize", msg0.str());
-        for(int i = MappingController::getInstance().getProjector(0)->quadCount()-1; i >= 0; i--) {
-            MappingQuad_ptr mq = MappingController::getInstance().getProjector(0)->getQuad(i);
-            ofPolyline line = Visuals::get().outlinesRaw()->at(i);
+        for(int i = projector->shapeCount()-1; i >= 0; i--) {
+            ofPtr<ofx2DMappingObject> mq = projector->getMappingObject(i);
+            ofPolyline line = projector->outlinesRaw()->at(i);
             stringstream msg;
             msg << mq->id << ";" << mq->nature << ";";
             for(uint j = 0; j < line.getVertices().size(); j++) {
@@ -160,8 +116,8 @@ void ServerController::sendMappingQuads() {
                     msg << ",";
                 }
                 ofPoint p = line.getVertices().at(j);
-                if(MappingController::getInstance().getUsingCam()) {
-                    p = MappingController::getInstance().getProjector(0)->inCameraView(p);
+                if(projector->getUsingCam()) {
+                    p = projector->inCameraView(p);
                 }
                 msg << p.x << "|" << p.y;
             }
@@ -278,7 +234,7 @@ void ServerController::reconnect() {
     }
 }
 
-bool ServerController::isConnected() {
+ofParameter<bool> &ServerController::isConnected() {
     return connected;
 }
 
@@ -292,14 +248,18 @@ void ServerController::setActive(bool _active) {
     active = _active;
 }
 
-ofParameter<int> ServerController::getPort() {
+ofParameter<int> &ServerController::getPort() {
     return port;
 }
 
-ofParameter<string> ServerController::getIp() {
+ofParameter<string> &ServerController::getIp() {
     return ip;
 }
 
 string ServerController::getClientName() {
     return client_name;
+}
+
+void ServerController::sendPosition(ctMessage &msg){
+    send(getClientName(), msg.action, msg.value);
 }

@@ -8,7 +8,7 @@
 
 using namespace guardacaso;
 
-FakeObject::FakeObject(string future, string id) {
+FakeObject::FakeObject(string future, string id):LightObject() {
 
     future_line.clear();
     future_timestamp.clear();
@@ -71,20 +71,14 @@ FakeObject::FakeObject(string future, string id) {
 
 }
 
+void FakeObject::update(float range_max, float speed) {
 
-void FakeObject::update() {
-
-    range = 100*ObjectController::getInstance().getDrawingRangeMax();
-
-    speed = ObjectController::getInstance().getDrawingSpeed();
+    range = 100*range_max;
+    this->speed = speed;
 
 }
 
-void FakeObject::setPos(ofPoint p, string timestamp) {
-
-    int max_distance = range;
-
-    last_pos = pos;
+bool FakeObject::setPos(string timestamp, ofPoint p) {
 
     pos = p;
 
@@ -94,48 +88,27 @@ void FakeObject::setPos(ofPoint p, string timestamp) {
     history_net_line.addVertex(pos);
     history_net_timestamp.push_back(timestamp);
     line.addVertex(pos);
-    for(uint i = 0; i < backup_line.getVertices().size(); i++) {
-        ofPoint p_tmp = backup_line.getVertices().at(i);
-        if(p_tmp.distance(pos) < max_distance) {
-            line.addVertex(p_tmp);
-            line.addVertex(pos);
-            history_net_line.addVertex(p_tmp);
-            history_net_timestamp.push_back(timestamp);
-            history_net_line.addVertex(pos);
-            history_net_timestamp.push_back(timestamp);
-        }
+
+    //check if point matches one of the line points other than the last one
+    //if this is the case, the point was already added and no connection lines need to be drawn (they are already present)
+    bool point_in_line = false;
+    for(uint i = 0; i < backup_line.getVertices().size()-1; i++) {
+       if(pos.get() == backup_line.getVertices().at(i)) {
+           point_in_line = true;
+           break;
+       }
     }
+    return point_in_line;
 
-    backup_line.simplify();
+}
 
-    Projector* pj = MappingController::getInstance().getProjector(0);
-    MappingQuad_ptr q;
-
-    for(uint i = 0; i < pj->quadCount(); i++) {
-        q = pj->getQuad(i);
-        if(q) {
-            ofPolyline polyline = Visuals::get().outlinesRaw()->at(i);
-            if(q->nature == "window") {
-                for(uint j = 0; j < polyline.size(); j++) {
-                    vector<ofPoint> points_between = Stuff::getPointsBetween(polyline[j],
-                                                                             polyline[(j+1)%polyline.size()],
-                                                                             10);
-                    for(uint k = 0; k < points_between.size(); k++) {
-                        if(pos.distance(points_between[k]) < max_distance) {
-                            line.addVertex(points_between[k]);
-                            line.addVertex(pos);
-                            history_net_line.addVertex(points_between[k]);
-                            history_net_timestamp.push_back(timestamp);
-                            history_net_line.addVertex(pos);
-                            history_net_timestamp.push_back(timestamp);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-
+void FakeObject::addIntersection(string timestamp, ofPoint p){
+    line.addVertex(p);
+    line.addVertex(pos);
+    history_net_line.addVertex(p);
+    history_net_timestamp.push_back(timestamp);
+    history_net_line.addVertex(pos);
+    history_net_timestamp.push_back(timestamp);
 }
 
 ofColor FakeObject::getModColor() {
@@ -150,15 +123,28 @@ ofPolyline FakeObject::getConnections() {
     return line;
 }
 
-FakeObject::~FakeObject() {
+FakeObject::~FakeObject() {}
+
+void FakeObject::closeAndSave(string history_dir, float output_w, float output_h){
     cout << "DRAWINGOBJECT::saving fake object " << getId() << "..." << endl;
     stringstream svg_path, timestamp_path, svg_net_path, timestamp_net_path;
-    svg_path << Traces::get().historyDir() << "/" << getId() << ".svg";
-    svg_net_path << Traces::get().historyDir() << "/net_" << getId() << ".svg";
-    timestamp_path << Traces::get().historyDir() << "/" << getId() << ".xml";
-    timestamp_net_path << Traces::get().historyDir() << "/net_" << getId() << ".xml";
-    Stuff::saveLineAsSvg(svg_path.str(),history_line,Visuals::get().outputWidth(), Visuals::get().outputHeight(),getColor());
-    Stuff::saveLineAsSvg(svg_net_path.str(),history_net_line,Visuals::get().outputWidth(), Visuals::get().outputHeight(),getColor());
+    svg_path << history_dir << "/" << getId() << ".svg";
+    svg_net_path << history_dir << "/net_" << getId() << ".svg";
+    timestamp_path << history_dir << "/" << getId() << ".xml";
+    timestamp_net_path << history_dir << "/net_" << getId() << ".xml";
+
+    Stuff::saveLineAsSvg(
+                svg_path.str(),
+                history_line,
+                output_w,
+                output_h,
+                getColor());
+    Stuff::saveLineAsSvg(
+                svg_net_path.str(),
+                history_net_line,
+                output_w,
+                output_h,
+                getColor());
     saveTimestamps(timestamp_path.str());
     saveNetTimestamps(timestamp_net_path.str());
 }
@@ -201,8 +187,15 @@ bool FakeObject::hasFuture() {
     return future_line.size()>0;
 }
 
-void FakeObject::futureStep() {
-    setPos(future_line.getVertices().at(0), future_timestamp.at(0));
+futureStepData FakeObject::getFutureStep(){
+    futureStepData data;
+    data.pos = future_line.getVertices().at(0);
+    data.timestamp = future_timestamp.at(0);
+    return data;
+
+}
+
+void FakeObject::removeFutureStep() {
     future_line.getVertices().erase(future_line.getVertices().begin());
     future_timestamp.erase(future_timestamp.begin());
 }

@@ -3,94 +3,100 @@
 #include "ofMain.h"
 #include "DrawingObject.h"
 #include "FakeObject.h"
+#include "ServerController.h"
+#include "MappingController.h"
 
-typedef std::shared_ptr<DrawingObject> DrawingObject_ptr;
-typedef std::shared_ptr<FakeObject> FakeObject_ptr;
+namespace guardacaso {
 
-class ObjectController {
+    typedef std::shared_ptr<DrawingObject> DrawingObject_ptr;
+    typedef std::shared_ptr<FakeObject> FakeObject_ptr;
 
-    public:
-        static ObjectController& getInstance();
+    class ObjectController {
 
-        void setup();
-        void update();
+        public:
+            ObjectController();
+            ~ObjectController() {
+                pulsing_obj.reset();
+                removeAllClients();
+            }
 
-        vector<DrawingObject_ptr> getDrawingObjects();
-        map<string, DrawingObject_ptr> getClients();
+            void setup(MappingController* mc);
+            void update(ServerController *server_controller);
 
-        void removeObject(DrawingObject_ptr drawing_o);
+            ofParameter<string>& getHistoryDir();
 
-        void setDrawingSpeed(float speed);
-        ofParameter<float> getDrawingSpeed();
-        void setDrawingSpeedWheels(float speed);
-        ofParameter<float> getDrawingSpeedWheels();
-        void setDrawingRangeMax(float range);
-        ofParameter<float> getDrawingRangeMax();
-        void setDrawingRangeMin(float range);
-        ofParameter<float> getDrawingRangeMin();
-        void setDrawingRangeWheels(float range);
-        ofParameter<float> getDrawingRangeWheels();
-        int getMaxLinecount();
-        ofParameter<float> getPulseTime();
-        float getMaxPulseTime();
-        void setPulseTime(float time);
-        ofParameter<float> getMaxLines();
-        void setMaxLines(float percentage);
-        ofParameter<float> getFadeoutTimeIdle();
-        void setFadeoutTimeIdle(float time);
-        ofParameter<float> getFadeoutTimeGone();
-        void setFadeoutTimeGone(float time);
-        ofParameter<float> getMaxFadeoutTime();
-        void setConnectToItself(bool connect);
-        ofParameter<bool> getConnectToItself();
-        void setConnectToOthers(bool connect);
-        ofParameter<bool> getConnectToOthers();
-        void setMaxConnections(int num);
-        ofParameter<int> getMaxConnections();
+            vector<DrawingObject_ptr> &getDrawingObjects();
+            map<string, DrawingObject_ptr> &getClients();
 
-        ofPoint getCurrentPulsingPoint();
+            void removeObject(DrawingObject_ptr drawing_o);
 
-        int getTotalClientLineCount();
-        DrawingObject_ptr getMostInactiveClient();
-        DrawingObject_ptr getClient(string id);
-        void fadeoutClient(string id);
-        void deactivateClient(string id);
-        void activateClient(string id);
-        void removeClient(string id);
-        void removeClient(map<string,DrawingObject_ptr>::iterator it);
-        void removeAllClients();
+            DrawingObject_ptr addDrawingObject(string id);
 
-        FakeObject_ptr addFakeObj(string path, string id);
+            void setObjectPos(DrawingObject_ptr obj, ofPoint p);
+            void setFakeObjectPos(FakeObject_ptr obj, ofPoint p, string timestamp);
 
-    protected:
-        ObjectController();
-        ~ObjectController() {
-            pulsing_obj.reset();
-            removeAllClients();
-        }
+            ofParameter<float>& getDrawingSpeed();
+            ofParameter<float>& getDrawingSpeedWheels();
+            ofParameter<float>& getDrawingRangeMax();
+            ofParameter<float>& getDrawingRangeMin();
+            ofParameter<float>& getDrawingRangeWheels();
+            int getMaxLinecount();
+            ofParameter<float>& getPulseTime();
+            float getMaxPulseTime();
+            ofParameter<float>& getMaxLines();
+            ofParameter<float>& getFadeoutTimeIdle();
+            ofParameter<float>& getFadeoutTimeGone();
+            ofParameter<float>& getMaxFadeoutTime();
+            ofParameter<bool>& getConnectToItself();
+            ofParameter<bool>& getConnectToOthers();
+            ofParameter<int>& getMaxConnections();
 
-    private:
+            ofPoint getStartingPoint();
+            ofPoint getCurrentPulsingPoint();
 
-        vector<DrawingObject_ptr> draw_obj;
-        map<string, DrawingObject_ptr> clients;
+            int getTotalClientLineCount();
+            DrawingObject_ptr getMostInactiveClient();
+            DrawingObject_ptr getClient(string id);
+            void fadeoutClient(string id);
+            void deactivateClient(string id);
+            void activateClient(string id);
+            void removeClient(string id);
+            void removeClient(map<string,DrawingObject_ptr>::iterator it);
+            void removeAllClients();
 
-        ofParameter<float> client_speed;
-        ofParameter<float> wheel_speed;
-        ofParameter<float> client_range_max;
-        ofParameter<float> client_range_min;
-        ofParameter<float> wheel_range;
-        ofParameter<float> max_lines_percent;
-        int max_lines;
-        ofParameter<float> pulse_time_percent;
-        ofParameter<float> max_pulse_time;
-        ofParameter<float> fadeout_time_idle;
-        ofParameter<float> fadeout_time_gone;
-        float max_fadeout_time;
-        ofParameter<bool> connect_to_itself;
-        ofParameter<bool> connect_to_others;
-        ofParameter<int> max_connections;
-        DrawingObject_ptr pulsing_obj;
+            FakeObject_ptr addFakeObj(string path, string id);
 
-        vector<FakeObject_ptr> fake_objs;
-};
+            void processMsg(ctMessage& msg);
 
+            ofEvent<ctMessage> sendingPosition;
+
+        private:
+
+            ofParameter<string> history_dir;
+
+            MappingController* mapping_controller;
+
+            vector<DrawingObject_ptr> draw_obj;
+            map<string, DrawingObject_ptr> clients;
+
+            ofParameter<float> client_speed;
+            ofParameter<float> wheel_speed;
+            ofParameter<float> client_range_max;
+            ofParameter<float> client_range_min;
+            ofParameter<float> wheel_range;
+            ofParameter<float> max_lines_percent;
+            ofParameter<int> max_lines;
+            ofParameter<float> pulse_time_percent;
+            ofParameter<float> max_pulse_time;
+            ofParameter<float> fadeout_time_idle;
+            ofParameter<float> fadeout_time_gone;
+            ofParameter<float> max_fadeout_time;
+            ofParameter<bool> connect_to_itself;
+            ofParameter<bool> connect_to_others;
+            ofParameter<int> max_connections;
+            DrawingObject_ptr pulsing_obj;
+
+            vector<FakeObject_ptr> fake_objs;
+    };
+
+}

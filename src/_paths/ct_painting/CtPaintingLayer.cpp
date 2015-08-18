@@ -1,63 +1,54 @@
 #include "CtPaintingLayer.h"
 
 CtPaintingLayer::CtPaintingLayer(string name):CustomPaths(name) {
-
+    settings.add(stroke1_w.set("stroke1 w", 1, 0.5, 20));
+    settings.add(stroke2_w.set("stroke2 w", 1, 0.5, 20));
+    settings.add(control_size.set("control size", 6, 1, 33));
+    settings.add(alpha1.set("alpha1", 1, 0, 1));
+    settings.add(alpha2.set("alpha2", 1, 0, 1));
+    settings.add(pulse_size.set("pulse size", 1, 1, 4));
+    settings.add(show_lines.set("show lines", true));
+    settings.add(show_controls.set("show controls", true));
 }
 
 void CtPaintingLayer::setup() {
-    name_sl1 = "stroke1 w";
-    name_sl2 = "stroke2 w";
-    name_sl3 = "control size";
-    name_rsl1 = "alpha1";
-    name_rsl2 = "alpha2";
-    name_rsl3 = "pulse size";
-    name_btn1_1 = "show lines";
-    name_btn1_2 = "show controls";
-    name_btn2_1 = "";
-    name_btn2_2 = "";
-    name_btn3_1 = "";
-    name_btn3_2 = "";
-
-    max_pulse_size_factor = 4;
-    max_size = 33;
 }
 
-void CtPaintingLayer::update() {
+void CtPaintingLayer::update(ofPolylines_ptr lines, map<string, DrawingObject_ptr> &clients) {
 
 }
 
-void CtPaintingLayer::draw(int path) {
+void CtPaintingLayer::draw(ofPolylines_ptr lines, map<string, DrawingObject_ptr> &clients) {
 
     ofEnableAlphaBlending();
     glHint(GL_PERSPECTIVE_CORRECTION_HINT,
            GL_NICEST);
     ofNoFill();
 
-    map<string,DrawingObject_ptr>cs = data.getDrawingObjects();
     map<string,DrawingObject_ptr>::iterator iter;
     DrawingObject_ptr c;
-    for( iter = cs.begin(); iter != cs.end(); iter++) {
+    for( iter = clients.begin(); iter != clients.end(); iter++) {
 
         c = iter->second;
 
         if(c) {
 
-            if(data.btn1_1) {
+            if(show_lines) {
                 ofColor col = c->getColor();
                 col.setBrightness(col.getBrightness()*1.1);
 
-                ofSetLineWidth(20*data.sl1);
-                ofSetColor(col, col.a*data.rsl1);
+                ofSetLineWidth(stroke1_w);
+                ofSetColor(col, col.a*alpha1);
 
                 c->getConnections().draw();
 
-                ofSetLineWidth(20*data.sl2);
-                ofSetColor(col, col.a*data.rsl2);
+                ofSetLineWidth(stroke2_w);
+                ofSetColor(col, col.a*alpha2);
 
                 c->getLine().draw();
             }
 
-            if(data.btn1_2) {
+            if(show_controls) {
                 ofColor col = c->getColor();
                 col.setBrightness(col.getBrightness()*1.2);
                 ofSetColor(col);
@@ -65,18 +56,16 @@ void CtPaintingLayer::draw(int path) {
                 ofSetLineWidth(3);
 
                 float current_time = ofGetElapsedTimef();
-                float size = data.sl3*max_size;
-                float pulse_time = (int)(data.getPulseTime()+1);
-                float pulse_size_factor = (max_pulse_size_factor-1)*(data.rsl3)+1;
+                float pulse_time = (int)(c->getPulseDuration()+1);
                 float pulsing = (current_time-c->getPulseStart())/pulse_time;
-                c->setPulseVal(pulsing);
+                c->getPulseVal().set(pulsing);
                 if(pulsing < 1) {
                     float tmp = fmodf(pulsing,1./pulse_time)*pulse_time;
                     float pulse_val = 1-(cos(tmp*2*PI)+1)/2;
-                    ofCircle(c->getPos(),size*(pulse_size_factor*pulse_val+1));
+                    ofDrawCircle(c->getPos(),control_size*(pulse_size*pulse_val+1));
                 }
                 else {
-                    ofCircle(c->getPos(),size);
+                    ofDrawCircle(c->getPos(),control_size);
                 }
             }
 

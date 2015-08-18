@@ -1,20 +1,7 @@
 <pathsconfig>
     <deck visible="1">
-        <paths1>
-            <name>ct-painting</name>
-            <sl1>0.015000000</sl1>
-            <sl2>0.100000001</sl2>
-            <sl3>0.129999995</sl3>
-            <rsl1>0.155000001</rsl1>
-            <rsl2>0.555000007</rsl2>
-            <rsl3>0.409999996</rsl3>
-            <btn1-1>1</btn1-1>
-            <btn2-2>1</btn2-2>
-            <btn3-1>1</btn3-1>
-            <btn1-2>1</btn1-2>
-            <btn2-1>1</btn2-1>
-            <btn3-2>0</btn3-2>
-            <color r="89" g="221" b="201" a="0"></color>
-        </paths1>
+        <empty>
+            <group></group>
+        </empty>
     </deck>
 </pathsconfig>

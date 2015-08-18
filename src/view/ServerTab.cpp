@@ -1,77 +1,98 @@
 #include "ServerTab.h"
-#include "ObjectController.h"
-#include "ServerController.h"
-#include "Visuals.h"
-#include "Traces.h"
 
 using namespace guardacaso;
 
-ServerTab::ServerTab():CustomTab() {
+ServerTab::ServerTab():CustomTab() {}
 
-    setup("SERVER");
+void ServerTab::setup(Traces *tc){
 
-    setBorderColor(ofColor::black);
-    setHeaderBackgroundColor(ofColor(235,212,0,0.5));
+    traces_controller = tc;
 
-    save_btn.addListener(&Traces::get(), &Traces::saveServer);
-    save_btn.setup("SAVE");
-    add(&save_btn);
+    CustomTab::setup("Server");
 
-    add(ServerController::getInstance().getActive().set("ACTIVE", ServerController::getInstance().getActive()));
-    add(ServerController::getInstance().getIp().set("IP", ServerController::getInstance().getIp()));
-//    add(ofParameter<string>().set("Port", printf("%i",ServerController::getInstance().getPort().get())));
-    add(ObjectController::getInstance().getMaxLines().set("Max. lines", ObjectController::getInstance().getMaxLines(), 0, 1));
-    add(ObjectController::getInstance().getPulseTime().set("Pulse time", ObjectController::getInstance().getPulseTime(), 0, 1));
-    add(ObjectController::getInstance().getDrawingSpeed().set("Speed", ObjectController::getInstance().getDrawingSpeed(), 0, 1));
-    add(ObjectController::getInstance().getDrawingRangeMax().set("Range max", ObjectController::getInstance().getDrawingRangeMax(), 0, 1));
-    add(ObjectController::getInstance().getDrawingRangeMin().set("Range min", ObjectController::getInstance().getDrawingRangeMin(), 0, 1));
-    add(ObjectController::getInstance().getConnectToItself().set("connect to itself", ObjectController::getInstance().getConnectToItself(), 0, 1));
-    add(ObjectController::getInstance().getConnectToOthers().set("connect to others", ObjectController::getInstance().getConnectToOthers(), 0, 1));
-    add(ObjectController::getInstance().getMaxConnections().set("max connections", ObjectController::getInstance().getMaxConnections(),0,100));
-    add(ObjectController::getInstance().getFadeoutTimeIdle().set("Fadeout idle", ObjectController::getInstance().getFadeoutTimeIdle(), 0, 1));
-    add(ObjectController::getInstance().getFadeoutTimeGone().set("Fadeout gone", ObjectController::getInstance().getFadeoutTimeGone(), 0, 1));
-    add(timeout_gone.set("gone timeout: ", timeout_gone));
-    add(timeout_idle.set("idle timeout: ", timeout_idle));
+    TTF.load("mono", 10);
 
-    participants.setup("Connected drawers");
-    participants.setBorderColor(ofColor::black);
-    participants.setHeaderBackgroundColor(ofColor::fromHex(0xA09000));
+    setBorderColor(ofColor(235,212,0,0.5));
+
+    settings.setup(group_config);
+
+    save_btn.addListener(traces_controller, &Traces::saveServer);
+    save_btn.setup("SAVE", toggle_config);
+    settings.add(save_btn);
+
+    settings.add(traces_controller->getServerController()->getActive().set("ACTIVE", traces_controller->getServerController()->getActive()), toggle_config);
+    settings.add(traces_controller->getServerController()->getIp().set("IP", traces_controller->getServerController()->getIp()), label_config);
+//    settings.add(ofParameter<string>().set("Port", printf("%i",traces_controller->getServerController()->getPort().get())));
+    settings.add(traces_controller->getObjectController()->getMaxLines(), slider_config);
+    settings.add(traces_controller->getObjectController()->getPulseTime(), slider_config);
+    settings.add(traces_controller->getObjectController()->getDrawingSpeed(), slider_config);
+    settings.add(traces_controller->getObjectController()->getDrawingRangeMax(), slider_config);
+    settings.add(traces_controller->getObjectController()->getDrawingRangeMin(), slider_config);
+    settings.add(traces_controller->getObjectController()->getConnectToItself(), toggle_config);
+    settings.add(traces_controller->getObjectController()->getConnectToOthers(), toggle_config);
+    settings.add(traces_controller->getObjectController()->getMaxConnections(), slider_config);
+    settings.add(traces_controller->getObjectController()->getFadeoutTimeIdle(), slider_config);
+    settings.add(traces_controller->getObjectController()->getFadeoutTimeGone(), slider_config);
+    settings.add(timeout_gone.set("gone timeout", timeout_gone), label_config);
+    settings.add(timeout_idle.set("idle timeout", timeout_idle), label_config);
+
+    traces_controller->getObjectController()->getFadeoutTimeIdle().addListener(this, &ServerTab::updateTimeoutIdle);
+    traces_controller->getObjectController()->getFadeoutTimeGone().addListener(this, &ServerTab::updateTimeoutGone);
+
+//    participants.setup("Connected drawers");
+//    participants.setHeaderBackgroundColor(ofColor::fromHex(0xA09000));
+//    participants.add(status_msg.setup("status","waiting"));
+//    participants.addSpacer(10);
+
+//    traces_controller->getServerController()->isConnected().addListener(this,&ServerTab::updateServerStatus);
+//    traces_controller->getServerController()->getActive().addListener(this,&ServerTab::updateServerStatus);
+
+    add(settings);
+//    add(participants);
+
+    settings.setPosition(settings.getPosition()+ofPoint(10,0));
 
 }
 
 ServerTab::~ServerTab() {
-    save_btn.removeListener(&Traces::get(), &Traces::saveServer);
+    save_btn.removeListener(traces_controller, &Traces::saveServer);
+    traces_controller->getObjectController()->getFadeoutTimeIdle().removeListener(this, &ServerTab::updateTimeoutIdle);
+    traces_controller->getObjectController()->getFadeoutTimeGone().removeListener(this, &ServerTab::updateTimeoutGone);
+//    traces_controller->getServerController()->isConnected().removeListener(this,&ServerTab::updateServerStatus);
+//    traces_controller->getServerController()->getActive().removeListener(this,&ServerTab::updateServerStatus);
 }
 
-void ServerTab::update() {
-    if(control_rect.position != this->getPosition()) {
-        control_rect.position = this->getPosition();
-        control_rect.setWidth(this->getWidth());
-        control_rect.setHeight(this->getHeight());
+void ServerTab::updateTimeoutGone(float&){
+    timeout_gone = secondsToTimestring(
+                traces_controller->getObjectController()->getFadeoutTimeGone()
+                *traces_controller->getObjectController()->getMaxFadeoutTime());
+}
 
-        ofRectangle r_widget;
-        int margin = 10;
-        r_widget.x = this->getPosition().x+this->getWidth()+margin;
-        r_widget.y = this->getPosition().y;
-        r_widget.width = 420;
-        r_widget.height = this->getHeight();
+void ServerTab::updateTimeoutIdle(float&){
+    timeout_idle = secondsToTimestring(
+                traces_controller->getObjectController()->getFadeoutTimeIdle()
+                *traces_controller->getObjectController()->getMaxFadeoutTime());
+}
 
-        participants.setShape(r_widget);
-    }
+void ServerTab::updateServerStatus(bool &){
+    if(traces_controller->getServerController()->isConnected()) {
+       if(traces_controller->getServerController()->getActive()) {
+           status_msg = "connected";
+           status_msg.setBackgroundColor(ofColor(0,255,0));
+       }
+       else {
+           status_msg = "connected but inactive";
+           status_msg.setBackgroundColor(ofColor(255,255,0));
+       }
+   }
+   else {
+       status_msg.setBackgroundColor(ofColor(255,0,0));
+       status_msg = "disconnected";
+   }
+}
 
-    //updating idle and gone timeout strings
-    int sec = ObjectController::getInstance().getFadeoutTimeGone()*ObjectController::getInstance().getMaxFadeoutTime();
-    int seconds=sec%60;
-    int minutes=(sec/(60))%60;
-    int hours=(sec/(60*60))%24;
-    stringstream timestr1;
-    timestr1 << setfill('0') << setw(2) << hours;
-    timestr1 << ":";
-    timestr1 << setfill('0') << setw(2) << minutes;
-    timestr1 << ":";
-    timestr1 << setfill('0') << setw(2) << seconds;
-    timeout_gone = timestr1.str();
-    sec = ObjectController::getInstance().getFadeoutTimeIdle()*ObjectController::getInstance().getMaxFadeoutTime();
+std::string ServerTab::secondsToTimestring(int sec){
+    int seconds, minutes, hours;
     seconds=sec%60;
     minutes=(sec/(60))%60;
     hours=(sec/(60*60))%24;
@@ -81,25 +102,16 @@ void ServerTab::update() {
     timestr2 << setfill('0') << setw(2) << minutes;
     timestr2 << ":";
     timestr2 << setfill('0') << setw(2) << seconds;
-    timeout_idle = timestr2.str();
-
+    return timestr2.str();
 }
 
-void ServerTab::draw(ofPoint p) {
+void ServerTab::render(){
 
-    if(visible) {
+    CustomTab::render();
 
-        CustomTab::draw(p);
-        participants.draw(p);
-        ofPushMatrix();
-        drawServerStatus(participants.getShape());
-        ofPopMatrix();
-
-    }
-
-}
-
-void ServerTab::drawServerStatus(ofRectangle shape) {
+    participants.setPosition(settings.getPosition()+ofPoint(settings.getWidth()+10, 0));
+    participants.setWidth(this->getShape().getRight()-participants.getPosition().x - 10);
+    participants.setHeight(this->getShape().getBottom()-participants.getPosition().y - 10);
 
     ofEnableAlphaBlending();
     ofSetLineWidth(1);
@@ -108,8 +120,7 @@ void ServerTab::drawServerStatus(ofRectangle shape) {
     int status_quad = 20;
     int margin = 10;
 
-    ofRectangle r_widget = shape;
-    r_widget.y = shape.y+30;
+    ofRectangle r_widget = participants;
 
     ofRectangle r_connected(r_widget);
     r_connected.height = status_quad+margin;
@@ -129,8 +140,8 @@ void ServerTab::drawServerStatus(ofRectangle shape) {
 
         stringstream con_msg;
         //DRAWING CONNECTED STATUS
-        if(ServerController::getInstance().isConnected()) {
-            if(ServerController::getInstance().getActive()) {
+        if(traces_controller->getServerController()->isConnected()) {
+            if(traces_controller->getServerController()->getActive()) {
                 con_msg << "CONNECTED. ";
                 ofSetColor(0,255,0);
             }
@@ -146,9 +157,9 @@ void ServerTab::drawServerStatus(ofRectangle shape) {
         ofDrawRectangle(margin,margin-status_quad/2,status_quad, status_quad);
         stringstream obj_msg;
         obj_msg << con_msg.str();
-        obj_msg << ObjectController::getInstance().getClients().size() << " drawing objects,";
-        obj_msg << ObjectController::getInstance().getTotalClientLineCount() << " lines ";
-        obj_msg << "(max. " << ObjectController::getInstance().getMaxLinecount() << ")";
+        obj_msg << traces_controller->getObjectController()->getClients().size() << " drawing objects,";
+        obj_msg << traces_controller->getObjectController()->getTotalClientLineCount() << " lines ";
+        obj_msg << "(max. " << traces_controller->getObjectController()->getMaxLinecount() << ")";
         ofSetColor(255);
         TTF.drawString(obj_msg.str(),status_quad+margin*2,margin*3/2);
 
@@ -159,7 +170,7 @@ void ServerTab::drawServerStatus(ofRectangle shape) {
 
         //DRAWING CLIENTS;
         // @TODO SORT BY MOST ACTIVE AND MOST INACTIVE
-        map<string,DrawingObject_ptr>cs = ObjectController::getInstance().getClients();
+        map<string,DrawingObject_ptr>cs = traces_controller->getObjectController()->getClients();
         map<string,DrawingObject_ptr>::iterator iter;
         DrawingObject_ptr c;
 
@@ -175,7 +186,7 @@ void ServerTab::drawServerStatus(ofRectangle shape) {
                     client_names.push_back(c->getId());
                     ofSetColor(c->getColor());
                     ofDrawRectangle(margin,i*r_client.height-status_quad/2,status_quad, status_quad);
-                    ofSetLineWidth(5);
+                    ofSetLineWidth(3);
                     ofSetColor(255,100,100,(1-c->getPulseVal())*255);
                     ofNoFill();
                     ofDrawRectangle(margin,i*r_client.height-status_quad/2,status_quad, status_quad);
@@ -190,7 +201,7 @@ void ServerTab::drawServerStatus(ofRectangle shape) {
                     c_status << " lines: " << c->getConnections().size();
                     string resttime = c->getRestTimeAsString();
                     if(resttime != "") {
-                        if(c->isGone()) {
+                        if(c->getIsGone()) {
                             c_status << " gone: ";
                         }
                         else {

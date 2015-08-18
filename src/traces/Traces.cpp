@@ -1,15 +1,7 @@
 #include "Traces.h"
-#include "ServerController.h"
-#include "ObjectController.h"
 #include "Stuff.h"
-#include "Visuals.h"
 
 using namespace guardacaso;
-
-Traces& Traces::get() {
-    static Traces instance;
-    return instance;
-}
 
 Traces::Traces() {
     xml_server = "sessions/last/server.xml";
@@ -25,21 +17,26 @@ Traces::Traces() {
     history_dir = history_dir_sstr.str();
 
     ofDirectory::createDirectory(history_dir);
+
+    object_controller.getHistoryDir().makeReferenceTo(history_dir);
+
 }
 
-void Traces::setup() {
-    ObjectController::getInstance().setup();
+void Traces::setup(MappingController *mc) {
+    mapping_controller = mc;
+    object_controller.setup(mc);
     setupServer();
 }
 
-void Traces::setup(string ip, int port) {
-    ObjectController::getInstance().setup();
+void Traces::setup(MappingController* mc, string ip, int port) {
+    mapping_controller = mc;
+    object_controller.setup(mc);
     setupServer(ip, port);
 }
 
 void Traces::update() {
-    ServerController::getInstance().update();
-    ObjectController::getInstance().update();
+    server_controller.update();
+    object_controller.update(&server_controller);
 }
 
 void Traces::setupServer(string ip, int port){
@@ -69,22 +66,26 @@ void Traces::reloadServer(ofxXmlSettings_ptr xml, string ip, int port) {
     xml->pushTag("traces", 0);
 
         bool active = xml->getAttribute("server", "active", (int)false);
-        ServerController::getInstance().setActive(active);
+        server_controller.setActive(active);
 
-        ServerController::getInstance().setup(ip,port,client_id);
+        server_controller.setup(ip,port,client_id);
 
-        ObjectController::getInstance().setDrawingRangeMax(xml->getValue("range_max",0.3));
-        ObjectController::getInstance().setDrawingRangeMin(xml->getValue("range_min",0.3));
-        ObjectController::getInstance().setConnectToItself(xml->getValue("connect_itself",0));
-        ObjectController::getInstance().setConnectToOthers(xml->getValue("connect_others",1));
-        ObjectController::getInstance().setMaxConnections(xml->getValue("max_connect",10));
-        ObjectController::getInstance().setDrawingSpeed(xml->getValue("speed",0.3));
-        ObjectController::getInstance().setPulseTime(xml->getValue("pulsetime",0.2));
-        ObjectController::getInstance().setMaxLines(xml->getValue("maxlines",0.5));
-        ObjectController::getInstance().setFadeoutTimeIdle(xml->getValue("fadeout-idle",0.5));
-        ObjectController::getInstance().setFadeoutTimeGone(xml->getValue("fadeout-gone",0.5));
+        object_controller.getDrawingRangeMax().set(xml->getValue("range_max",object_controller.getDrawingRangeMax()));
+        object_controller.getDrawingRangeMin().set(xml->getValue("range_min",object_controller.getDrawingRangeMin()));
+        object_controller.getConnectToItself().set(xml->getValue("connect_itself",object_controller.getConnectToItself()));
+        object_controller.getConnectToOthers().set(xml->getValue("connect_others",object_controller.getConnectToOthers()));
+        object_controller.getMaxConnections().set(xml->getValue("max_connect",object_controller.getMaxConnections()));
+        object_controller.getDrawingSpeed().set(xml->getValue("speed",object_controller.getDrawingSpeed()));
+        object_controller.getPulseTime().set(xml->getValue("pulsetime",object_controller.getPulseTime()));
+        object_controller.getMaxLines().set(xml->getValue("maxlines",object_controller.getMaxLines()));
+        object_controller.getFadeoutTimeIdle().set(xml->getValue("fadeout-idle",object_controller.getFadeoutTimeIdle()));
+        object_controller.getFadeoutTimeGone().set(xml->getValue("fadeout-gone",object_controller.getFadeoutTimeGone()));
 
     xml->popTag();
+
+    ofAddListener(server_controller.messageReceived, &object_controller, &ObjectController::processMsg);
+    ofAddListener(object_controller.sendingPosition, &server_controller, &ServerController::sendPosition);
+    ofAddListener(server_controller.mappingRequested, this, &Traces::sendMapping);
 
 }
 
@@ -115,25 +116,25 @@ void Traces::saveServer() {
 
         xml.addTag("server");
 
-        xml.addAttribute("server", "active", (int)ServerController::getInstance().getActive().get(),0);
+        xml.addAttribute("server", "active", (int)server_controller.getActive().get(),0);
 
         xml.pushTag("server", 0);
 
-            xml.addValue("ip", ServerController::getInstance().getIp());
-            xml.addValue("port", ServerController::getInstance().getPort());
+            xml.addValue("ip", server_controller.getIp());
+            xml.addValue("port", server_controller.getPort());
 
         xml.popTag();
 
-        xml.addValue("speed", ObjectController::getInstance().getDrawingSpeed());
-        xml.addValue("range_max", ObjectController::getInstance().getDrawingRangeMax());
-        xml.addValue("range_min", ObjectController::getInstance().getDrawingRangeMin());
-        xml.addValue("connect_itself", ObjectController::getInstance().getConnectToItself());
-        xml.addValue("connect_others", ObjectController::getInstance().getConnectToOthers());
-        xml.addValue("max_connect", ObjectController::getInstance().getMaxConnections());
-        xml.addValue("pulsetime", ObjectController::getInstance().getPulseTime());
-        xml.addValue("maxlines", ObjectController::getInstance().getMaxLines());
-        xml.addValue("fadeout-idle", ObjectController::getInstance().getFadeoutTimeIdle());
-        xml.addValue("fadeout-gone", ObjectController::getInstance().getFadeoutTimeGone());
+        xml.addValue("speed", object_controller.getDrawingSpeed());
+        xml.addValue("range_max", object_controller.getDrawingRangeMax());
+        xml.addValue("range_min", object_controller.getDrawingRangeMin());
+        xml.addValue("connect_itself", object_controller.getConnectToItself());
+        xml.addValue("connect_others", object_controller.getConnectToOthers());
+        xml.addValue("max_connect", object_controller.getMaxConnections());
+        xml.addValue("pulsetime", object_controller.getPulseTime());
+        xml.addValue("maxlines", object_controller.getMaxLines());
+        xml.addValue("fadeout-idle", object_controller.getFadeoutTimeIdle());
+        xml.addValue("fadeout-gone", object_controller.getFadeoutTimeGone());
 
     xml.popTag();
 
@@ -151,9 +152,12 @@ string Traces::historyDir() {
 }
 
 Traces::~Traces() {
+    ofRemoveListener(server_controller.messageReceived, &object_controller, &ObjectController::processMsg);
+    ofRemoveListener(object_controller.sendingPosition, &server_controller, &ServerController::sendPosition);
+    ofRemoveListener(server_controller.mappingRequested, this, &Traces::sendMapping);
 }
 
-void Traces::simulateGroup(string group_dir) {
+void Traces::simulateGroup(MappingController *mc, string group_dir) {
 
     //find events in group
 
@@ -174,7 +178,7 @@ void Traces::simulateGroup(string group_dir) {
             stringstream mapping_svg;
             mapping_svg << group_file.getAbsolutePath() << "/" << "mapping.svg";
             cout << "traces::trying to import " << mapping_svg.str() << endl;
-            Visuals::get().importSvg(mapping_svg.str());
+            mc->getMapping()->getControl()->importSvg(mapping_svg.str());
 
             //find users (=svgs with fitting xml)
 
@@ -189,13 +193,25 @@ void Traces::simulateGroup(string group_dir) {
                 user_path << event_folder.getAbsolutePath() << "/" << user;
                 xml << user_path.str() << ".xml";
                 if(ofFile(xml.str()).exists()) {
-                    ObjectController::getInstance().addFakeObj(user_path.str(), user);
+                    object_controller.addFakeObj(user_path.str(), user);
                 }
             }
         }
     }
 }
 
-void Traces::simulateGroups() {
-    simulateGroup("history_processing/2013-07 Geschwistertreffen");
+void Traces::simulateGroups(MappingController* mc) {
+    simulateGroup(mc, "history_processing/2013-07 Geschwistertreffen");
+}
+
+void Traces::sendMapping(bool &){
+    getServerController()->sendMappingQuads(mapping_controller->getMapping()->getControl()->getProjector());
+}
+
+ServerController* Traces::getServerController(){
+    return &server_controller;
+}
+
+ObjectController* Traces::getObjectController(){
+    return &object_controller;
 }

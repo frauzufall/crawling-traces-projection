@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Traces.h"
 #include "CustomTab.h"
 
 namespace guardacaso {
@@ -10,17 +11,26 @@ class ServerTab : public CustomTab {
         ServerTab();
         ~ServerTab();
 
-        void update();
-        void draw(ofPoint p);
+        void setup(Traces* tc);
+        void render();
+
+        void updateTimeoutGone(float&);
+        void updateTimeoutIdle(float&);
+        void updateServerStatus(bool&);
 
     private:
 
-        void drawServerStatus(ofRectangle shape);
+        Traces* traces_controller;
+
+        std::string secondsToTimestring(int seconds);
 
         ofxButton save_btn;
-        CustomTab participants;
+        ofxPanel settings;
+        ofRectangle participants;
+        ofxLabel status_msg;
 
-        ofRectangle control_rect;
+        ofTrueTypeFont TTF;
+
         ofParameter<string> timeout_idle;
         ofParameter<string> timeout_gone;
 

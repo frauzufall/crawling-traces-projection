@@ -63,7 +63,7 @@ void SoundController::update() {
 
     //setting height
     int cut = 0;
-    for(int i = 0; i < activities.size(); i++) {
+    for(unsigned int i = 0; i < activities.size(); i++) {
         if(activities.at(i) < current_time-blendout) {
             cut = i+1;
         }

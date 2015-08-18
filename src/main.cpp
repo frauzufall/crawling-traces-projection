@@ -1,15 +1,13 @@
 #include "app.h"
 #include "ofAppGLFWWindow.h"
 
-typedef std::shared_ptr<AppStart> AppStart_ptr;
-
 //========================================================================
 int main(int argc, char *argv[]){
 
     ofAppGLFWWindow window;
 
-    int w = 100;
-    int h = 100;
+    int w = 1600;
+    int h = 900;
 
     window.setMultiDisplayFullscreen(true);
 

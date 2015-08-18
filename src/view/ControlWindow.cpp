@@ -5,11 +5,7 @@
 #include "PathsController.h"
 #include "Stuff.h"
 
-#include "ServerTab.h"
-#include "MappingTab.h"
-#include "PathsTab.h"
-
-#include "Visuals.h"
+#include "Traces.h"
 
 #include <regex>
 #include <iostream>
@@ -17,12 +13,7 @@
 
 using namespace guardacaso;
 
-ControlWindow& ControlWindow::getInstance() {
-    static ControlWindow instance;
-    return instance;
-}
-
-ControlWindow::ControlWindow() {
+ControlWindow::ControlWindow():ofxPanel() {
     is_setup = false;
 }
 
@@ -30,23 +21,67 @@ bool ControlWindow::isSetup() {
     return is_setup;
 }
 
-void ControlWindow::setup() {
+void ControlWindow::setup(MappingController* mc, PathsController* pc, Traces* tc) {
 
-    font = "fonts/Ubuntu-L.ttf";
+    mapping_controller = mc;
+    paths_controller = pc;
+    traces_controller = tc;
+
+    ofxPanel::setup("crawling traces");
+    setShowHeader(false);
+
     xml_gui = "sessions/last/gui.xml";
 
-    system_temp_freq = 30000;
-    last_temp_update = -system_temp_freq;
+    w = mapping_controller->getMapping()->getControl()->controlWidth();
+    h = mapping_controller->getMapping()->getControl()->controlHeight();
+    setSize(w+1,h);
 
-    header_height = 0.19;
-    w = Visuals::get().controlWidth();
-    h = Visuals::get().controlHeight();
-    x = 0;
-    y = 0;
+    //system_temp_freq = 30000;
+    //last_temp_update = -system_temp_freq;
+    //status_temp = "";
 
-    status_temp = "";
+    bool left = mapping_controller->controlLeft().get();
+    updatePosition(left);
+    mapping_controller->controlLeft().addListener(this, &ControlWindow::updatePosition);
 
-    setGui();
+    header.setup("header");
+    header.setLayout(ofxBaseGui::Horizontal);
+    header.setShowHeader(false);
+
+    title.setup("title","crawling traces");
+    title.setShowName(false);
+    header.add(title);
+    header.add<ofxFpsPlotter>();
+    header.setBorderColor(ofColor(47));
+    header.setDefaultBackgroundColor(ofColor(47));
+    //status.setup("STATUS");
+
+    save_settings_btn.addListener(this, &ControlWindow::saveAllSettings);
+    header.add(save_settings_btn.setup("Save all settings"));
+
+//    import_events_btn.addListener(this, &ControlWindow::importGroup);
+//    import_events_btn.setup("Import events");
+//    gui.add(&import_events_btn);
+
+    //status.add(status_temp.set("Hardware temperatures", ".. showing status .."));
+
+    server.setup(traces_controller);
+    paths.setup(paths_controller);
+
+    gui.setup("tabbed page");
+
+    gui.setShowHeader(false);
+    gui.setTabHeight(50);
+    gui.setTabWidth(100);
+    gui.setSize(w,h-header.getHeight()-10);
+    gui.add(server);
+    gui.add(paths);
+    gui.add(*mapping_controller->getMapping()->getControlView());
+    //gui.setSize(w,h-header.getHeight()-10);
+
+    add(header);
+    addSpacer(10);
+    add(gui);
 
     is_setup = true;
 
@@ -54,12 +89,7 @@ void ControlWindow::setup() {
 
 void ControlWindow::update() {
 
-    w = Visuals::get().controlWidth();
-    h = Visuals::get().controlHeight();
-
-    mapping.update();
     paths.update();
-    server.update();
 
 //    float current_time = ofGetElapsedTimeMillis();
 //    if(current_time - last_temp_update >= system_temp_freq) {
@@ -96,157 +126,27 @@ void ControlWindow::update() {
 
 }
 
-void ControlWindow::reloadGui() {
-
-    ofxXmlSettings_ptr xml = ofxXmlSettings_ptr(new ofxXmlSettings());
-    xml->clear();
-
-    ofPoint mapping_pos(gui.getPosition().x, gui.getPosition().y+gui.getHeight()+10);
-    ofPoint server_pos(gui.getPosition().x, gui.getPosition().y+gui.getHeight()+10);
-    ofPoint paths_pos(gui.getPosition().x, gui.getPosition().y+gui.getHeight()+10);
-//    ofPoint status_pos(gui.getPosition().x+gui.getWidth()+10, gui.getPosition().y);
-
-    if( xml->loadFile(xml_gui) ){
-
-        xml->pushTag("gui", 0);
-
-            mapping_pos.x = xml->getAttribute("mapping", "x", mapping_pos.x);
-            mapping_pos.y = xml->getAttribute("mapping", "y", mapping_pos.y);
-            mapping.setVisible(xml->getAttribute("mapping", "visible", 1));
-
-            server_pos.x = xml->getAttribute("server", "x", server_pos.x);
-            server_pos.y = xml->getAttribute("server", "y", server_pos.y);
-            server.setVisible(xml->getAttribute("server", "visible", 1));
-
-            paths_pos.x = xml->getAttribute("paths", "x", paths_pos.x);
-            paths_pos.y = xml->getAttribute("paths", "y", paths_pos.y);
-            paths.setVisible(xml->getAttribute("paths", "visible", 1));
-
-//            status_pos.x = xml->getAttribute("status", "x", status_pos.x);
-//            status_pos.y = xml->getAttribute("status", "y", status_pos.y);
-//            status.setVisible(xml->getAttribute("status", "visible", 1));
-
-        xml->popTag();
-
-    }else{
-        cout << "unable to load xml file " << xml_gui << endl;
-    }
-
-//    status.setPlacing(ofRectangle(status_pos,0,0));
-    server.setPlacing(ofRectangle(server_pos,0,0));
-    paths.setPlacing(ofRectangle(paths_pos,0,0));
-    mapping.setPlacing(ofRectangle(mapping_pos,0,0));
-
-}
-
-void ControlWindow::saveGui() {
-
-    ofxXmlSettings xml;
-
-    xml.clear();
-
-    xml.addTag("gui");
-    xml.pushTag("gui", 0);
-
-    xml.addTag("mapping");
-    xml.addAttribute("mapping", "x", mapping.getPlacing().x,0);
-    xml.addAttribute("mapping", "y", mapping.getPlacing().y,0);
-    xml.addAttribute("mapping", "visible", mapping.isVisible(),0);
-
-    xml.addTag("server");
-    xml.addAttribute("server", "x", server.getPlacing().x,0);
-    xml.addAttribute("server", "y", server.getPlacing().y,0);
-    xml.addAttribute("server", "visible", server.isVisible(),0);
-
-    xml.addTag("paths");
-    xml.addAttribute("paths", "x", paths.getPlacing().x,0);
-    xml.addAttribute("paths", "y", paths.getPlacing().y,0);
-    xml.addAttribute("paths", "visible", paths.isVisible(),0);
-
-//    xml.addTag("status");
-//    xml.addAttribute("status", "x", status.getPlacing().x,0);
-//    xml.addAttribute("status", "y", status.getPlacing().y,0);
-//    xml.addAttribute("status", "visible", status.isVisible(),0);
-
-    xml.popTag();
-
-    xml.saveFile(xml_gui);
-
-}
-
-void ControlWindow::draw(ofPoint p) {
-    
-    gui.draw(p);
-//    status.draw(p);
-    server.draw(p);
-    paths.draw(p);
-    mapping.draw(p);
-
-}
-
-void ControlWindow::setGui() {
-
-    gui.setup("crawling traces");
-//    status.setup("STATUS");
-
-    gui.setBorderColor(ofColor::black);
-//    status.setBorderColor(ofColor::black);
-
-    save_gui_btn.addListener(this, &ControlWindow::saveGui);
-    gui.add(save_gui_btn.setup("Save GUI"));
-
-    save_settings_btn.addListener(this, &ControlWindow::saveAllSettings);
-    gui.add(save_settings_btn.setup("Save all settings"));
-
-//    import_events_btn.addListener(this, &ControlWindow::importGroup);
-//    import_events_btn.setup("Import events");
-//    gui.add(&import_events_btn);
-
-    gui.add(server.visible.set("show server", false));
-    gui.add(paths.visible.set("show paths", true));
-    gui.add(mapping.visible.set("show mapping", false));
-
-//    status.add(status_temp.set("Hardware temperatures", ".. showing status .."));
-
-    reloadGui();
-
-}
-
 ControlWindow::~ControlWindow() {
-    save_gui_btn.removeListener(this, &ControlWindow::saveGui);
+    mapping_controller->controlLeft().addListener(this, &ControlWindow::updatePosition);
     save_settings_btn.removeListener(this, &ControlWindow::saveAllSettings);
 }
 
-bool ControlWindow::drawingMapping() {
-    return mapping.isVisible();
-}
-
 void ControlWindow::saveAllSettings() {
-    Visuals::get().saveMappingDefault();
-    Traces::get().saveServer();
-    Visuals::get().savePaths();
-}
-
-void ControlWindow::keyPressed(int key) {
-    switch(key) {
-    case '1':
-        server.setVisible(!server.isVisible());
-        break;
-    case '2':
-        paths.setVisible(!paths.isVisible());
-        break;
-    case '3':
-        mapping.setVisible(!mapping.isVisible());
-        break;
-    default:break;
-    }
-}
-
-MappingTab& ControlWindow::getMapping() {
-    return mapping;
+    //MappingController::getInstance().getMapping()->getControl()->saveMappingDefault();
+    traces_controller->saveServer();
+    paths_controller->savePaths();
 }
 
 void ControlWindow::importGroup() {
-    Traces::get().simulateGroups();
-    mapping.reload();
+    traces_controller->simulateGroups(mapping_controller);
+    //TODO update mapping tab
+}
+
+void ControlWindow::updatePosition(bool &left){
+    if(left){
+        this->setPosition(0,0);
+    }else {
+        this->setPosition(mapping_controller->getMapping()->getControl()->getProjector()->outputWidth(),0);
+    }
+
 }

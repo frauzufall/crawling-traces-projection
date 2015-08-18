@@ -1,7 +1,6 @@
 #pragma once
 
 #include "CustomPaths.h"
-//#include "ofxBox2d.h"
 
 using namespace guardacaso;
 
@@ -13,13 +12,20 @@ public:
     ~CtPaintingLayer(){}
 	
     void setup();
-    void update();
-    void draw(int path);
+    void update(ofPolylines_ptr lines, map<string, DrawingObject_ptr> &clients);
+    void draw(ofPolylines_ptr lines, map<string, DrawingObject_ptr> &clients);
     void idle();
     void resume();
 
 private:
-    float max_size;
-    float max_pulse_size_factor;
+
+    ofParameter<float> stroke1_w;
+    ofParameter<float> stroke2_w;
+    ofParameter<float> control_size;
+    ofParameter<float> alpha1;
+    ofParameter<float> alpha2;
+    ofParameter<float> pulse_size;
+    ofParameter<bool> show_lines;
+    ofParameter<bool> show_controls;
 	
 };
