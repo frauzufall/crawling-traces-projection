@@ -52,5 +52,44 @@
             <x>0.415912092</x>
             <y>0.384275615</y>
         </object>
+        <object type="COLOR_SHAPE" name="window">
+            <color r="0" g="0" b="0"></color>
+            <dst>
+                <lefttop>
+                    <x>0.248349041</x>
+                    <y>0.500943363</y>
+                </lefttop>
+                <righttop>
+                    <x>0.753006995</x>
+                    <y>0.495283008</y>
+                </righttop>
+                <rightbottom>
+                    <x>0.783254683</x>
+                    <y>0.933962226</y>
+                </rightbottom>
+                <leftbottom>
+                    <x>0.318396211</x>
+                    <y>0.962264121</y>
+                </leftbottom>
+            </dst>
+            <polyline>
+                <point>
+                    <x>0.248349041</x>
+                    <y>0.500943363</y>
+                </point>
+                <point>
+                    <x>0.753006995</x>
+                    <y>0.495283008</y>
+                </point>
+                <point>
+                    <x>0.783254683</x>
+                    <y>0.933962226</y>
+                </point>
+                <point>
+                    <x>0.318396211</x>
+                    <y>0.962264121</y>
+                </point>
+            </polyline>
+        </object>
     </projector>
 </mapping>

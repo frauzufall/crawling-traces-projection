@@ -102,14 +102,6 @@ void DrawingObject::gotRedrawn() {
     please_redraw = false;
 }
 
-//void DrawingObject::setPulsing() {
-    //pulsestart = ofGetElapsedTimef();
-    //pulseval = 1;
-    //send to server that client is pulsing
-    //TODO fix
-    //ServerController::getInstance().send(ServerController::getInstance().getClientName(), "pulsing", _id);
-//}
-
 ofParameter<float> &DrawingObject::getPulseStart() {
     return pulsestart;
 }

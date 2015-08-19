@@ -44,7 +44,7 @@ namespace guardacaso {
 
             bool is_setup;
 
-            ofxButton save_settings_btn, import_events_btn;
+            ofxMinimalButton save_settings_btn, import_events_btn;
             ofxLabel title;
 
             ofParameter<string> status_temp;

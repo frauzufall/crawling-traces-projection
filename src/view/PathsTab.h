@@ -1,19 +1,18 @@
 #pragma once
 
 #include "PathsController.h"
-#include "ofxGuiPage.h"
+#include "CustomTab.h"
 
 namespace guardacaso {
 
-class PathsTab : public ofxGuiPage {
+class PathsTab : public CustomTab {
 
     public:
         PathsTab();
         ~PathsTab();
 
         void setup(PathsController* pc);
-        void update();
-        void setGui();
+        void setGui(int &index);
 
     private:
 
@@ -23,11 +22,9 @@ class PathsTab : public ofxGuiPage {
 
         float preview_h, preview_w;
 
-        string active_path;
-
         ofxButton save_btn;
 
-        ofxPanel paths_list, paths_options;
+        ofxGuiGroup paths_list, paths_options;
 
 };
 

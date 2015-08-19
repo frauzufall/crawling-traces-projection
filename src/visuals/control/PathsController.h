@@ -27,9 +27,9 @@ namespace guardacaso {
         void addPaths(CustomPaths_ptr c);
         CustomPaths_ptr getActivePath();
         CustomPaths_ptr getPath(int index);
-        void activePathChanged(bool&);
-        void setActivePath(string paths_name, bool loadDataFromLastPaths);
-        void setActivePath(int paths_name);
+        void activePathChanged(int &index);
+        void setActivePath(string paths_name);
+        void setActivePath(int index);
         vector<string> getPathsNames();
 
 		

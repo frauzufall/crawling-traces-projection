@@ -13,7 +13,7 @@ void PathsController::setup(){
     xml_paths = "sessions/last/paths.xml";
 
     paths.clear();
-    active_path = 0;
+    active_path = -1;
 	
     addPaths(CustomPaths_ptr(new EmptyPaths("empty")));
 
@@ -33,7 +33,9 @@ void PathsController::setup(){
     /*__________________|||_____________________________*/
     /*__________________|||_____________________________*/
 	
-    setActivePath("empty",false);
+    setActivePath(0);
+
+    setupPaths();
 
 }
 
@@ -58,13 +60,12 @@ void PathsController::reloadPaths(ofPtr<ofxXmlSettings> xml) {
 
             if(xml->getAttribute(p->getName(), "active", 0, 0)){
                 setActivePath(i);
+                xml->pushTag(p->getName(), 0);
+
+                    xml->deserialize(p->getSettings());
+
+                xml->popTag();
             }
-
-            xml->pushTag(p->getName(), 0);
-
-                xml->deserialize(p->getSettings());
-
-            xml->popTag();
         }
 
     xml->popTag();
@@ -80,27 +81,20 @@ void PathsController::savePaths() {
     xml.addTag("pathsconfig");
     xml.pushTag("pathsconfig", 0);
 
-        int d_num = xml.getNumTags("deck");
+        CustomPaths_ptr p = getActivePath();
 
-        xml.addTag("deck");
-
-        xml.addAttribute("deck", "visible", 1, d_num);
-
-        xml.pushTag("deck", d_num);
-
-            CustomPaths_ptr p = getActivePath();
-
-            if(p){
-                xml.addTag(p->getName());
-                xml.pushTag(p->getName(), 0);
-
-                xml.serialize(p->getSettings());
-
-                xml.popTag();
-
+        if(p){
+            xml.addTag(p->getName());
+            if(p->isActive().get()){
+                xml.addAttribute(p->getName(), "active", 1, 0);
             }
+            xml.pushTag(p->getName(), 0);
 
-        xml.popTag();
+            xml.serialize(p->getSettings());
+
+            xml.popTag();
+
+        }
 
     xml.popTag();
 
@@ -138,7 +132,7 @@ void PathsController::addPaths(CustomPaths_ptr c) {
 	
 }
 
-void PathsController::setActivePath(string paths_name, bool loadDataFromLastPaths) {
+void PathsController::setActivePath(string paths_name) {
 
     for(uint i = 0; i < paths.size(); i++) {
         if(paths[i]->getName() == paths_name) {
@@ -149,12 +143,14 @@ void PathsController::setActivePath(string paths_name, bool loadDataFromLastPath
 
 }
 
-void PathsController::setActivePath(int paths_id) {
+void PathsController::setActivePath(int index) {
 
-    getActivePath()->idle();
-    getActivePath()->isActive().set(false);
+    if(active_path >= 0){
+        getActivePath()->idle();
+        getActivePath()->isActive().set(false);
+    }
 
-    active_path = paths_id;
+    active_path = index;
 
     getActivePath()->isActive().set(true);
     getActivePath()->resume();
@@ -189,14 +185,9 @@ CustomPaths_ptr PathsController::getPath(int index) {
 
 }
 
-void PathsController::activePathChanged(bool&) {
-    for(int i = 0; i < (int)paths.size(); i++) {
-        if( (paths.at(i)->isActive()) ) {
-            if(active_path.get() != i){
-                setActivePath(i);
-            }
-
-        }
+void PathsController::activePathChanged(int& index) {
+    if(active_path.get() != index){
+        setActivePath(index);
     }
 }
 

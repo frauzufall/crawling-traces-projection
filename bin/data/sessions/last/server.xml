@@ -6,7 +6,7 @@
     <speed>0.300000012</speed>
     <range_max>60.000000000</range_max>
     <range_min>10.000000000</range_min>
-    <connect_itself>0</connect_itself>
+    <connect_itself>1</connect_itself>
     <connect_others>1</connect_others>
     <max_connect>100</max_connect>
     <pulsetime>0.200000003</pulsetime>

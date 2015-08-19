@@ -69,7 +69,12 @@ void AppStart::update(){
 //--------------------------------------------------------------
 void AppStart::draw(){
 
+    ofSetColor(255);
+
     mapping_controller.draw();
+
+    ofSetColor(255);
+
     ofPushMatrix();
     if(mapping_controller.controlLeft()){
         ofTranslate(mapping_controller.getMapping()->getControl()->getProjector()->outputWidth(),0);
@@ -77,6 +82,7 @@ void AppStart::draw(){
     paths_controller.draw(mapping_controller.getMapping()->getControl()->getProjector()->outlines(),
                           traces_controller.getObjectController()->getClients());
     ofPopMatrix();
+    ofSetColor(255);
     control_window.draw();
 
 }

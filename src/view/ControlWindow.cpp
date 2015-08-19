@@ -29,6 +29,7 @@ void ControlWindow::setup(MappingController* mc, PathsController* pc, Traces* tc
 
     ofxPanel::setup("crawling traces");
     setShowHeader(false);
+    setBorderColor(ofColor::fromHex(0x4BB3A5));
 
     xml_gui = "sessions/last/gui.xml";
 
@@ -40,6 +41,11 @@ void ControlWindow::setup(MappingController* mc, PathsController* pc, Traces* tc
     //last_temp_update = -system_temp_freq;
     //status_temp = "";
 
+    ofxBaseGui::Config config_header;
+    config_header.backgroundColor = ofColor(0,0,0,0);
+    config_header.shape.width = 170;
+    config_header.shape.height = 30;
+
     bool left = mapping_controller->controlLeft().get();
     updatePosition(left);
     mapping_controller->controlLeft().addListener(this, &ControlWindow::updatePosition);
@@ -47,38 +53,52 @@ void ControlWindow::setup(MappingController* mc, PathsController* pc, Traces* tc
     header.setup("header");
     header.setLayout(ofxBaseGui::Horizontal);
     header.setShowHeader(false);
+    header.setBorderColor(ofColor(0,0,0,0));
 
-    title.setup("title","crawling traces");
+    title.setup("title","crawling traces", config_header);
     title.setShowName(false);
     header.add(title);
-    header.add<ofxFpsPlotter>();
-    header.setBorderColor(ofColor(47));
-    header.setDefaultBackgroundColor(ofColor(47));
+    header.add<ofxFpsPlotter>(config_header);
     //status.setup("STATUS");
 
+    ofxBaseGui::Config config_header_btn = config_header;
+    config_header_btn.shape.width = 0;
+
     save_settings_btn.addListener(this, &ControlWindow::saveAllSettings);
-    header.add(save_settings_btn.setup("Save all settings"));
+    save_settings_btn.setBackgroundColor(ofColor(0,0,0,0));
+    header.addSpacer(13);
+    header.add(save_settings_btn.setup("Save all settings", config_header_btn));
 
 //    import_events_btn.addListener(this, &ControlWindow::importGroup);
 //    import_events_btn.setup("Import events");
-//    gui.add(&import_events_btn);
+//    gui.add(import_events_btn);
 
     //status.add(status_temp.set("Hardware temperatures", ".. showing status .."));
 
     server.setup(traces_controller);
     paths.setup(paths_controller);
 
+    //setup mapping view
+    mapping_controller->getMapping()->getControlView()->setGroupConfig(CustomTab().group_config);
+    mapping_controller->getMapping()->getControlView()->setSliderConfig(CustomTab().slider_config);
+    mapping_controller->getMapping()->getControlView()->setToggleConfig(CustomTab().toggle_config);
+    mapping_controller->getMapping()->getControlView()->setLabelConfig(CustomTab().label_config);
+    mapping_controller->getMapping()->getControlView()->setup(0,0,800,600);
+
     gui.setup("tabbed page");
 
     gui.setShowHeader(false);
     gui.setTabHeight(50);
     gui.setTabWidth(100);
+    gui.setBackgroundColor(ofColor(22));
+    gui.setBorderColor(ofColor(0,0,0,0));
     gui.setSize(w,h-header.getHeight()-10);
     gui.add(server);
     gui.add(paths);
     gui.add(*mapping_controller->getMapping()->getControlView());
-    //gui.setSize(w,h-header.getHeight()-10);
+    gui.setSize(w,h-header.getHeight()-10);
 
+    addSpacer(10);
     add(header);
     addSpacer(10);
     add(gui);
@@ -88,8 +108,6 @@ void ControlWindow::setup(MappingController* mc, PathsController* pc, Traces* tc
 }
 
 void ControlWindow::update() {
-
-    paths.update();
 
 //    float current_time = ofGetElapsedTimeMillis();
 //    if(current_time - last_temp_update >= system_temp_freq) {
@@ -132,7 +150,7 @@ ControlWindow::~ControlWindow() {
 }
 
 void ControlWindow::saveAllSettings() {
-    //MappingController::getInstance().getMapping()->getControl()->saveMappingDefault();
+    mapping_controller->getMapping()->getControl()->saveMappingDefault();
     traces_controller->saveServer();
     paths_controller->savePaths();
 }

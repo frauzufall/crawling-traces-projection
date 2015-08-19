@@ -8,21 +8,20 @@ void ServerTab::setup(Traces *tc){
 
     traces_controller = tc;
 
-    CustomTab::setup("Server");
+    ofxGuiGroup::setup("Server", group_config);
 
     TTF.load("mono", 10);
 
-    setBorderColor(ofColor(235,212,0,0.5));
-
     settings.setup(group_config);
+    settings.setShowHeader(false);
 
-    save_btn.addListener(traces_controller, &Traces::saveServer);
     save_btn.setup("SAVE", toggle_config);
+    save_btn.addListener(traces_controller, &Traces::saveServer);
     settings.add(save_btn);
 
-    settings.add(traces_controller->getServerController()->getActive().set("ACTIVE", traces_controller->getServerController()->getActive()), toggle_config);
-    settings.add(traces_controller->getServerController()->getIp().set("IP", traces_controller->getServerController()->getIp()), label_config);
-//    settings.add(ofParameter<string>().set("Port", printf("%i",traces_controller->getServerController()->getPort().get())));
+    settings.add(traces_controller->getServerController()->getActive(), toggle_config);
+    settings.add(traces_controller->getServerController()->getIp(), label_config);
+    settings.add<ofxIntLabel>(traces_controller->getServerController()->getPort(), label_config);
     settings.add(traces_controller->getObjectController()->getMaxLines(), slider_config);
     settings.add(traces_controller->getObjectController()->getPulseTime(), slider_config);
     settings.add(traces_controller->getObjectController()->getDrawingSpeed(), slider_config);
@@ -50,7 +49,7 @@ void ServerTab::setup(Traces *tc){
     add(settings);
 //    add(participants);
 
-    settings.setPosition(settings.getPosition()+ofPoint(10,0));
+    settings.setPosition(settings.getPosition()+ofPoint(margin,0));
 
 }
 
@@ -109,16 +108,15 @@ void ServerTab::render(){
 
     CustomTab::render();
 
-    participants.setPosition(settings.getPosition()+ofPoint(settings.getWidth()+10, 0));
-    participants.setWidth(this->getShape().getRight()-participants.getPosition().x - 10);
-    participants.setHeight(this->getShape().getBottom()-participants.getPosition().y - 10);
+    participants.setPosition(settings.getPosition()+ofPoint(settings.getWidth()+margin, 0));
+    participants.setWidth(this->getShape().getRight()-participants.getPosition().x - margin);
+    participants.setHeight(this->getShape().getBottom()-participants.getPosition().y - margin);
 
     ofEnableAlphaBlending();
     ofSetLineWidth(1);
     ofFill();
 
     int status_quad = 20;
-    int margin = 10;
 
     ofRectangle r_widget = participants;
 

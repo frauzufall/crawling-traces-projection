@@ -6,14 +6,14 @@ using namespace guardacaso;
 ServerController::ServerController() {
 
     setup_done = false;
-    active = false;
-    connected = false;
+    active.set("active", false);
+    connected.set("connected", false);
     ofSetVerticalSync(true);
     protocol = PROTOCOL_TCP;
     reconnect_time = 5;
-    ip="";
-    port = 8080;
-    client_name="";
+    ip.set("IP","");
+    port.set("Port",8080);
+    client_name.set("ID", "");
     mapping_sent = 0;
     mapping_time = 100;
 
@@ -24,7 +24,7 @@ void ServerController::setup(string address, int port, string name) {
     this->ip = address;
     this->port = port;
     client_name = name;
-    cout << "SERVERCONTROLLER: name of this instance of WALLS: " << name << endl;
+    ofLogNotice("ServerController: setup()", "Name of this instance: " + name);
 
     setup_done = true;
 
@@ -71,7 +71,7 @@ void ServerController::update() {
 
 void ServerController::askForColor(string client_id) {
     if(connected && setup_done) {
-        cout << "SERVERCONTROLLER: asking for color of client " << client_id << "." << endl;
+        ofLogNotice("ServerController: askForColor()", "Asking for color of client " + client_id + ".");
         send(client_name,"getcolor",client_id);
     }
 }
@@ -171,7 +171,7 @@ bool ServerController::sendViaTcp(string client_id, string action, string value)
         connected = tcpConnection.send(message);
     }
     catch (exception& e) {
-        cout << "SERVERCONTROLLER: " << e.what() << endl;
+        ofLogNotice("ServerController: sendViaTcp()", e.what());
     }
     return connected;
 }
@@ -183,10 +183,9 @@ bool ServerController::sendViaUdp(string client_id, string action, string value)
 }
 
 void ServerController::reconnectUdp() {
-    string message = client_name + ":new:of";
     int sent = send(client_name, "new", "of");
     if(!sent) {
-        cout << "SERVERCONTROLLER: no udp connection" << endl;
+        ofLogNotice("ServerController: reconnectUdp()", "No udp connection.");
         connected = false;
         setupUdp(ip, port);
     }
@@ -197,7 +196,7 @@ void ServerController::reconnectUdp() {
 void ServerController::setupUdp(string address, int port) {
     udpConnection.Create();
     udpConnection.Connect(address.c_str(),port);
-    cout << "SERVERCONTROLLER LOG: connecting to " << ip << " on port " << port << endl;
+    ofLogNotice("ServerController: setupUdp()", "Connecting to " + ip.get() + " on port " + ofToString(port) + ".");
     udpConnection.SetNonBlocking(true);
 }
 
@@ -206,16 +205,16 @@ void ServerController::reconnectTcp() {
     tcpConnection.setMessageDelimiter("\n");
     if(connected) {
         if(send(client_name, "new", "of")) {
-            cout << "SERVERCONTROLLER: established tcp connection and successfully sent message" << endl;
+            ofLogNotice("ServerController: reconnectTcp()", "Established tcp connection and successfully sent message.");
             connected = true;
         }
         else {
-            cout << "SERVERCONTROLLER: established tcp connection, but could not send message" << endl;
+            ofLogNotice("ServerController: reconnectTcp()", "Established tcp connection, but could not send message.");
         }
     }
     else {
         connected = false;
-        cout << "SERVERCONTROLLER: no tcp connection" << endl;
+        ofLogNotice("ServerController: reconnectTcp()", "No tcp connection.");
     }
 }
 
@@ -238,7 +237,7 @@ ofParameter<bool> &ServerController::isConnected() {
     return connected;
 }
 
-ofParameter<bool> ServerController::getActive() {
+ofParameter<bool>& ServerController::getActive() {
     return active;
 }
 
@@ -256,7 +255,7 @@ ofParameter<string> &ServerController::getIp() {
     return ip;
 }
 
-string ServerController::getClientName() {
+ofParameter<string> &ServerController::getClientName() {
     return client_name;
 }
 

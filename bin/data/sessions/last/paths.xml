@@ -1,7 +1,14 @@
 <pathsconfig>
-    <deck visible="1">
-        <empty>
-            <group></group>
-        </empty>
-    </deck>
+    <ct-painting active="1">
+        <group>
+            <stroke1_w>1</stroke1_w>
+            <stroke2_w>1</stroke2_w>
+            <control_size>6</control_size>
+            <alpha1>1</alpha1>
+            <alpha2>1</alpha2>
+            <pulse_size>1</pulse_size>
+            <show_lines>1</show_lines>
+            <show_controls>1</show_controls>
+        </group>
+    </ct-painting>
 </pathsconfig>

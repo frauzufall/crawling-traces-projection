@@ -449,13 +449,14 @@ void ObjectController::setObjectPos(DrawingObject_ptr obj, ofPoint p) {
     for(uint i = 0; i < pj->shapeCount(); i++) {
         mo = pj->getMappingObject(i);
         if(ofPtr<ofx2DMappingShape> shape = std::dynamic_pointer_cast<ofx2DMappingShape>(mo)){
-            if(shape->nature == "window") {
+            if(shape->name == "window") {
                 ofPolyline polyline = mapping_controller->getMapping()->getControl()->getProjector(0)->outlinesRaw()->at(i);
                 for(uint j = 0; j < polyline.size(); j++) {
                     vector<ofPoint> points_between = Stuff::getPointsBetween(polyline[j],
                                                                              polyline[(j+1)%polyline.size()],
                                                                              10);
                     for(uint k = 0; k < points_between.size(); k++) {
+                        //cout << pos.distance(points_between[k]) << endl;
                         if(pos.distance(points_between[k]) < max_distance) {
                             //SoundController::getInstance().triggerActivity();
                             obj->addIntersection(timestamp, points_between[k]);

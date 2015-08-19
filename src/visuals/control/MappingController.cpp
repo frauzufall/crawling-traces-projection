@@ -20,7 +20,7 @@ void MappingController::setup(){
     mapping.addTemplate<ofx2DMappingShape>("drawing area");
     mapping.addColorTemplate("window", ofColor(0));
 
-    mapping.setup(xml_mapping);
+    mapping.setup(xml_mapping, false);
     mapping.showControls(false);
 
     bool left = control_left;
@@ -38,6 +38,8 @@ void MappingController::update() {
 void MappingController::draw(int projector_id) {
 
     ofx2DMappingProjector* p = mapping.getControl()->getProjector(projector_id);
+
+    ofSetColor(255);
 
     mapping.draw();
 

@@ -26,3 +26,6 @@ bin/data/history/*
 
 #Crawling Traces binary, server and gui settings
 bin/data/sessions/*/*
+
+bin/crawling-traces
+bin/crawling-traces_debug

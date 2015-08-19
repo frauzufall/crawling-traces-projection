@@ -32,11 +32,11 @@ namespace guardacaso {
             bool send(string client_id, string action, string value);
             void sendMappingQuads(ofx2DMappingProjector *projector);
             void askForColor(string client_id);
-            ofParameter<bool> getActive();
+            ofParameter<bool> &getActive();
             void setActive(bool _active);
             ofParameter<int> &getPort();
             ofParameter<string> &getIp();
-            string getClientName();
+            ofParameter<string>& getClientName();
             void sendPosition(ctMessage& msg);
 
             ofEvent<ctMessage> messageReceived;
@@ -67,7 +67,7 @@ namespace guardacaso {
 
             ofParameter<int> port;
             ofParameter<string> ip;
-            string client_name;
+            ofParameter<string> client_name;
 
             ofParameter<bool> connected;
             ofParameter<bool> active;
