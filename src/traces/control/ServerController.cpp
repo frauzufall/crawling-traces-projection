@@ -171,7 +171,7 @@ bool ServerController::sendViaTcp(string client_id, string action, string value)
         connected = tcpConnection.send(message);
     }
     catch (exception& e) {
-        ofLogNotice("ServerController: sendViaTcp()", e.what());
+        ofLogNotice("ServerController: sendViaTcp()", ofToString(e.what()));
     }
     return connected;
 }

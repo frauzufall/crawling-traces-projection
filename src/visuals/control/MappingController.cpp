@@ -17,7 +17,7 @@ void MappingController::setup(){
     xml_mapping = "sessions/last/mapping.xml";
 
     mapping.addTemplate<ofx2DMappingPoint>("start");
-    mapping.addTemplate<ofx2DMappingShape>("drawing area");
+    mapping.addTemplate<ofx2DMappingContentShape>("drawing area");
     mapping.addColorTemplate("window", ofColor(0));
 
     mapping.setup(xml_mapping, false);

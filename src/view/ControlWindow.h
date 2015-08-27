@@ -8,6 +8,7 @@
 #include "MappingController.h"
 #include "PathsController.h"
 #include "Traces.h"
+#include "VideoRecorderController.h"
 
 using namespace guardacaso;
 
@@ -19,7 +20,7 @@ namespace guardacaso {
 
             ControlWindow();
             ~ControlWindow();
-            void setup(MappingController* mc, PathsController* pc, Traces* tc);
+            void setup(MappingController* mc, PathsController* pc, Traces* tc, VideoRecorderController *vrc);
             void update();
             void updatePosition(bool& left);
 
@@ -34,6 +35,7 @@ namespace guardacaso {
             MappingController* mapping_controller;
             PathsController* paths_controller;
             Traces* traces_controller;
+            VideoRecorderController* video_recorder_controller;
 
             ofxTabbedPages gui;
             ofxGuiGroup header, status;
@@ -48,6 +50,7 @@ namespace guardacaso {
             ofxLabel title;
 
             ofParameter<string> status_temp;
+            ofParameter<bool> recording;
 
             int system_temp_freq;
             int last_temp_update;

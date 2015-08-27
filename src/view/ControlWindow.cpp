@@ -21,11 +21,12 @@ bool ControlWindow::isSetup() {
     return is_setup;
 }
 
-void ControlWindow::setup(MappingController* mc, PathsController* pc, Traces* tc) {
+void ControlWindow::setup(MappingController* mc, PathsController* pc, Traces* tc, VideoRecorderController* vrc) {
 
     mapping_controller = mc;
     paths_controller = pc;
     traces_controller = tc;
+    video_recorder_controller = vrc;
 
     ofxPanel::setup("crawling traces");
     setShowHeader(false);
@@ -68,6 +69,8 @@ void ControlWindow::setup(MappingController* mc, PathsController* pc, Traces* tc
     save_settings_btn.setBackgroundColor(ofColor(0,0,0,0));
     header.addSpacer(13);
     header.add(save_settings_btn.setup("Save all settings", config_header_btn));
+    header.add(recording.set("recording", false));
+    recording.addListener(video_recorder_controller, &VideoRecorderController::setRecording);
 
 //    import_events_btn.addListener(this, &ControlWindow::importGroup);
 //    import_events_btn.setup("Import events");
@@ -145,8 +148,9 @@ void ControlWindow::update() {
 }
 
 ControlWindow::~ControlWindow() {
-    mapping_controller->controlLeft().addListener(this, &ControlWindow::updatePosition);
+    mapping_controller->controlLeft().removeListener(this, &ControlWindow::updatePosition);
     save_settings_btn.removeListener(this, &ControlWindow::saveAllSettings);
+    recording.removeListener(video_recorder_controller, &VideoRecorderController::setRecording);
 }
 
 void ControlWindow::saveAllSettings() {

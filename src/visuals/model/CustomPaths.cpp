@@ -6,7 +6,7 @@ using namespace guardacaso;
 	
 CustomPaths::CustomPaths(string title) {
 
-    setup_done = false;
+    setup_done.set(false);
     loaded = false;
 
     active.set(false);
@@ -24,7 +24,7 @@ string CustomPaths::getName() {
     return name;
 }
 
-bool CustomPaths::isSetupDone() {
+ofParameter<bool>& CustomPaths::setupDone() {
     return setup_done;
 }
 

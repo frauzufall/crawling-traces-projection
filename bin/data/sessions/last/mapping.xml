@@ -8,9 +8,45 @@
             <width>1600</width>
             <height>900</height>
         </output>
-        <object type="SHAPE" name="drawing area">
+        <object type="CONTENT_SHAPE" name="drawing area">
             <color r="255" g="255" b="255"></color>
             <dst>
+                <lefttop>
+                    <x>0.239081830</x>
+                    <y>0.185694635</y>
+                </lefttop>
+                <righttop>
+                    <x>0.723048449</x>
+                    <y>0.167125165</y>
+                </righttop>
+                <rightbottom>
+                    <x>0.735814929</x>
+                    <y>0.858321846</y>
+                </rightbottom>
+                <leftbottom>
+                    <x>0.247205958</x>
+                    <y>0.685006857</y>
+                </leftbottom>
+            </dst>
+            <polyline>
+                <point>
+                    <x>0.239081830</x>
+                    <y>0.185694635</y>
+                </point>
+                <point>
+                    <x>0.723048449</x>
+                    <y>0.167125165</y>
+                </point>
+                <point>
+                    <x>0.735814929</x>
+                    <y>0.858321846</y>
+                </point>
+                <point>
+                    <x>0.247205958</x>
+                    <y>0.685006857</y>
+                </point>
+            </polyline>
+            <src>
                 <lefttop>
                     <x>0.000000000</x>
                     <y>0.000000000</y>
@@ -27,69 +63,7 @@
                     <x>0.000000000</x>
                     <y>1.000000000</y>
                 </leftbottom>
-            </dst>
-            <polyline>
-                <point>
-                    <x>0.000000000</x>
-                    <y>0.000000000</y>
-                </point>
-                <point>
-                    <x>1.000000000</x>
-                    <y>0.000000000</y>
-                </point>
-                <point>
-                    <x>1.000000000</x>
-                    <y>1.000000000</y>
-                </point>
-                <point>
-                    <x>0.000000000</x>
-                    <y>1.000000000</y>
-                </point>
-            </polyline>
-        </object>
-        <object type="POINT" name="start">
-            <color r="255" g="255" b="255"></color>
-            <x>0.415912092</x>
-            <y>0.384275615</y>
-        </object>
-        <object type="COLOR_SHAPE" name="window">
-            <color r="0" g="0" b="0"></color>
-            <dst>
-                <lefttop>
-                    <x>0.248349041</x>
-                    <y>0.500943363</y>
-                </lefttop>
-                <righttop>
-                    <x>0.753006995</x>
-                    <y>0.495283008</y>
-                </righttop>
-                <rightbottom>
-                    <x>0.783254683</x>
-                    <y>0.933962226</y>
-                </rightbottom>
-                <leftbottom>
-                    <x>0.318396211</x>
-                    <y>0.962264121</y>
-                </leftbottom>
-            </dst>
-            <polyline>
-                <point>
-                    <x>0.248349041</x>
-                    <y>0.500943363</y>
-                </point>
-                <point>
-                    <x>0.753006995</x>
-                    <y>0.495283008</y>
-                </point>
-                <point>
-                    <x>0.783254683</x>
-                    <y>0.933962226</y>
-                </point>
-                <point>
-                    <x>0.318396211</x>
-                    <y>0.962264121</y>
-                </point>
-            </polyline>
+            </src>
         </object>
     </projector>
 </mapping>

@@ -20,9 +20,9 @@ namespace guardacaso {
         void reloadPaths(ofPtr<ofxXmlSettings> xml);
         void savePaths();
 
-        void setup();
-        void update(ofPolylines_ptr lines, map<string, DrawingObject_ptr> &clients);
-        void draw(ofPolylines_ptr lines, map<string, DrawingObject_ptr> &clients);
+        void setup(float width, float height);
+        void update(ofx2DMappingProjector *projector, map<string, DrawingObject_ptr> &clients);
+        void drawOutput(ofx2DMappingProjector *projector, map<string, DrawingObject_ptr> &clients);
 		
         void addPaths(CustomPaths_ptr c);
         CustomPaths_ptr getActivePath();
@@ -32,6 +32,8 @@ namespace guardacaso {
         void setActivePath(int index);
         vector<string> getPathsNames();
 
+        ofPtr<ofFbo> getOutput();
+
 		
     private:
 
@@ -39,8 +41,9 @@ namespace guardacaso {
 		
         vector<CustomPaths_ptr>             paths;
         ofParameter<int>                    active_path;
-        float                               w,h;
 		
+        ofPtr<ofFbo>                        output;
+
 	};
 
 }

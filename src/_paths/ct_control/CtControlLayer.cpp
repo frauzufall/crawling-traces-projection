@@ -8,10 +8,10 @@ void CtControlLayer::setup() {
 
 }
 
-void CtControlLayer::update(ofPolylines_ptr lines, map<string, DrawingObject_ptr> &clients) {
+void CtControlLayer::update(ofx2DMappingProjector *projector, map<string, DrawingObject_ptr> &clients) {
 }
 
-void CtControlLayer::draw(ofPolylines_ptr lines, map<string, DrawingObject_ptr> &clients) {
+void CtControlLayer::draw(ofx2DMappingProjector *projector, map<string, DrawingObject_ptr> &clients) {
 
 }
 

@@ -1,14 +1,26 @@
 <pathsconfig>
-    <ct-painting active="1">
+    <bricks active="1">
         <group>
-            <stroke1_w>1</stroke1_w>
-            <stroke2_w>1</stroke2_w>
+            <stroke1_w>4.62431</stroke1_w>
+            <stroke2_w>4.62431</stroke2_w>
             <control_size>6</control_size>
             <alpha1>1</alpha1>
             <alpha2>1</alpha2>
             <pulse_size>1</pulse_size>
             <show_lines>1</show_lines>
-            <show_controls>1</show_controls>
+            <show_controls>0</show_controls>
+            <wall_w>800</wall_w>
+            <wall_h>600</wall_h>
+            <reload_shapes>1</reload_shapes>
+            <clear_blur>0</clear_blur>
+            <blur_scale>1</blur_scale>
+            <blur_radius>8</blur_radius>
+            <blur_shape>0.943311</blur_shape>
+            <blur_passes>1</blur_passes>
+            <brick_cols>30</brick_cols>
+            <brickrows>10</brickrows>
+            <brick_offset>0.5</brick_offset>
+            <calibration>1</calibration>
         </group>
-    </ct-painting>
+    </bricks>
 </pathsconfig>

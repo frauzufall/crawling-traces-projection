@@ -1,6 +1,7 @@
 #pragma once
 
 #include "PathsData.h"
+#include "ofx2DMappingProjector.h"
 
 namespace guardacaso {
 
@@ -13,16 +14,16 @@ namespace guardacaso {
 		
 		virtual void setup() = 0;
 		
-        virtual void update(ofPolylines_ptr lines, map<string, DrawingObject_ptr> &clients) = 0;
+        virtual void update(ofx2DMappingProjector* projector, map<string, DrawingObject_ptr> &clients) = 0;
 
-        virtual void draw(ofPolylines_ptr lines, map<string, DrawingObject_ptr> &clients) = 0;
+        virtual void draw(ofx2DMappingProjector* projector, map<string, DrawingObject_ptr> &clients) = 0;
 
         virtual void idle() = 0;
         virtual void resume() = 0;
 		
 		string getName();
 
-        bool isSetupDone();
+        ofParameter<bool> &setupDone();
         bool isLoaded();
         void setLoaded();
 
@@ -41,7 +42,7 @@ namespace guardacaso {
 		
         string name;
 
-        bool setup_done;
+        ofParameter<bool> setup_done;
         bool loaded;
         ofParameter<bool> active;
 	

@@ -5,3 +5,5 @@ ofxSvg
 ofx2DMapping
 ofxTriangle
 ofxSortableList
+ofxBricksBlur
+ofxVideoRecorder

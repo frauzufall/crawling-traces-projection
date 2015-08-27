@@ -11,7 +11,7 @@ using namespace guardacaso;
 //--------------------------------------------------------------
 void AppStart::setup(){
 
-    ofSetLogLevel(OF_LOG_FATAL_ERROR);
+    ofSetLogLevel(OF_LOG_VERBOSE);
 
 //    ofSetFrameRate(20);
 
@@ -29,8 +29,6 @@ void AppStart::setup(){
         traces_controller.setup(&mapping_controller);
     }
 
-    paths_controller.setup();
-
     int w = mapping_controller.getMapping()->getControl()->controlWidth()
             +mapping_controller.getMapping()->getControl()->getProjector()->outputWidth();
     int h = max(
@@ -38,9 +36,15 @@ void AppStart::setup(){
                 mapping_controller.getMapping()->getControl()->getProjector()->outputHeight());
     ofSetWindowShape(w,h);
 
+    paths_controller.setup(mapping_controller.getMapping()->getControl()->getProjector()->outputWidth(),
+                           mapping_controller.getMapping()->getControl()->getProjector()->outputHeight());
+
+    video_recorder_controller.setup(paths_controller.getOutput());
+
     control_window.setup(&mapping_controller,
                          &paths_controller,
-                         &traces_controller);
+                         &traces_controller,
+                         &video_recorder_controller);
 
     delay = 1000/24;
     lastupdate = 0;
@@ -56,12 +60,14 @@ void AppStart::update(){
         lastupdate = currenttime;
 
         traces_controller.update();
-        paths_controller.update(mapping_controller.getMapping()->getControl()->getProjector()->outlines(),
+        paths_controller.update(mapping_controller.getMapping()->getControl()->getProjector(),
                                 traces_controller.getObjectController()->getClients());
         mapping_controller.update();
 //        SoundController::getInstance().update();
 
         control_window.update();
+
+        video_recorder_controller.update();
     }
 
 }
@@ -75,13 +81,12 @@ void AppStart::draw(){
 
     ofSetColor(255);
 
-    ofPushMatrix();
     if(mapping_controller.controlLeft()){
-        ofTranslate(mapping_controller.getMapping()->getControl()->getProjector()->outputWidth(),0);
+        paths_controller.getOutput()->draw(mapping_controller.getMapping()->getControl()->getProjector()->outputWidth(),0);
+    }else {
+        paths_controller.getOutput()->draw(0,0);
     }
-    paths_controller.draw(mapping_controller.getMapping()->getControl()->getProjector()->outlines(),
-                          traces_controller.getObjectController()->getClients());
-    ofPopMatrix();
+
     ofSetColor(255);
     control_window.draw();
 

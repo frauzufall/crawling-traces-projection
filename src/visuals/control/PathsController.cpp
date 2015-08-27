@@ -3,12 +3,13 @@
 #include "EmptyPaths.h"
 #include "CtPaintingLayer.h"
 #include "CtControlLayer.h"
+#include "BricksLayer.h"
 
 using namespace guardacaso;
 
 PathsController::PathsController() {}
 
-void PathsController::setup(){
+void PathsController::setup(float width, float height){
 
     xml_paths = "sessions/last/paths.xml";
 
@@ -26,6 +27,7 @@ void PathsController::setup(){
 
     addPaths(CustomPaths_ptr(new CtControlLayer("ct-control")));
     addPaths(CustomPaths_ptr(new CtPaintingLayer("ct-painting")));
+    addPaths(CustomPaths_ptr(new BricksLayer("bricks")));
 
     /*___________________.______________________________*/
     /*__________________/|\_____________________________*/
@@ -36,6 +38,9 @@ void PathsController::setup(){
     setActivePath(0);
 
     setupPaths();
+
+    output = ofPtr<ofFbo>(new ofFbo());
+    output->allocate(width, height, GL_RGB);
 
 }
 
@@ -59,12 +64,12 @@ void PathsController::reloadPaths(ofPtr<ofxXmlSettings> xml) {
             CustomPaths_ptr p = getPath(i);
 
             if(xml->getAttribute(p->getName(), "active", 0, 0)){
-                setActivePath(i);
                 xml->pushTag(p->getName(), 0);
 
                     xml->deserialize(p->getSettings());
 
                 xml->popTag();
+                setActivePath(i);
             }
         }
 
@@ -102,25 +107,30 @@ void PathsController::savePaths() {
 
 }
 
-void PathsController::update(ofPolylines_ptr lines, map<string, DrawingObject_ptr> &clients) {
+void PathsController::update(ofx2DMappingProjector* projector, map<string, DrawingObject_ptr> &clients) {
 
     ofSetColor(255);
 
     CustomPaths_ptr active = getActivePath();
     if(active){
-        active->update(lines, clients);
+        active->update(projector, clients);
     }
+
+    drawOutput(projector, clients);
 	
 }
 
-void PathsController::draw(ofPolylines_ptr lines, map<string, DrawingObject_ptr>& clients) {
-
-    ofSetColor(255);
+void PathsController::drawOutput(ofx2DMappingProjector* projector, map<string, DrawingObject_ptr>& clients) {
 
     if(getActivePath()){
+        output->begin();
+        ofClear(0,0,0,0);
+
+        ofSetColor(255);
         //for(int i = p->shapeCount()-1; i >= 0; i--) {
-            getActivePath()->draw(lines, clients);
+            getActivePath()->draw(projector, clients);
         //}
+        output->end();
     }else{
         ofLogWarning("PathsController: draw()", "no active path style, chose one from the paths tab");
     }
@@ -151,6 +161,11 @@ void PathsController::setActivePath(int index) {
     }
 
     active_path = index;
+
+    if(!getActivePath()->setupDone()){
+        getActivePath()->setup();
+        getActivePath()->setupDone().set(true);
+    }
 
     getActivePath()->isActive().set(true);
     getActivePath()->resume();
@@ -189,6 +204,10 @@ void PathsController::activePathChanged(int& index) {
     if(active_path.get() != index){
         setActivePath(index);
     }
+}
+
+ofPtr<ofFbo> PathsController::getOutput(){
+    return output;
 }
 
 PathsController::~PathsController(){}

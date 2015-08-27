@@ -6,6 +6,7 @@
 #include "PathsController.h"
 #include "ControlWindow.h"
 #include "Traces.h"
+#include "VideoRecorderController.h"
 
 using namespace guardacaso;
 
@@ -42,6 +43,7 @@ private:
     PathsController paths_controller;
     ControlWindow control_window;
     Traces traces_controller;
+    VideoRecorderController video_recorder_controller;
 
     int delay;
     int lastupdate;

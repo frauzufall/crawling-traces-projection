@@ -14,11 +14,11 @@ CtPaintingLayer::CtPaintingLayer(string name):CustomPaths(name) {
 void CtPaintingLayer::setup() {
 }
 
-void CtPaintingLayer::update(ofPolylines_ptr lines, map<string, DrawingObject_ptr> &clients) {
+void CtPaintingLayer::update(ofx2DMappingProjector *projector, map<string, DrawingObject_ptr> &clients) {
 
 }
 
-void CtPaintingLayer::draw(ofPolylines_ptr lines, map<string, DrawingObject_ptr> &clients) {
+void CtPaintingLayer::draw(ofx2DMappingProjector* projector, map<string, DrawingObject_ptr> &clients) {
 
     ofEnableAlphaBlending();
     glHint(GL_PERSPECTIVE_CORRECTION_HINT,
