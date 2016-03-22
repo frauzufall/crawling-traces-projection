@@ -14,99 +14,91 @@
 using namespace guardacaso;
 
 ControlWindow::ControlWindow():ofxPanel() {
-    is_setup = false;
+	is_setup = false;
 }
 
 bool ControlWindow::isSetup() {
-    return is_setup;
+	return is_setup;
 }
 
 void ControlWindow::setup(MappingController* mc, PathsController* pc, Traces* tc, VideoRecorderController* vrc) {
 
-    mapping_controller = mc;
-    paths_controller = pc;
-    traces_controller = tc;
-    video_recorder_controller = vrc;
+	mapping_controller = mc;
+	paths_controller = pc;
+	traces_controller = tc;
+	video_recorder_controller = vrc;
 
-    ofxPanel::setup("crawling traces");
-    setShowHeader(false);
-    setBorderColor(ofColor::fromHex(0x4BB3A5));
+	setName("crawling traces");
+	setShowHeader(false);
+	setBorderColor(ofColor::fromHex(0x4BB3A5));
 
-    xml_gui = "sessions/last/gui.xml";
+	xml_gui = "sessions/last/gui.xml";
 
-    w = mapping_controller->getMapping()->getControl()->controlWidth();
-    h = mapping_controller->getMapping()->getControl()->controlHeight();
-    setSize(w+1,h);
+	ofJson floatleft = {{"float", "left"}};
 
-    //system_temp_freq = 30000;
-    //last_temp_update = -system_temp_freq;
-    //status_temp = "";
+	w = mapping_controller->getMapping()->getControl()->controlWidth();
+	h = mapping_controller->getMapping()->getControl()->controlHeight();
+	setSize(w,h);
 
-    ofxBaseGui::Config config_header;
-    config_header.backgroundColor = ofColor(0,0,0,0);
-    config_header.shape.width = 170;
-    config_header.shape.height = 30;
+	//system_temp_freq = 30000;
+	//last_temp_update = -system_temp_freq;
+	//status_temp = "";
 
-    bool left = mapping_controller->controlLeft().get();
-    updatePosition(left);
-    mapping_controller->controlLeft().addListener(this, &ControlWindow::updatePosition);
+//	ofxBaseGui::Config config_header;
+//	config_header.backgroundColor = ofColor(0,0,0,0);
+//	config_header.shape.width = 170;
+//	config_header.shape.height = 30;
 
-    header.setup("header");
-    header.setLayout(ofxBaseGui::Horizontal);
-    header.setShowHeader(false);
-    header.setBorderColor(ofColor(0,0,0,0));
+	bool left = mapping_controller->controlLeft().get();
+	updatePosition(left);
+	mapping_controller->controlLeft().addListener(this, &ControlWindow::updatePosition);
 
-    title.setup("title","crawling traces", config_header);
-    title.setShowName(false);
-    header.add(title);
-    header.add<ofxFpsPlotter>(config_header);
-    //status.setup("STATUS");
+	addSpacer(ofJson({{"width", 10}, {"height", 10}, {"float", "left"}}));
+	header = addGroup("header");
+	header->setShowHeader(false);
+	header->setBorderColor(ofColor(0,0,0,0));
 
-    ofxBaseGui::Config config_header_btn = config_header;
-    config_header_btn.shape.width = 0;
+	header->add(title.set("crawling traces"), floatleft);
+	header->addFpsPlotter(ofJson({{"float", "left"}}));
+	//status.setup("STATUS");
 
-    save_settings_btn.addListener(this, &ControlWindow::saveAllSettings);
-    save_settings_btn.setBackgroundColor(ofColor(0,0,0,0));
-    header.addSpacer(13);
-    header.add(save_settings_btn.setup("Save all settings", config_header_btn));
-    header.add(recording.set("recording", false));
-    recording.addListener(video_recorder_controller, &VideoRecorderController::setRecording);
+	save_settings.addListener(this, &ControlWindow::saveAllSettings);
+	header->addSpacer(ofJson({{"width", 13}, {"height", 13}, {"float", "left"}}));
+	header->add(save_settings.set("Save all settings"), floatleft);
+	header->add(recording.set("recording", false), floatleft);
+	recording.addListener(video_recorder_controller, &VideoRecorderController::setRecording);
 
 //    import_events_btn.addListener(this, &ControlWindow::importGroup);
 //    import_events_btn.setup("Import events");
 //    gui.add(import_events_btn);
 
-    //status.add(status_temp.set("Hardware temperatures", ".. showing status .."));
+	//status.add(status_temp.set("Hardware temperatures", ".. showing status .."));
 
-    server.setup(traces_controller);
-    paths.setup(paths_controller);
+	//setup mapping view
+//    mapping_controller->getMapping()->getControlView()->setGroupConfig(CustomTab().group_config);
+//    mapping_controller->getMapping()->getControlView()->setSliderConfig(CustomTab().slider_config);
+//    mapping_controller->getMapping()->getControlView()->setToggleConfig(CustomTab().toggle_config);
+//    mapping_controller->getMapping()->getControlView()->setLabelConfig(CustomTab().label_config);
+//	mapping_controller->getMapping()->getControlView()->setup(0,0,800,600);
 
-    //setup mapping view
-    mapping_controller->getMapping()->getControlView()->setGroupConfig(CustomTab().group_config);
-    mapping_controller->getMapping()->getControlView()->setSliderConfig(CustomTab().slider_config);
-    mapping_controller->getMapping()->getControlView()->setToggleConfig(CustomTab().toggle_config);
-    mapping_controller->getMapping()->getControlView()->setLabelConfig(CustomTab().label_config);
-    mapping_controller->getMapping()->getControlView()->setup(0,0,800,600);
+	addSpacer(ofJson({{"width", 10}, {"height", 10}, {"float", "left"}}));
+	tabbed_pages = addTabs("tabbed page");
 
-    gui.setup("tabbed page");
+	tabbed_pages->setShowHeader(false);
+	tabbed_pages->setTabHeight(50);
+	tabbed_pages->setTabWidth(100);
+	tabbed_pages->setBackgroundColor(ofColor(22));
+	tabbed_pages->setBorderColor(ofColor(0,0,0,0));
+	tabbed_pages->setWidth(w);
+	server = tabbed_pages->add<ServerTab>();
+	paths = tabbed_pages->add<PathsTab>();
+	mapping_controller->getMapping()->addControlViewTo(tabbed_pages);
+//	tabbed_pages.setSize(w,h-header.getHeight()-10);
 
-    gui.setShowHeader(false);
-    gui.setTabHeight(50);
-    gui.setTabWidth(100);
-    gui.setBackgroundColor(ofColor(22));
-    gui.setBorderColor(ofColor(0,0,0,0));
-    gui.setSize(w,h-header.getHeight()-10);
-    gui.add(server);
-    gui.add(paths);
-    gui.add(*mapping_controller->getMapping()->getControlView());
-    gui.setSize(w,h-header.getHeight()-10);
+	server->setup(traces_controller);
+	paths->setup(paths_controller);
 
-    addSpacer(10);
-    add(header);
-    addSpacer(10);
-    add(gui);
-
-    is_setup = true;
+	is_setup = true;
 
 }
 
@@ -148,27 +140,27 @@ void ControlWindow::update() {
 }
 
 ControlWindow::~ControlWindow() {
-    mapping_controller->controlLeft().removeListener(this, &ControlWindow::updatePosition);
-    save_settings_btn.removeListener(this, &ControlWindow::saveAllSettings);
-    recording.removeListener(video_recorder_controller, &VideoRecorderController::setRecording);
+	mapping_controller->controlLeft().removeListener(this, &ControlWindow::updatePosition);
+	save_settings.removeListener(this, &ControlWindow::saveAllSettings);
+	recording.removeListener(video_recorder_controller, &VideoRecorderController::setRecording);
 }
 
 void ControlWindow::saveAllSettings() {
-    mapping_controller->getMapping()->getControl()->saveMappingDefault();
-    traces_controller->saveServer();
-    paths_controller->savePaths();
+	mapping_controller->getMapping()->getControl()->saveMappingDefault();
+	traces_controller->saveServer();
+	paths_controller->savePaths();
 }
 
 void ControlWindow::importGroup() {
-    traces_controller->simulateGroups(mapping_controller);
-    //TODO update mapping tab
+	traces_controller->simulateGroups(mapping_controller);
+	//TODO update mapping tab
 }
 
 void ControlWindow::updatePosition(bool &left){
-    if(left){
-        this->setPosition(0,0);
-    }else {
-        this->setPosition(mapping_controller->getMapping()->getControl()->getProjector()->outputWidth(),0);
-    }
+	if(left){
+		this->setPosition(0,0);
+	}else {
+		this->setPosition(mapping_controller->getMapping()->getControl()->getProjector()->outputWidth(),0);
+	}
 
 }

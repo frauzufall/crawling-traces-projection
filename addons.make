@@ -1,5 +1,6 @@
 ofxXmlSettings
 ofxGui
+ofxDOM
 ofxNetwork
 ofxSvg
 ofx2DMapping

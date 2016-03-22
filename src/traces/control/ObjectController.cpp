@@ -213,7 +213,7 @@ DrawingObject_ptr ObjectController::addDrawingObject(string id){
 
     //send starting position to server
     stringstream possent;
-    ofx2DMappingProjector *p = mapping_controller->getMapping()->getControl()->getProjector(0);
+    ofPtr<ofx2DMappingProjector> p = mapping_controller->getMapping()->getControl()->getProjector(0);
     ofPoint posres = c->getPos();
     if(p->getUsingCam()) {
         posres = p->inCameraView(c->getPos());
@@ -390,7 +390,7 @@ void ObjectController::setObjectPos(DrawingObject_ptr obj, ofPoint p) {
     //send new position to server
     stringstream possent;
 
-    ofx2DMappingProjector* pj = mapping_controller->getMapping()->getControl()->getProjector();
+    ofPtr<ofx2DMappingProjector> pj = mapping_controller->getMapping()->getControl()->getProjector();
 
     ofPoint posres = pos;
     if(mapping_controller->getMapping()->getControl()->getProjector()->getUsingCam()) {
@@ -482,7 +482,7 @@ void ObjectController::setFakeObjectPos(FakeObject_ptr obj, ofPoint p, string ti
 
     ofPoint pos = p;
 
-    ofx2DMappingProjector* pj = mapping_controller->getMapping()->getControl()->getProjector();
+    ofPtr<ofx2DMappingProjector> pj = mapping_controller->getMapping()->getControl()->getProjector();
 
     if(!point_in_line) {
         //create connection lines to existing drawing points

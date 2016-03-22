@@ -40,7 +40,7 @@ void PathsController::setup(float width, float height){
     setupPaths();
 
     output = ofPtr<ofFbo>(new ofFbo());
-    output->allocate(width, height, GL_RGB);
+    output->allocate(width, height, GL_RGBA);
 
 }
 
@@ -107,7 +107,7 @@ void PathsController::savePaths() {
 
 }
 
-void PathsController::update(ofx2DMappingProjector* projector, map<string, DrawingObject_ptr> &clients) {
+void PathsController::update(ofPtr<ofx2DMappingProjector> projector, vector<DrawingObject_ptr> &clients) {
 
     ofSetColor(255);
 
@@ -120,7 +120,7 @@ void PathsController::update(ofx2DMappingProjector* projector, map<string, Drawi
 	
 }
 
-void PathsController::drawOutput(ofx2DMappingProjector* projector, map<string, DrawingObject_ptr>& clients) {
+void PathsController::drawOutput(ofPtr<ofx2DMappingProjector> projector, vector<DrawingObject_ptr>& clients) {
 
     if(getActivePath()){
         output->begin();

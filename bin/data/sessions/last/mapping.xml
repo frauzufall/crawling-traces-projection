@@ -1,49 +1,107 @@
 <mapping>
     <control>
-        <width>1600</width>
-        <height>900</height>
+        <width>1920</width>
+        <height>1080</height>
     </control>
     <projector>
         <output>
-            <width>1600</width>
-            <height>900</height>
+            <width>1920</width>
+            <height>1080</height>
         </output>
-        <object type="CONTENT_SHAPE" name="drawing area">
-            <color r="255" g="255" b="255"></color>
+        <object type="IMAGE" name="url">
+            <color r="0" g="200" b="255"></color>
             <dst>
                 <lefttop>
-                    <x>0.239081830</x>
-                    <y>0.185694635</y>
+                    <x>0.270046353</x>
+                    <y>0.399725258</y>
                 </lefttop>
                 <righttop>
-                    <x>0.723048449</x>
-                    <y>0.167125165</y>
+                    <x>0.467407733</x>
+                    <y>0.403083682</y>
                 </righttop>
                 <rightbottom>
-                    <x>0.735814929</x>
-                    <y>0.858321846</y>
+                    <x>0.467407733</x>
+                    <y>0.563325942</y>
                 </rightbottom>
                 <leftbottom>
-                    <x>0.247205958</x>
-                    <y>0.685006857</y>
+                    <x>0.266691893</x>
+                    <y>0.560021996</y>
                 </leftbottom>
             </dst>
             <polyline>
                 <point>
-                    <x>0.239081830</x>
-                    <y>0.185694635</y>
+                    <x>0.270046353</x>
+                    <y>0.399725258</y>
                 </point>
                 <point>
-                    <x>0.723048449</x>
-                    <y>0.167125165</y>
+                    <x>0.467407733</x>
+                    <y>0.403083682</y>
                 </point>
                 <point>
-                    <x>0.735814929</x>
-                    <y>0.858321846</y>
+                    <x>0.467407733</x>
+                    <y>0.563325942</y>
                 </point>
                 <point>
-                    <x>0.247205958</x>
-                    <y>0.685006857</y>
+                    <x>0.266691893</x>
+                    <y>0.560021996</y>
+                </point>
+            </polyline>
+            <src>
+                <lefttop>
+                    <x>0.000000000</x>
+                    <y>0.000000000</y>
+                </lefttop>
+                <righttop>
+                    <x>1.000000000</x>
+                    <y>0.000000000</y>
+                </righttop>
+                <rightbottom>
+                    <x>1.000000000</x>
+                    <y>1.000000000</y>
+                </rightbottom>
+                <leftbottom>
+                    <x>0.000000000</x>
+                    <y>1.000000000</y>
+                </leftbottom>
+            </src>
+            <url>images/url.png</url>
+        </object>
+        <object type="CONTENT_SHAPE" name="drawing area">
+            <color r="255" g="255" b="255"></color>
+            <dst>
+                <lefttop>
+                    <x>0.000000000</x>
+                    <y>0.000000000</y>
+                </lefttop>
+                <righttop>
+                    <x>1.000000000</x>
+                    <y>0.000000000</y>
+                </righttop>
+                <rightbottom>
+                    <x>1.000000000</x>
+                    <y>1.000000000</y>
+                </rightbottom>
+                <leftbottom>
+                    <x>0.000000000</x>
+                    <y>1.000000000</y>
+                </leftbottom>
+            </dst>
+            <polyline>
+                <point>
+                    <x>0.000000000</x>
+                    <y>0.000000000</y>
+                </point>
+                <point>
+                    <x>1.000000000</x>
+                    <y>0.000000000</y>
+                </point>
+                <point>
+                    <x>1.000000000</x>
+                    <y>1.000000000</y>
+                </point>
+                <point>
+                    <x>0.000000000</x>
+                    <y>1.000000000</y>
                 </point>
             </polyline>
             <src>

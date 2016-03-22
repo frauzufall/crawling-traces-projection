@@ -8,10 +8,10 @@ void CtControlLayer::setup() {
 
 }
 
-void CtControlLayer::update(ofx2DMappingProjector *projector, map<string, DrawingObject_ptr> &clients) {
+void CtControlLayer::update(ofPtr<ofx2DMappingProjector> projector, vector<DrawingObject_ptr> &clients) {
 }
 
-void CtControlLayer::draw(ofx2DMappingProjector *projector, map<string, DrawingObject_ptr> &clients) {
+void CtControlLayer::draw(ofPtr<ofx2DMappingProjector> projector, vector<DrawingObject_ptr> &clients) {
 
 }
 

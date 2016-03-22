@@ -21,8 +21,8 @@ namespace guardacaso {
         void savePaths();
 
         void setup(float width, float height);
-        void update(ofx2DMappingProjector *projector, map<string, DrawingObject_ptr> &clients);
-        void drawOutput(ofx2DMappingProjector *projector, map<string, DrawingObject_ptr> &clients);
+        void update(ofPtr<ofx2DMappingProjector> projector, vector<DrawingObject_ptr> &clients);
+        void drawOutput(ofPtr<ofx2DMappingProjector> projector, vector<DrawingObject_ptr> &clients);
 		
         void addPaths(CustomPaths_ptr c);
         CustomPaths_ptr getActivePath();

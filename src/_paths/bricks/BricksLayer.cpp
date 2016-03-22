@@ -27,7 +27,7 @@ void BricksLayer::setup() {
     blur_shapes_set = false;
 }
 
-void BricksLayer::setBlurShapes(ofx2DMappingProjector* projector){
+void BricksLayer::setBlurShapes(ofPtr<ofx2DMappingProjector> projector){
     blurshapes.clear();
     for(auto e : projector->getShapesByClass<ofx2DMappingContentShape>()){
         if(e->name == "drawing area"){
@@ -44,7 +44,7 @@ void BricksLayer::setBlurShapes(ofx2DMappingProjector* projector){
     blur_shapes_set = true;
 }
 
-void BricksLayer::update(ofx2DMappingProjector* projector, map<string, DrawingObject_ptr> &clients) {
+void BricksLayer::update(ofPtr<ofx2DMappingProjector> projector, vector<DrawingObject_ptr> &clients) {
     if(!blur_shapes_set){
         setBlurShapes(projector);
     }
@@ -53,7 +53,7 @@ void BricksLayer::update(ofx2DMappingProjector* projector, map<string, DrawingOb
     }
 }
 
-void BricksLayer::draw(ofx2DMappingProjector *projector, map<string, DrawingObject_ptr> &clients) {
+void BricksLayer::draw(ofPtr<ofx2DMappingProjector> projector, vector<DrawingObject_ptr> &clients) {
 
     ofEnableAlphaBlending();
     glHint(GL_PERSPECTIVE_CORRECTION_HINT,
@@ -65,11 +65,11 @@ void BricksLayer::draw(ofx2DMappingProjector *projector, map<string, DrawingObje
     for(auto drawing_shape : projector->getShapesByClass<ofx2DMappingContentShape>()) {
         if(drawing_shape->name == "drawing area"){
 
-            map<string,DrawingObject_ptr>::iterator iter;
+            vector<DrawingObject_ptr>::iterator iter;
             DrawingObject_ptr c;
             for( iter = clients.begin(); iter != clients.end(); iter++) {
 
-                c = iter->second;
+                c = *iter;
 
                 if(c) {
 

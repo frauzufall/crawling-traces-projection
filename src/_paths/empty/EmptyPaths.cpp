@@ -4,9 +4,9 @@ EmptyPaths::EmptyPaths(string name):CustomPaths(name) {}
 
 void EmptyPaths::setup() {}
 
-void EmptyPaths::update(ofx2DMappingProjector* projector, map<string, DrawingObject_ptr> &clients) {}
+void EmptyPaths::update(ofPtr<ofx2DMappingProjector> projector, vector<DrawingObject_ptr> &clients) {}
 
-void EmptyPaths::draw(ofx2DMappingProjector* projector, map<string, DrawingObject_ptr> &clients) {}
+void EmptyPaths::draw(ofPtr<ofx2DMappingProjector> projector, vector<DrawingObject_ptr> &clients) {}
 
 void EmptyPaths::idle() {}
 

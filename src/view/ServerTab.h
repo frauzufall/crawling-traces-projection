@@ -7,32 +7,32 @@ namespace guardacaso {
 
 class ServerTab : public CustomTab {
 
-    public:
-        ServerTab();
-        ~ServerTab();
+	public:
+		ServerTab(const std::string &name="Server", const ofJson& config = ofJson());
+		~ServerTab();
 
-        void setup(Traces* tc);
-        void render();
+		void setup(Traces* tc);
+		void render();
 
-        void updateTimeoutGone(float&);
-        void updateTimeoutIdle(float&);
-        void updateServerStatus(bool&);
+		void updateTimeoutGone(float&);
+		void updateTimeoutIdle(float&);
+		void updateServerStatus(bool&);
 
-    private:
+	private:
 
-        Traces* traces_controller;
+		Traces* traces_controller;
 
-        std::string secondsToTimestring(int seconds);
+		std::string secondsToTimestring(int seconds);
 
-        ofxButton save_btn;
-        ofxPanel settings;
-        ofRectangle participants;
-        ofxLabel status_msg;
+		ofParameter<void> save;
+		ofxPanel *settings;
+		ofRectangle participants;
+//		ofParameter<std::string> status_msg;
 
-        ofTrueTypeFont TTF;
+		ofTrueTypeFont TTF;
 
-        ofParameter<string> timeout_idle;
-        ofParameter<string> timeout_gone;
+		ofParameter<string> timeout_idle;
+		ofParameter<string> timeout_gone;
 
 };
 

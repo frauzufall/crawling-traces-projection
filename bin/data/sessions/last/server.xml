@@ -3,8 +3,8 @@
         <ip>178.62.180.144</ip>
         <port>1234</port>
     </server>
-    <speed>0.904522598</speed>
-    <range_max>60.000000000</range_max>
+    <speed>0.336683422</speed>
+    <range_max>24.120603561</range_max>
     <range_min>10.000000000</range_min>
     <connect_itself>1</connect_itself>
     <connect_others>1</connect_others>

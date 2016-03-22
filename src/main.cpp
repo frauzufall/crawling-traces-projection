@@ -4,19 +4,13 @@
 //========================================================================
 int main(int argc, char *argv[]){
 
-    ofAppGLFWWindow window;
-
-    int w = 1600;
-    int h = 900;
-
-    window.setMultiDisplayFullscreen(true);
-
-    ofSetupOpenGL(&window, w,h, OF_WINDOW);
-
-    AppStart* app = new AppStart();
-
-    app->arguments = vector<string>(argv, argv + argc);
-
-    ofRunApp(app);
+	ofGLFWWindowSettings settings;
+	settings.multiMonitorFullScreen = true;
+	settings.windowMode = OF_WINDOW;
+	auto window = ofCreateWindow(settings);
+	auto app = std::make_shared<AppStart>();
+	app->arguments = vector<string>(argv, argv + argc);
+	ofRunApp(window, app);
+	ofRunMainLoop();
 
 }

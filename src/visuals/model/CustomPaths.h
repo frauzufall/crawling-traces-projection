@@ -14,9 +14,9 @@ namespace guardacaso {
 		
 		virtual void setup() = 0;
 		
-        virtual void update(ofx2DMappingProjector* projector, map<string, DrawingObject_ptr> &clients) = 0;
+        virtual void update(ofPtr<ofx2DMappingProjector> projector, vector<DrawingObject_ptr> &clients) = 0;
 
-        virtual void draw(ofx2DMappingProjector* projector, map<string, DrawingObject_ptr> &clients) = 0;
+        virtual void draw(ofPtr<ofx2DMappingProjector> projector, vector<DrawingObject_ptr> &clients) = 0;
 
         virtual void idle() = 0;
         virtual void resume() = 0;

@@ -13,41 +13,38 @@ using namespace guardacaso;
 class AppStart : public ofBaseApp {
 
 public:
-//    AppStart();
-//    ~AppStart() {
-//    }
-    void setup();
-    void update();
-    void draw();
 
-    void exit();
+	void setup();
+	void update();
+	void draw();
 
-    void keyPressed(int key);
-    void keyReleased(int key);
-    void mouseMoved(ofMouseEventArgs &args);
-    void mouseDragged(ofMouseEventArgs &args);
-    void mousePressed(ofMouseEventArgs &args);
-    void mouseReleased(ofMouseEventArgs &args);
-    void windowResized(int w, int h);
-    void dragEvent(ofDragInfo dragInfo);
-    void gotMessage(ofMessage msg);
+	void exit();
+
+	void keyPressed(int key);
+	void keyReleased(int key);
+	void mouseMoved(ofMouseEventArgs &args);
+	void mouseDragged(ofMouseEventArgs &args);
+	void mousePressed(ofMouseEventArgs &args);
+	void mouseReleased(ofMouseEventArgs &args);
+	void windowResized(int w, int h);
+	void dragEvent(ofDragInfo dragInfo);
+	void gotMessage(ofMessage msg);
 
 //    void audioOut(float * input, int bufferSize, int nChannels);
 
-    vector<string> arguments;
+	vector<string> arguments;
 
 private:
 
-    Visuals input_controller;
-    MappingController mapping_controller;
-    PathsController paths_controller;
-    ControlWindow control_window;
-    Traces traces_controller;
-    VideoRecorderController video_recorder_controller;
+	Visuals input_controller;
+	MappingController mapping_controller;
+	PathsController paths_controller;
+	Traces traces_controller;
+	VideoRecorderController video_recorder_controller;
 
-    int delay;
-    int lastupdate;
+	ofxGui gui;
+	ControlWindow *control_window;
 
-    bool fullscreen;
+	bool fullscreen;
 
 };

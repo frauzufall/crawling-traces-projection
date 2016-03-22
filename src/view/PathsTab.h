@@ -7,24 +7,22 @@ namespace guardacaso {
 
 class PathsTab : public CustomTab {
 
-    public:
-        PathsTab();
-        ~PathsTab();
+	public:
+		PathsTab(const std::string &name="Paths", const ofJson& config = ofJson());
+		~PathsTab();
 
-        void setup(PathsController* pc);
-        void setGui(int &index);
+		void setup(PathsController* pc);
+		void setGui(int &index);
 
-    private:
+	private:
 
-        PathsController* paths_controller;
+		PathsController* paths_controller;
 
-        vector<string> paths_names;
+		float preview_h, preview_w;
 
-        float preview_h, preview_w;
+		ofParameter<void> save;
 
-        ofxButton save_btn;
-
-        ofxGuiGroup paths_list, paths_options;
+		ofxGuiGroup *paths_list, *paths_options;
 
 };
 

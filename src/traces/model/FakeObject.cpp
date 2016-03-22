@@ -47,7 +47,7 @@ FakeObject::FakeObject(string future, string id):LightObject() {
         xml->popTag();
 
     } else{
-        cout << "unable to load xml file " << future_xml << endl;
+        cout << "unable to load xml file " << future_xml.str() << endl;
     }
     if(future_line.size() == future_timestamp.size()) {
         cout << "DRAWINGOBJECT:: successfully imported future " << future << endl;

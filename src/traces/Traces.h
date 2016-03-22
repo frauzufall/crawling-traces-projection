@@ -44,7 +44,7 @@ namespace guardacaso {
 
             string          xml_server;
             string          client_id;
-            string          history_dir;
+            ofParameter<string> history_dir;
 			
 	};
 	

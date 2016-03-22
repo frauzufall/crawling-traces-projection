@@ -95,7 +95,7 @@ void ServerController::processMsg(string client_id, string action, string value)
 
 }
 
-void ServerController::sendMappingQuads(ofx2DMappingProjector* projector) {
+void ServerController::sendMappingQuads(ofPtr<ofx2DMappingProjector> projector) {
 
     //ensure that mapping gets not sent too often (breaks connection of control webpage)
     int currentTime = ofGetElapsedTimeMillis();

@@ -12,8 +12,8 @@ public:
     ~CtPaintingLayer(){}
 	
     void setup();
-    void update(ofx2DMappingProjector* projector, map<string, DrawingObject_ptr> &clients);
-    void draw(ofx2DMappingProjector *projector, map<string, DrawingObject_ptr> &clients);
+    void update(ofPtr<ofx2DMappingProjector> projector, vector<DrawingObject_ptr> &clients);
+    void draw(ofPtr<ofx2DMappingProjector> projector, vector<DrawingObject_ptr> &clients);
     void idle();
     void resume();
 

@@ -30,7 +30,7 @@ namespace guardacaso {
             void update();
             ofParameter<bool>& isConnected();
             bool send(string client_id, string action, string value);
-            void sendMappingQuads(ofx2DMappingProjector *projector);
+            void sendMappingQuads(ofPtr<ofx2DMappingProjector> projector);
             void askForColor(string client_id);
             ofParameter<bool> &getActive();
             void setActive(bool _active);

@@ -14,22 +14,22 @@ CtPaintingLayer::CtPaintingLayer(string name):CustomPaths(name) {
 void CtPaintingLayer::setup() {
 }
 
-void CtPaintingLayer::update(ofx2DMappingProjector *projector, map<string, DrawingObject_ptr> &clients) {
+void CtPaintingLayer::update(ofPtr<ofx2DMappingProjector> projector, vector<DrawingObject_ptr> &clients) {
 
 }
 
-void CtPaintingLayer::draw(ofx2DMappingProjector* projector, map<string, DrawingObject_ptr> &clients) {
+void CtPaintingLayer::draw(ofPtr<ofx2DMappingProjector> projector, vector<DrawingObject_ptr> &clients) {
 
     ofEnableAlphaBlending();
     glHint(GL_PERSPECTIVE_CORRECTION_HINT,
            GL_NICEST);
     ofNoFill();
 
-    map<string,DrawingObject_ptr>::iterator iter;
+    vector<DrawingObject_ptr>::iterator iter;
     DrawingObject_ptr c;
     for( iter = clients.begin(); iter != clients.end(); iter++) {
 
-        c = iter->second;
+        c = *iter;
 
         if(c) {
 
@@ -53,7 +53,7 @@ void CtPaintingLayer::draw(ofx2DMappingProjector* projector, map<string, Drawing
                 col.setBrightness(col.getBrightness()*1.2);
                 ofSetColor(col);
                 ofNoFill();
-                ofSetLineWidth(3);
+                ofSetLineWidth(stroke2_w);
 
                 float current_time = ofGetElapsedTimef();
                 float pulse_time = (int)(c->getPulseDuration()+1);

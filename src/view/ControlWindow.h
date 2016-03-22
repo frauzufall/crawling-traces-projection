@@ -14,51 +14,51 @@ using namespace guardacaso;
 
 namespace guardacaso {
 
-    class ControlWindow : public ofxPanel {
+	class ControlWindow : public ofxPanel {
 
-        public:
+		public:
 
-            ControlWindow();
-            ~ControlWindow();
-            void setup(MappingController* mc, PathsController* pc, Traces* tc, VideoRecorderController *vrc);
-            void update();
-            void updatePosition(bool& left);
+			ControlWindow();
+			~ControlWindow();
+			void setup(MappingController* mc, PathsController* pc, Traces* tc, VideoRecorderController *vrc);
+			void update();
+			void updatePosition(bool& left);
 
-            bool isSetup();
+			bool isSetup();
 
-            void keyPressed(int key);
+			void keyPressed(int key);
 
-    private:
+	private:
 
-            void saveAllSettings();
+			void saveAllSettings();
 
-            MappingController* mapping_controller;
-            PathsController* paths_controller;
-            Traces* traces_controller;
-            VideoRecorderController* video_recorder_controller;
+			MappingController* mapping_controller;
+			PathsController* paths_controller;
+			Traces* traces_controller;
+			VideoRecorderController* video_recorder_controller;
 
-            ofxTabbedPages gui;
-            ofxGuiGroup header, status;
-            ServerTab server;
-            PathsTab paths;
+			ofxGuiTabs *tabbed_pages;
+			ofxGuiGroup *header, *status;
+			ServerTab *server;
+			PathsTab *paths;
 
-            int w,h;
+			int w,h;
 
-            bool is_setup;
+			bool is_setup;
 
-            ofxMinimalButton save_settings_btn, import_events_btn;
-            ofxLabel title;
+			ofParameter<void> save_settings, import_events;
+			ofParameter<string> title;
 
-            ofParameter<string> status_temp;
-            ofParameter<bool> recording;
+			ofParameter<string> status_temp;
+			ofParameter<bool> recording;
 
-            int system_temp_freq;
-            int last_temp_update;
+			int system_temp_freq;
+			int last_temp_update;
 
-            string xml_gui;
-            void importGroup();
+			string xml_gui;
+			void importGroup();
 
-    };
+	};
 
 }
 
